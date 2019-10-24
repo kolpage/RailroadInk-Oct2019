@@ -1,0 +1,26 @@
+{
+  "name": "railroadink",
+  "version": "1.0.0",
+  "description": "Railroad Ink Electron Implementation",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kolpage/RailroadInk-Oct2019.git"
+  },
+  "keywords": [
+    "Railroad",
+    "Ink"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kolpage/RailroadInk-Oct2019/issues"
+  },
+  "homepage": "https://github.com/kolpage/RailroadInk-Oct2019#readme",
+  "devDependencies": {
+    "electron": "^7.0.0"
+  }
+}
