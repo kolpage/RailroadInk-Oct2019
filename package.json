@@ -2,7 +2,7 @@
   "name": "railroadink",
   "version": "1.0.0",
   "description": "Railroad Ink Electron Implementation",
-  "main": "main.js",
+  "main": "dist/main.js",
   "scripts": {
     "start": "electron ."
   },
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/kolpage/RailroadInk-Oct2019#readme",
   "devDependencies": {
-    "electron": "^7.0.0"
+    "electron": "^7.0.0",
+    "typescript": "^3.6.4"
   }
 }
