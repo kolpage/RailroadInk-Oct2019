@@ -1,3 +1,4 @@
+"use strict";
 //To run from visual studio code debug window follow these instructions.
 //1. Click the 4th icon down on the left side of the screen. It looks like a bug.
 //2. Click the Gear icon to the right of the dropdown at the top of the left column of the screen.
@@ -17,26 +18,21 @@
 //       },
 //   ]
 // }
-
+Object.defineProperty(exports, "__esModule", { value: true });
 //4. Modify the "runtimeExecutable" and "program" paths to match you computers folder structure.
 //   Mine is something like ~/Documents/Electron/RailroadInk/<repo checked out in here>. In visual studio code Electron is set as my workspace.
-
-
-
-const { app, BrowserWindow } = require('electron')
-
-function createWindow () {
-  // Create the browser window.
-  let win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      nodeIntegration: true
-    }
-  })
-
-  // and load the index.html of the app.
-  win.loadFile('index.html')
+var electron_1 = require("electron");
+function createWindow() {
+    // Create the browser window.
+    var win = new electron_1.BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+    // and load the index.html of the app.
+    win.loadFile('index.html');
 }
-
-app.on('ready', createWindow)
+electron_1.app.on('ready', createWindow);
+//# sourceMappingURL=main.js.map
