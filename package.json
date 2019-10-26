@@ -4,7 +4,8 @@
   "description": "Railroad Ink Electron Implementation",
   "main": "dist/main.js",
   "scripts": {
-    "start": "electron ."
+    "build": "webpack --config ./webpack.config.js",
+    "start": "npm run build && electron ./dist/main.js"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,15 @@
   },
   "homepage": "https://github.com/kolpage/RailroadInk-Oct2019#readme",
   "devDependencies": {
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.3",
     "electron": "^7.0.0",
-    "typescript": "^3.6.4"
+    "html-webpack-plugin": "^3.2.0",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.6.4",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.9"
   }
 }
