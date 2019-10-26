@@ -23,7 +23,7 @@
 
 
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow } from 'electron';
 
 function createWindow () {
   // Create the browser window.
@@ -33,12 +33,10 @@ function createWindow () {
     webPreferences: {
       nodeIntegration: true
     }
-  })
+  });
 
   // and load the index.html of the app.
-  // TODO: This is bad...we should be using the absolute path but I don't
-  //       know what it is... "./src/index.html" doesn't work
-  win.loadFile('index.html')
+  win.loadFile('./index.html');
 }
 
-app.on('ready', createWindow)
+app.on('ready', createWindow);
