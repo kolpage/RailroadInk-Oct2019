@@ -5,6 +5,7 @@ module.exports = [
     mode: 'development',
     entry: './src/main.ts',
     target: 'electron-main',
+    devtool: 'source-map',
     module: {
         rules: [{
         test: /\.ts$/,
@@ -19,9 +20,12 @@ module.exports = [
   },
   {
     mode: 'development',
-    entry: './src/root.tsx',
-    target: 'electron-main',
+    entry: './src/client/root.tsx',
+    target: 'electron-renderer',
     devtool: 'source-map',
+    resolve: {
+        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
+    },
     module: {
       rules: [{
         test: /\.ts(x?)$/,
