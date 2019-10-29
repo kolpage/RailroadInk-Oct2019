@@ -7,9 +7,12 @@ npm install
 If that doesn't work, try these:
 npm install sass -g
 npm install typescript -g
+
+Just calling npm install in the project directory should call these but FYI:
 npm install --save-dev webpack webpack-cli ts-loader
 npm install --save-dev react react-dom @types/react @type/react-dom
 npm install --save-dev html-webpack-plugin
+npm install --save-dev sass-loader node-sass css-loader 
 
 In .vscode folder modify/create these files to enable building from VS Code. Assumes Workspace is set to be /RailroadInk/ folder.
 Breakpoints in TS files don't work. Breakpoints in JS files do. Something with sourcemaps not being found because webpack prefixes them.
