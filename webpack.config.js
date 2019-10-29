@@ -24,7 +24,7 @@ module.exports = [
     target: 'electron-renderer',
     devtool: 'source-map',
     resolve: {
-        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.css']
+        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.scss']
     },
     module: {
       rules: [{
@@ -33,9 +33,16 @@ module.exports = [
         use: [{ loader: 'ts-loader' }]
       },
       {
-        test:/\.css$/,
-        use:['style-loader','css-loader']
-    }]
+        test: /\.s[ac]ss$/i,
+        use: [
+          // Creates `style` nodes from JS strings
+          'style-loader',
+          // Translates CSS into CommonJS
+          'css-loader',
+          // Compiles Sass to CSS
+          'sass-loader',
+        ],
+      }]
     },
     output: {
       path: __dirname + '/dist',
