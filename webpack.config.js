@@ -24,14 +24,18 @@ module.exports = [
     target: 'electron-renderer',
     devtool: 'source-map',
     resolve: {
-        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx']
+        extensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.css']
     },
     module: {
       rules: [{
         test: /\.ts(x?)$/,
         include: /src/,
         use: [{ loader: 'ts-loader' }]
-      }]
+      },
+      {
+        test:/\.css$/,
+        use:['style-loader','css-loader']
+    }]
     },
     output: {
       path: __dirname + '/dist',
