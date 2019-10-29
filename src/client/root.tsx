@@ -1,10 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import {Square} from './square';
+import {Board} from './board';
 
 const Index = () => {
-    return <Square />;
+    return <Board columns={7} rows={7} />;
 };
 
 ReactDOM.render(<Index />, document.getElementById('app'));
