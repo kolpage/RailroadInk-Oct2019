@@ -3,13 +3,13 @@ import './styles/square.scss';
 
 interface IDiceProps {
     color: string;
-    //onDiceSelected: (color: string)=>void;
+    onDiceSelected: (color:string) => void;
 }
 
 // TODO: Maybe this should be a child of Square
 export class Dice extends React.Component<IDiceProps> {
     diceSelected() {
-        //this.props.onDiceSelected(this.props.color);
+        this.props.onDiceSelected(this.props.color);
     }
     
     render() {

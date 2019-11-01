@@ -7,7 +7,9 @@ interface ISquareState {
     color: string;
 }
 
-interface ISquareProps {}
+interface ISquareProps {
+    selectionColor: string;
+}
 
 export class Square extends React.Component<ISquareProps, ISquareState> {
     constructor(props: ISquareProps) {
@@ -20,7 +22,7 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
     
     changeSelected() {
         const isSelected = !this.state.selected;
-        const newColor = isSelected ? 'black': 'white'; 
+        const newColor = isSelected ? this.props.selectionColor: 'white'; 
         this.setState({selected: isSelected, color: newColor})
     }
 
