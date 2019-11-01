@@ -37,6 +37,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   win.loadFile('index.html');
+  win.webContents.openDevTools(); // TODO: Remove this line when client dev is done
 }
 
 app.on('ready', createWindow);
