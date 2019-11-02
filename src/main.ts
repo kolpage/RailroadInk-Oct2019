@@ -24,6 +24,7 @@
 
 
 import { app, BrowserWindow } from 'electron';
+import { Test } from './test/Test';
 
 function createWindow () {
   // Create the browser window.
@@ -41,3 +42,4 @@ function createWindow () {
 }
 
 app.on('ready', createWindow);
+//Test.TileTest();

@@ -6,6 +6,9 @@ module.exports = [
     entry: './src/main.ts',
     target: 'electron-main',
     devtool: 'source-map',
+    resolve: {
+      extensions: ['.js', '.ts', '.json']
+    },
     module: {
         rules: [{
         test: /\.ts$/,
