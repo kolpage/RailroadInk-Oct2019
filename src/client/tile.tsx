@@ -1,30 +1,7 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import './styles/square.scss';
 
-interface IDiceProps {
-    color: string;
-    onDiceSelected: (color:string) => void;
-}
-
-// TODO: Maybe this should be a child of Square
-export class Dice extends React.Component<IDiceProps> {
-    diceSelected() {
-        this.props.onDiceSelected(this.props.color);
-    }
-    
-    render() {
-        return (
-            <div 
-                className='dice' 
-                style={{background: this.props.color}}
-                onClick={this.diceSelected.bind(this)}
-            >
-            </div>
-        );
-    }
-}
-
+// TODO: Maybe we should use a functional approach instead for drawing tiles?
 const Canvas = () => {
     return <canvas height='75px' width='75px' />;
 };
@@ -52,7 +29,6 @@ export class Tile extends React.Component {
     }
 
     render() {
-        
         return (
             <div className='dice'>
                 <canvas ref={this.trainTrackCanvas}></canvas>

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Dice} from './dice';
+import {Tile} from './tile';
 import './styles/inventory.scss';
 
 interface IInventoryProps {
@@ -13,6 +14,7 @@ export class Inventory extends React.Component<IInventoryProps> {
         for (var i = 0; i < this.props.dice.length; i++) {
             row.push(<Dice color={this.props.dice[i]} onDiceSelected={this.props.onDiceSelected} />);
         }
+        row.push(<Tile />);
         return (
             <div className='row'>
                 {row}
