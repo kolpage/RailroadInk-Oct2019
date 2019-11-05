@@ -43,3 +43,5 @@ function createWindow () {
 
 app.on('ready', createWindow);
 //Test.TileTest();
+Test.StandardDicePoolTest_NoSeed();
+Test.StandardDicePoolTest_WithSeed("Tony_was_here");
