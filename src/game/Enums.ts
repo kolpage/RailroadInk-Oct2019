@@ -22,24 +22,22 @@ export enum Edge{
     lava
 }
 
-/** The types of tiles that can be played.
- *  String values of enum used for testbench and debug saving.
- */
+/** The types of tiles that can be played */
 export enum TileType{
-    RailTurn = "0",
-    RailThreeWay = "1",
-    RailStraight = "2",
-    RoadTurn = "3",
-    RoadThreeWay = "4",
-    RoadStraight = "5",
-    Overpass = "6",
-    StationStraight = "7",
-    StationTurn = "8",
-    StationTurnMirror = "9",
-    SpecialThreeRoadOneRail = "A",
-    SpecialThreeRailOneRoad = "B",
-    SpecialAllRoad = "C",
-    SpecialAllRail = "D",
-    SpecialRoadRailAdjacent = "E",
-    SpecialRoadRailAcross = "F"
+    RailTurn,
+    RailThreeWay,
+    RailStraight,
+    RoadTurn,
+    RoadThreeWay,
+    RoadStraight,
+    Overpass,
+    StationStraight,
+    StationTurn,
+    StationTurnMirror,
+    SpecialThreeRoadOneRail,
+    SpecialThreeRailOneRoad,
+    SpecialAllRoad,
+    SpecialAllRail,
+    SpecialRoadRailAdjacent,
+    SpecialRoadRailAcross
 }
