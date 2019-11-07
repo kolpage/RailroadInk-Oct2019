@@ -1,14 +1,16 @@
 import * as React from 'react';
 import './styles/square.scss';
+import { TileType } from '../game/Enums';
+import { Tile } from './tile';
 
 // TODO: Figure out how you are suppose to use React state
 interface ISquareState {
     selected: boolean;
-    color: string;
+    tile: TileType;
 }
 
 interface ISquareProps {
-    selectionColor: string;
+    selectedTile: TileType;
 }
 
 export class Square extends React.Component<ISquareProps, ISquareState> {
@@ -16,23 +18,28 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
         super(props);
         this.state = {
             selected: false,
-            color: 'white'
+            tile: TileType.Overpass //TODO: Support the concept of none
         }
     }
     
     changeSelected() {
         const isSelected = !this.state.selected;
-        const newColor = isSelected ? this.props.selectionColor: 'white'; 
-        this.setState({selected: isSelected, color: newColor})
+        this.setState({selected: isSelected, tile: this.props.selectedTile})
+    }
+
+    drawTile(tile: TileType) {
+        console.log("draw tile on square: " + tile);
+        return ;
+        //return <span>{tile}</span>
     }
 
     render() {
         return (
             <div 
                 className='square' 
-                style={{background: this.state.color}}
                 onClick={this.changeSelected.bind(this)}
             >
+                <Tile tile={this.state.tile} />
             </div>
         );
     }

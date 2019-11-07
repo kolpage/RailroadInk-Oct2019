@@ -1,19 +1,23 @@
 import * as React from 'react';
 import './styles/square.scss';
+import { TileGraphics } from './TileGraphics';
+import { TileType } from '../game/Enums';
 
 // TODO: Maybe we should use a functional approach instead for drawing tiles?
 const Canvas = () => {
     return <canvas height='75px' width='75px' />;
 };
 
-interface IDiceProps {}
+interface ITileProps {
+    tile: TileType
+}
 
-export class Tile extends React.Component {
+export class Tile extends React.Component<ITileProps> {
     trainTrackCanvas: any;
     height: number;
     width: number;
 
-    constructor(props: IDiceProps) {
+    constructor(props: ITileProps) {
         super(props);
         this.trainTrackCanvas = React.createRef();
 
@@ -23,38 +27,37 @@ export class Tile extends React.Component {
     }
 
     componentDidMount() {
+        const context = this.getCanvasContext();
+
+        if (context) {
+           //this.props.draw(context, this.width, this.height);
+           const draw = TileGraphics.TileFactory(this.props.tile);
+           draw(context, this.width, this.height);
+        }
+    }
+
+    getCanvasContext() {
         if (!this.trainTrackCanvas.current) {
             return;
         }
-        const canvas: HTMLCanvasElement = this.trainTrackCanvas.current;
-        const context = canvas.getContext('2d');
+        
+        return this.trainTrackCanvas.current.getContext('2d');
+    }
+
+    redrawTile() {
+        const context = this.getCanvasContext();
         if (context) {
-           this.drawRoad(context);
+            TileGraphics.drawEmptyTile(context, this.width, this.height);
+            //this.props.draw(context, this.width, this.height);
+            const draw = TileGraphics.TileFactory(this.props.tile);
+            draw(context, this.width, this.height);
         }
     }
 
-    drawRoad(context: CanvasRenderingContext2D) {
-        this.drawLine(this.width/3, this.width/3, 0, this.height, context);
-        this.drawDottedLine(10, this.width/2, this.width/2, 0, this.height, context);
-        this.drawLine(this.width*(2/3), this.width*(2/3), 0, this.height, context);
-    }
-
-    drawDottedLine(segLength: number, xStart: number, xEnd: number, yStart: number, yEnd: number, context: CanvasRenderingContext2D) {
-        context.setLineDash([10]);
-        this.drawLine(xStart, xEnd, yStart, yEnd, context);
-        context.setLineDash([]);
-    }
-
-    drawLine(xStart: number, xEnd: number, yStart: number, yEnd: number, context: CanvasRenderingContext2D) {
-        context.beginPath();
-        context.moveTo(xStart,yStart);
-        context.lineTo(xEnd, yEnd);
-        context.stroke();
-    }
-
     render() {
+        this.redrawTile();
         return (
-            <div className='dice'>
+            <div style={{width: this.width, height: this.height}}>
                 <canvas ref={this.trainTrackCanvas}></canvas>
             </div>
         )

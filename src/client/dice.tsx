@@ -1,25 +1,26 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './styles/square.scss';
+import {Tile} from './tile'
+import { TileType } from '../game/Enums';
 
 interface IDiceProps {
-    color: string;
-    onDiceSelected: (color:string) => void;
+    tile: TileType;
+    onDiceSelected: (tile:TileType) => void;
 }
 
-// TODO: Maybe this should be a child of Square
 export class Dice extends React.Component<IDiceProps> {
     diceSelected() {
-        this.props.onDiceSelected(this.props.color);
+        this.props.onDiceSelected(this.props.tile);
     }
     
     render() {
         return (
             <div 
                 className='dice' 
-                style={{background: this.props.color}}
                 onClick={this.diceSelected.bind(this)}
             >
+                <Tile tile={this.props.tile} />
             </div>
         );
     }
