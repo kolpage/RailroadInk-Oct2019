@@ -1,4 +1,4 @@
-import { TileType } from "./Enums";
+import { TileType } from "../common/Enums";
 
 /** The base implementation of a die. */
 export class BaseDie{

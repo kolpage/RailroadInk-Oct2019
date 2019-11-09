@@ -3,33 +3,34 @@ import {Square} from './square';
 import {Inventory} from './inventory';
 import './styles/board.scss';
 import './styles/inventory.scss';
+import { TileType } from '../common/Enums';
 
 interface IBoardProps {
     rows: number;
     columns: number;
-    dice: string[];
+    dice: TileType[];
 }
 
 interface IBoardState {
-    selectedDice: string; // TODO: right now dice are just a color string. This needs to be a real object
+    selectedDice: TileType; 
 }
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
     constructor(props: IBoardProps) {
         super(props);
         this.state = {
-            selectedDice: 'black', // TODO: Just default to first die for now. In the game, there should be a concept of no dice selected.
+            selectedDice: TileType.Empty, 
         }
     }
     
-    updateSelectedDice(dice:string) {
+    updateSelectedDice(dice: TileType) {
         this.setState({selectedDice: dice});
     }
 
     createRow(numberOfCells: number): React.ReactElement {
         let row = [];
         for (var i = 0; i < numberOfCells; i++) {
-            row.push(<Square selectionColor={this.state.selectedDice}/>);
+            row.push(<Square selectedTile={this.state.selectedDice}/>);
         }
         return (
             <div className='row'>

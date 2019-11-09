@@ -1,5 +1,5 @@
 import { BaseDie, RouteDie, StationDie } from "./Dice";
-import { TileType } from "./Enums";
+import { TileType } from "../common/Enums";
 
 const seedrandom = require('seedrandom');
 

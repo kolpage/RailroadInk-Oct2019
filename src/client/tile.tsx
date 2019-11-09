@@ -1,36 +1,63 @@
 import * as React from 'react';
 import './styles/square.scss';
+import { TileGraphics } from './TileGraphics';
+import { TileType, Orientation } from '../common/Enums';
 
 // TODO: Maybe we should use a functional approach instead for drawing tiles?
 const Canvas = () => {
     return <canvas height='75px' width='75px' />;
 };
 
-interface IDiceProps {}
+interface ITileProps {
+    tile: TileType,
+    tileOrientation: Orientation
+}
 
-export class Tile extends React.Component {
+export class Tile extends React.Component<ITileProps> {
     trainTrackCanvas: any;
+    height: number;
+    width: number;
+    graphicEngine: TileGraphics;
 
-    constructor(props: IDiceProps) {
+    constructor(props: ITileProps) {
         super(props);
         this.trainTrackCanvas = React.createRef();
+
+        // TODO: Dont't bastard inject dimensions
+        this.height = 75;
+        this.width = 75;
     }
 
     componentDidMount() {
+        const context = this.getCanvasContext();
+
+        // TODO: Should this be depedency injected? We can't create it until the components mount...
+        this.graphicEngine = new TileGraphics(context, this.width, this.height);
+
+        if (context) {
+           const draw = this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
+        }
+    }
+
+    getCanvasContext() {
         if (!this.trainTrackCanvas.current) {
             return;
         }
-        const canvas: HTMLCanvasElement = this.trainTrackCanvas.current;
-        const context = canvas.getContext('2d');
+        
+        return this.trainTrackCanvas.current.getContext('2d');
+    }
+
+    redrawTile() {
+        const context = this.getCanvasContext();
         if (context) {
-            context.fillStyle = 'rgb(200,0,0)';
-            context.fillRect(10, 10, 55, 50);
+            const draw = this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
         }
     }
 
     render() {
+        this.redrawTile();
         return (
-            <div className='dice'>
+            <div style={{width: this.width, height: this.height}}>
                 <canvas ref={this.trainTrackCanvas}></canvas>
             </div>
         )
