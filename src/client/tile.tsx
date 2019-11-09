@@ -16,6 +16,7 @@ export class Tile extends React.Component<ITileProps> {
     trainTrackCanvas: any;
     height: number;
     width: number;
+    graphicEngine: TileGraphics;
 
     constructor(props: ITileProps) {
         super(props);
@@ -29,10 +30,11 @@ export class Tile extends React.Component<ITileProps> {
     componentDidMount() {
         const context = this.getCanvasContext();
 
+        // TODO: Should this be depedency injected? We can't create it until the components mount...
+        this.graphicEngine = new TileGraphics(context, this.width, this.height);
+
         if (context) {
-           //this.props.draw(context, this.width, this.height);
-           const draw = TileGraphics.TileFactory(this.props.tile);
-           draw(context, this.width, this.height);
+           const draw = this.graphicEngine.drawTile(this.props.tile);
         }
     }
 
@@ -47,10 +49,8 @@ export class Tile extends React.Component<ITileProps> {
     redrawTile() {
         const context = this.getCanvasContext();
         if (context) {
-            TileGraphics.drawEmptyTile(context, this.width, this.height);
-            //this.props.draw(context, this.width, this.height);
-            const draw = TileGraphics.TileFactory(this.props.tile);
-            draw(context, this.width, this.height);
+            this.graphicEngine.drawEmptyTile();
+            const draw = this.graphicEngine.drawTile(this.props.tile);
         }
     }
 
