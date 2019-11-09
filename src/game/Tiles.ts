@@ -1,4 +1,4 @@
-import { Orientation, Edge } from "./Enums";
+import { Orientation, Edge } from "../common/Enums";
 
 /** The base class for every tile. */
 export class BaseTile{

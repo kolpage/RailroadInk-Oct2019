@@ -1,5 +1,5 @@
 import { BaseTile } from "../game/tiles";
-import { TileType, Orientation } from "../game/enums";
+import { TileType, Orientation } from "../common/Enums";
 import { TileFactory } from "../game/TileFactory";
 import { StandardDicePool } from "../game/DicePool";
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './styles/square.scss';
-import { TileType, Orientation } from '../game/Enums';
+import { TileType, Orientation } from '../common/Enums';
 import { Tile } from './tile';
 
 // TODO: Figure out how you are suppose to use React state

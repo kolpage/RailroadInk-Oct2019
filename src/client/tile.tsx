@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './styles/square.scss';
 import { TileGraphics } from './TileGraphics';
-import { TileType, Orientation } from '../game/Enums';
+import { TileType, Orientation } from '../common/Enums';
 
 // TODO: Maybe we should use a functional approach instead for drawing tiles?
 const Canvas = () => {

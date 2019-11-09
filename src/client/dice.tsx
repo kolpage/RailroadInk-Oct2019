@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import './styles/square.scss';
 import {Tile} from './tile'
-import { TileType, Orientation } from '../game/Enums';
+import { TileType, Orientation } from '../common/Enums';
 
 interface IDiceProps {
     tile: TileType;

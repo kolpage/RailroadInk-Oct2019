@@ -3,7 +3,7 @@ import {Dice} from './dice';
 import {Tile} from './tile';
 import {TileGraphics} from './TileGraphics';
 import './styles/inventory.scss';
-import { TileType } from '../game/Enums';
+import { TileType } from '../common/Enums';
 
 interface IInventoryProps {
     dice: TileType[];

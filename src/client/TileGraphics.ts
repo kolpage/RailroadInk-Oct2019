@@ -1,4 +1,4 @@
-import { TileType, Orientation } from "../game/Enums";
+import { TileType, Orientation } from "../common/Enums";
 
 export class TileGraphics {
 

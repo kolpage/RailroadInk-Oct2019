@@ -3,7 +3,7 @@ import {Square} from './square';
 import {Inventory} from './inventory';
 import './styles/board.scss';
 import './styles/inventory.scss';
-import { TileType } from '../game/Enums';
+import { TileType } from '../common/Enums';
 
 interface IBoardProps {
     rows: number;

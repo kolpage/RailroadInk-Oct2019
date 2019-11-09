@@ -1,5 +1,5 @@
 import * as Tiles from "./tiles";
-import { TileType, Orientation } from "./enums";
+import { TileType, Orientation } from "../common/Enums";
 
 export class TileFactory{
     constructor(){ }
