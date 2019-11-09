@@ -33,12 +33,33 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
         //return <span>{tile}</span>
     }
 
+    drawRotate()
+    {
+        return; // TODO: Figure out how to rotate tile
+       if(this.state.selected)
+       {
+            return (
+                <div 
+                    className='rotateButton' 
+                    onClick={this.rotateSquare.bind(this)} 
+                ></div>
+            );
+       }
+
+       return <div></div>;
+    }
+
+    rotateSquare() {
+        console.log("rotate click event");
+    }
+
     render() {
         return (
             <div 
                 className='square' 
                 onClick={this.changeSelected.bind(this)}
             >
+                {this.drawRotate()}
                 <Tile tile={this.state.tile} />
             </div>
         );

@@ -9,7 +9,7 @@ const Index = () => {
     const fakeState = { 
         numBoardColumns: 7,
         numBoardRows: 7,
-        dice: [TileType.RoadStraight, TileType.RailStraight, TileType.Overpass]
+        dice: [TileType.RoadStraight, TileType.RailStraight, TileType.RailTurn, TileType.Overpass]
     }
     return <Board key="board" columns={fakeState.numBoardColumns} rows={fakeState.numBoardRows} dice={fakeState.dice}/>;
 };

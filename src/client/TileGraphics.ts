@@ -21,26 +21,49 @@ export class TileGraphics {
     public drawTile(tile: TileType) {
         switch (tile) {
             case TileType.RoadStraight:
-                return this.drawRoad();
+                return this.drawRoadStraight();
             case TileType.RailStraight:
-                return this.drawRail();
+                return this.drawRailStraight();
+            case TileType.RailTurn:
+                return this.drawRailTurn();
             default:
                 return this.drawEmptyTile();    
             //return TileType[tile];
         }
     }
 
+    rotateTile() {
+        // Move registration point to the center of the canvas
+        this.tileContext.translate(this.tileWidth/2, this.tileWidth/2);
+	
+        this.tileContext.rotate(96*Math.PI / 180);
+    
+        // Move registration point back to the top left corner of canvas
+        this.tileContext.translate(-this.tileWidth/2, -this.tileWidth/2);
+    }
+
+    drawRailTurn() {
+        //this.rotateTile();
+        this.drawArch(this.tileWidth*(2/3));
+        this.drawArch(this.tileWidth*(1/3));
+    }
+
+    drawArch(radius: number) {
+        this.tileContext.beginPath();
+        this.tileContext.arc(0, 0, radius, 0, 0.5*Math.PI);
+        this.tileContext.stroke();
+    }
     
     drawEmptyTile() {
         this.tileContext.clearRect(0, 0, this.tileWidth, this.tileHeight);
     }
 
-    drawRail() {
+    drawRailStraight() {
         this.drawLine(this.tileWidth/2, this.tileWidth/2, 0, this.tileHeight);
         this.drawTicks(this.tileWidth, this.tileHeight);
     }
     
-    drawRoad() {
+    drawRoadStraight() {
         this.drawLine(this.tileWidth/3, this.tileWidth/3, 0, this.tileHeight);
         this.drawDottedLine(10, this.tileWidth/2, this.tileWidth/2, 0, this.tileHeight);
         this.drawLine(this.tileWidth*(2/3), this.tileWidth*(2/3), 0, this.tileHeight);
@@ -67,5 +90,9 @@ export class TileGraphics {
 
     writeWords(text: string, width: number, height: number) {
         this.tileContext.fillText(text, 0, 0, width);
+    }
+
+    private getRadius(width: number , height: number) {
+        return Math.sqrt(Math.pow(width,2) + Math.pow(height,2));
     }
 }
