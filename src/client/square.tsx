@@ -2,6 +2,7 @@ import * as React from 'react';
 import './styles/square.scss';
 import { TileType, Orientation } from '../common/Enums';
 import { Tile } from './tile';
+//import rotateIcon from './Assests/ArrowRotate.jpg'
 
 // TODO: Figure out how you are suppose to use React state
 interface ISquareState {
@@ -40,11 +41,14 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
         // TODO: Something is wrong with the click box for this. It registeres even when you don't click on the div
        if(this.state.selected)
        {
+           //<img rc={rotateIcon} alt="rotate" ></img>
             return (
                 <div 
                     className='rotateButton' 
                     onClick={this.rotateSquare.bind(this)} 
-                ></div>
+                >
+                    
+                </div>
             );
        }
 

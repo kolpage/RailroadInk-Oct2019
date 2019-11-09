@@ -45,7 +45,14 @@ module.exports = [
           // Compiles Sass to CSS
           'sass-loader',
         ],
-      }]
+      },
+      {
+        test: /\.(png|svg|jpg|gif|jpeg)$/,
+        use: [
+        'file-loader',
+        ],
+      },
+    ]
     },
     output: {
       path: __dirname + '/dist',
