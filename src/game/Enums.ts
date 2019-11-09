@@ -5,10 +5,11 @@
  *  the position the tile appears on the playing board.
  */
 export enum Orientation{
-    up = 0,
-    right = 1,
-    down = 2,
-    left = 3
+    up,
+    right,
+    down,
+    left,
+    _length // TODO: This is hacky...probably create s function on the enum object instead
 }
 
 /** The types of edges tiles can have. */
@@ -24,6 +25,7 @@ export enum Edge{
 
 /** The types of tiles that can be played */
 export enum TileType{
+    Empty = -1,
     RailTurn,
     RailThreeWay,
     RailStraight,

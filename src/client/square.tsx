@@ -1,12 +1,13 @@
 import * as React from 'react';
 import './styles/square.scss';
-import { TileType } from '../game/Enums';
+import { TileType, Orientation } from '../game/Enums';
 import { Tile } from './tile';
 
 // TODO: Figure out how you are suppose to use React state
 interface ISquareState {
     selected: boolean;
     tile: TileType;
+    tileOrientation: Orientation;
 }
 
 interface ISquareProps {
@@ -18,13 +19,14 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
         super(props);
         this.state = {
             selected: false,
-            tile: TileType.Overpass //TODO: Support the concept of none
+            tile: TileType.Empty, 
+            tileOrientation: Orientation.up
         }
     }
     
     changeSelected() {
         const isSelected = !this.state.selected;
-        this.setState({selected: isSelected, tile: this.props.selectedTile})
+        this.setState({selected: isSelected, tile: this.props.selectedTile, tileOrientation: this.state.tileOrientation})
     }
 
     drawTile(tile: TileType) {
@@ -35,7 +37,7 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
 
     drawRotate()
     {
-        return; // TODO: Figure out how to rotate tile
+        // TODO: Something is wrong with the click box for this. It registeres even when you don't click on the div
        if(this.state.selected)
        {
             return (
@@ -50,17 +52,21 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
     }
 
     rotateSquare() {
-        console.log("rotate click event");
+        // TODO: Move enum "next" function to somewhere else
+        let newOrientation = this.state.tileOrientation + 1;
+        if(newOrientation >= Orientation._length) {
+            newOrientation = 0;
+        }
+        this.setState({selected: this.state.selected, tile: this.state.tile, tileOrientation: newOrientation})
     }
 
     render() {
         return (
-            <div 
-                className='square' 
-                onClick={this.changeSelected.bind(this)}
-            >
+            <div className='square'>
                 {this.drawRotate()}
-                <Tile tile={this.state.tile} />
+                <div onClick={this.changeSelected.bind(this)}>
+                    <Tile tile={this.state.tile} tileOrientation={this.state.tileOrientation} />
+                </div>
             </div>
         );
     }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './styles/square.scss';
 import { TileGraphics } from './TileGraphics';
-import { TileType } from '../game/Enums';
+import { TileType, Orientation } from '../game/Enums';
 
 // TODO: Maybe we should use a functional approach instead for drawing tiles?
 const Canvas = () => {
@@ -9,7 +9,8 @@ const Canvas = () => {
 };
 
 interface ITileProps {
-    tile: TileType
+    tile: TileType,
+    tileOrientation: Orientation
 }
 
 export class Tile extends React.Component<ITileProps> {
@@ -34,7 +35,7 @@ export class Tile extends React.Component<ITileProps> {
         this.graphicEngine = new TileGraphics(context, this.width, this.height);
 
         if (context) {
-           const draw = this.graphicEngine.drawTile(this.props.tile);
+           const draw = this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
         }
     }
 
@@ -49,8 +50,7 @@ export class Tile extends React.Component<ITileProps> {
     redrawTile() {
         const context = this.getCanvasContext();
         if (context) {
-            this.graphicEngine.drawEmptyTile();
-            const draw = this.graphicEngine.drawTile(this.props.tile);
+            const draw = this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
         }
     }
 

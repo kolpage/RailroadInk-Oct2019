@@ -19,7 +19,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     constructor(props: IBoardProps) {
         super(props);
         this.state = {
-            selectedDice: TileType.Overpass, // TODO: Just default to first die for now. In the game, there should be a concept of no dice selected.
+            selectedDice: TileType.Empty, 
         }
     }
     
