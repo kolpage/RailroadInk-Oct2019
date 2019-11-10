@@ -20,12 +20,16 @@ export enum Edge{
     river,
     lake,
     meteor,
-    lava
+    lava,
+    any
 }
 
 /** The types of tiles that can be played */
 export enum TileType{
     Empty = -1,
+    RailEdge,
+    RoadEdge,
+    WallEdge,
     RailTurn,
     RailThreeWay,
     RailStraight,

@@ -24,4 +24,12 @@ export class TileFactory{
             case TileType.SpecialRoadRailAcross: return new Tiles.SpecialRoadRailAcrossTile(orientation, turn);
         }
     }
+
+    public CreateEdgeTile(tileType: TileType): Tiles.EdgeBaseTile{
+        switch(tileType){
+            case TileType.RailEdge: return new Tiles.RailEdgeTile();
+            case TileType.RoadEdge: return new Tiles.RoadEdgeTile();
+            case TileType.WallEdge: return new Tiles.WallEdgeTile();
+        }
+    }
 }

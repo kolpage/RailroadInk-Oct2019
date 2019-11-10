@@ -2,33 +2,17 @@ import { Orientation, Edge } from "../common/Enums";
 
 /** The base class for every tile. */
 export class BaseTile{
-    private orientation: Orientation;
-    private turn: number;
+    
     private topEdge: Edge;
     private rightEdge: Edge;
     private bottomEdge: Edge;
     private leftEdge: Edge;
-    private isStation: boolean
 
-    constructor(edges: Edge[], orientation: Orientation, turn: number, hasStation: boolean){
-        TileHelpers.RotateEdgeArray(edges, orientation);
+    constructor(edges: Edge[]){
         this.topEdge = edges[0];
         this.rightEdge = edges[1];
         this.bottomEdge = edges[2];
-        this.leftEdge = edges[3]
-        this.orientation = orientation;
-        this.turn = turn;
-        this.isStation = hasStation;
-    }
-
-    /** Gets the orientation of the tile */
-    public GetOrientation(): Orientation{
-        return this.orientation;
-    }
-
-    /** Gets the turn this tile was played. */
-    public GetTurn(): number{
-        return this.turn;
+        this.leftEdge = edges[3];
     }
 
     /** Gets the top edge of the tile. */
@@ -51,149 +35,310 @@ export class BaseTile{
         return this.leftEdge;
     }
 
+    /** FOR DEBUG - prints out string representation of tile. */
+    public ToString(): string{
+        let output: string = "";
+        output += "Top Edge: " + Edge[this.GetTopEdge()] + '\n';
+        output += "Right Edge: " + Edge[this.GetRightEdge()] + '\n';
+        output += "Bottom Edge: " + Edge[this.GetBottomEdge()] + '\n';
+        output += "Left Edge: " + Edge[this.GetLeftEdge()] + '\n';
+        return output;
+    }
+
+    public GetAbbrName(): string{
+        return "    ";
+    }
+}
+
+/** Base class for tiles that can be played to the board. */
+export class PlayableBaseTile extends BaseTile{
+    private orientation: Orientation;
+    private turn: number;
+    private isStation: boolean;
+
+    constructor(edges: Edge[], orientation: Orientation, turn: number, hasStation: boolean){
+        TileHelpers.RotateEdgeArray(edges, orientation);
+        super(edges)
+        this.orientation = orientation;
+        this.turn = turn;
+        this.isStation = hasStation;
+    }
+
+    /** Gets the orientation of the tile */
+    public GetOrientation(): Orientation{
+        return this.orientation;
+    }
+
+    /** Gets the turn this tile was played. */
+    public GetTurn(): number{
+        return this.turn;
+    }
+
     /** Returns true if this is a station tile. All edges should be considered connected to the same network if a tile has a station. */
     public IsStation(): boolean{
         return this.isStation;
     }
 
     public ToString(): string{
-        let output: string;
+        let output: string = "";
+        output += super.ToString();
         output += "Orientation: " + Orientation[this.GetOrientation()] + '\n';
         output += "Turn: " + this.GetTurn() + '\n';
-        output += "Top Edge: " + Edge[this.GetTopEdge()] + '\n';
-        output += "Right Edge: " + Edge[this.GetRightEdge()] + '\n';
-        output += "Bottom Edge: " + Edge[this.GetBottomEdge()] + '\n';
-        output += "Left Edge: " + Edge[this.GetLeftEdge()] + '\n';
         output += "Is Station?: " + this.IsStation() + '\n';
         return output;
     }
 }
 
+export class EdgeBaseTile extends BaseTile{
+    constructor(edges: Edge[]){
+        super(edges);
+    }
+}
+
 /** Tile representing the rail turn piece. */
-export class RailTurnTile extends BaseTile{
+export class RailTurnTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.empty, Edge.empty, Edge.rail];
         super(initEdges, orientation, turn, false);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RLTN";
+    }
 }
 
 /** Tile representing the three way rail piece. */
-export class RailThreeWayTile extends BaseTile{
+export class RailThreeWayTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.rail, Edge.empty, Edge.rail];
         super(initEdges, orientation, turn, false);
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RL3W";
     }
 }
 
 /** Tile representing the straight rail piece. */
-export class RailStraightTile extends BaseTile{
+export class RailStraightTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.empty, Edge.rail, Edge.empty];
         super(initEdges, orientation, turn, false);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RLST";
+    }
 }
 
 /** Tile representing the road turn piece. */
-export class RoadTurnTile extends BaseTile{
+export class RoadTurnTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.empty, Edge.empty, Edge.road];
         super(initEdges, orientation, turn, false);
     }
-}
 
-/** Tile representing the three way road piece. */
-export class RoadThreeWayTile extends BaseTile{
-    constructor(orientation: Orientation, turn: number){
-        const initEdges: Edge[] = [Edge.rail, Edge.rail, Edge.empty, Edge.rail];
-        super(initEdges, orientation, turn, false);
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RDTN";
     }
 }
 
-/** Tile representing the straight road piece. */
-export class RoadStraightTile extends BaseTile{
+/** Tile representing the three way road piece. */
+export class RoadThreeWayTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.road, Edge.empty, Edge.road];
         super(initEdges, orientation, turn, false);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RD3W";
+    }
+}
+
+/** Tile representing the straight road piece. */
+export class RoadStraightTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.road, Edge.empty, Edge.road, Edge.empty];
+        super(initEdges, orientation, turn, false);
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RDST";
+    }
 }
 
 /** Tile representing the overpass piece. Rails and roads do not connect. */
-export class OverpassTile extends BaseTile{
+export class OverpassTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.rail, Edge.road, Edge.rail];
         super(initEdges, orientation, turn, false);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "OVPS";
+    }
 }
 
 /** Tile representing the straight station piece. */
-export class StationStraightTile extends BaseTile{
+export class StationStraightTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.empty, Edge.road, Edge.empty];
         super(initEdges, orientation, turn, true);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "STST";
+    }
 }
 
 /** Tile representing the turn station piece. */
-export class StationTurnTile extends BaseTile{
+export class StationTurnTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.empty, Edge.empty, Edge.road];
         super(initEdges, orientation, turn, true);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "STTN";
+    }
 }
 
 /** Tile representing the mirror turn station piece. */
-export class StationTurnMirrorTile extends BaseTile{
+export class StationTurnMirrorTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.road, Edge.empty, Edge.empty];
         super(initEdges, orientation, turn, true);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "STTM";
+    }
 }
 
 /** Tile representing the special 3 road 1 rail piece. */
-export class SpecialThreeRoadOneRailTile extends BaseTile{
+export class SpecialThreeRoadOneRailTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.road, Edge.rail, Edge.road];
         super(initEdges, orientation, turn, true);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "3D1L";
+    }
 }
 
 /** Tile representing the special 3 rail 1 road piece. */
-export class SpecialThreeRailOneRoadTile extends BaseTile{
+export class SpecialThreeRailOneRoadTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.rail, Edge.rail, Edge.rail];
         super(initEdges, orientation, turn, true);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "3L1D";
+    }
 }
 
 /** Tile representing the special all road piece. */
-export class SpecialAllRoadTile extends BaseTile{
+export class SpecialAllRoadTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.road, Edge.road, Edge.road];
         super(initEdges, orientation, turn, true);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "4RDS";
+    }
 }
 
 /** Tile representing the special all rail piece. */
-export class SpecialAllRailTile extends BaseTile{
+export class SpecialAllRailTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.rail, Edge.rail, Edge.rail];
         super(initEdges, orientation, turn, true);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "4RLS";
+    }
 }
 
 /** Tile representing the piece with 2 roads and 2 rails next to each other. */
-export class SpecialRoadRailAdjacentTile extends BaseTile{
+export class SpecialRoadRailAdjacentTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.rail, Edge.rail, Edge.road];
         super(initEdges, orientation, turn, true);
     }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "DDLL";
+    }
 }
 
 /** Tile representing the piece with 2 roads and 2 rails across from each other. */
-export class SpecialRoadRailAcrossTile extends BaseTile{
+export class SpecialRoadRailAcrossTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.rail, Edge.road, Edge.rail];
         super(initEdges, orientation, turn, true);
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "DLDL";
+    }
+}
+
+/** Represents a rail exit tile that can be connected to */
+export class RailEdgeTile extends EdgeBaseTile{
+    constructor(){
+        const initEdges: Edge[] = [Edge.rail, Edge.rail, Edge.rail, Edge.rail];
+        super(initEdges);
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RLEG";
+    }
+}
+
+/** Represents a road exit tile that can be connected to */
+export class RoadEdgeTile extends EdgeBaseTile{
+    constructor(){
+        const initEdges: Edge[] = [Edge.road, Edge.road, Edge.road, Edge.road];
+        super(initEdges);
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RDEG";
+    }
+}
+
+/** Represents a wall on the board that anything can be connected to. */
+export class WallEdgeTile extends EdgeBaseTile{
+    constructor(){
+        const initEdges: Edge[] = [Edge.any, Edge.any, Edge.any, Edge.any];
+        super(initEdges);
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "WALL";
     }
 }
 
