@@ -23,18 +23,27 @@ export class TileGraphics {
 
         switch (tile) {
             case TileType.RoadStraight:
-                return this.drawRoadStraight();
+                this.drawRoadStraight();
+                break;
             case TileType.RailStraight:
-                return this.drawRailStraight();
+                this.drawRailStraight();
+                break;
             case TileType.RailTurn:
-                return this.drawRailTurn();
+                this.drawRailTurn();
+                break;
             case TileType.RoadTurn:
-                return this.drawRoadTurn();
+                this.drawRoadTurn();
+                break;
             case TileType.StationStraight:
-                return this.drawStationStraight();
+                this.drawStationStraight();
+                break;
+            case TileType.StationTurn:
+                this.drawStationTurn();
+                break;
             case TileType.RoadThreeWay:
                 // TODO: Draw this correctly
-                return this.drawRoadThreeWay();
+                this.drawRoadThreeWay();
+                break;
             case TileType.Empty:
             default:
                 return this.clearCanvas();    
@@ -51,6 +60,19 @@ export class TileGraphics {
         this.drawStation();
     }
     
+    private drawStationTurn() {
+        this.drawRail(0, this.tileHeight/2);
+        
+        // TODO: Find a better way to draw the road in the right orientation
+        let roadOrientation = this.tileOrientation + 3;
+        if (roadOrientation >= Orientation._length) {roadOrientation -= Orientation._length}
+
+        this.rotateTileToOrientation(roadOrientation);
+        this.drawRoad(this.tileHeight/2, this.tileHeight);
+        this.rotateTileToOrientation(this.tileOrientation);
+        this.drawStation();
+    }
+
     // #region Piece drawing functions
     private drawRoadStraight() {
         this.drawRoad(0, this.tileHeight)

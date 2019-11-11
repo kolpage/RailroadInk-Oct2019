@@ -1,7 +1,5 @@
 import * as React from 'react';
 import {Dice} from './dice';
-import {Tile} from './tile';
-import {TileGraphics} from './TileGraphics';
 import './styles/inventory.scss';
 import { TileType } from '../common/Enums';
 

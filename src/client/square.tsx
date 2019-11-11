@@ -2,11 +2,9 @@ import * as React from 'react';
 import './styles/square.scss';
 import { TileType, Orientation } from '../common/Enums';
 import { Tile } from './tile';
-//import rotateIcon from './Assests/ArrowRotate.jpg';
 
-const logo = require("./Assests/RefreshArrow.png")
+const RefreshArrowIcon = require("./Assests/RefreshArrow.png")
 
-// TODO: Figure out how you are suppose to use React state
 interface ISquareState {
     selected: boolean;
     tile: TileType;
@@ -32,15 +30,9 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
         this.setState({selected: isSelected, tile: this.props.selectedTile, tileOrientation: this.state.tileOrientation})
     }
 
-    drawTile(tile: TileType) {
-        console.log("draw tile on square: " + tile);
-        return ;
-        //return <span>{tile}</span>
-    }
-
     drawRotate()
     {
-        // TODO: Something is wrong with the click box for this. It registeres even when you don't click on the div
+        // TODO: This shouldn't depend on selected but on not being Empty
        if(this.state.selected)
        {
            // TODO: Use css class for styling image (some reason classes are not getting applied)
@@ -49,7 +41,7 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
                     onClick={this.rotateSquare.bind(this)} 
                     className='rotateButton'
                 >
-                    <img src={logo} alt="rotate" width="20px" height="18px" />
+                    <img src={RefreshArrowIcon} alt="rotate" width="20px" height="18px" />
                 </div>
             );
        }
