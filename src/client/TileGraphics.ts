@@ -21,6 +21,7 @@ export class TileGraphics {
         this.clearCanvas(); // Clear out the current drawing
         this.rotateTileToOrientation(orientation);
 
+        // TODO: There has got to be a better way to program than this than using a gaint switch statement
         switch (tile) {
             case TileType.RoadStraight:
                 this.drawRoadStraight();
@@ -44,6 +45,9 @@ export class TileGraphics {
                 // TODO: Draw this correctly
                 this.drawRoadThreeWay();
                 break;
+            case TileType.RailThreeWay:
+                this.drawRailThreeWay();
+                break;
             case TileType.Empty:
             default:
                 return this.clearCanvas();    
@@ -62,7 +66,7 @@ export class TileGraphics {
     
     private drawStationTurn() {
         this.drawRail(0, this.tileHeight/2);
-        
+
         // TODO: Find a better way to draw the road in the right orientation
         let roadOrientation = this.tileOrientation + 3;
         if (roadOrientation >= Orientation._length) {roadOrientation -= Orientation._length}
@@ -105,13 +109,26 @@ export class TileGraphics {
     }
 
     private drawRail(yStart: number, yEnd: number) {
-        // TODO: For now rails always start at the top but that needs to change
-        this.drawLine(this.tileWidth/2, this.tileWidth/2, 0, yEnd);
-        this.drawTicks(this.tileWidth, yEnd);
+        this.drawLine(this.tileWidth/2, this.tileWidth/2, yStart, yEnd);
+        this.drawTicks(yStart, yEnd);
     }
 
     private drawRailTurn() {
         this.drawArc(this.tileWidth*(1/2));
+    }
+
+    private drawRailThreeWay() {
+        // TODO: Clean up how the ticks are drawn
+        this.drawRailStraight();
+
+        // TODO: Find a better way to draw the road in the right orientation
+        // TODO: This code is also used by drawStationTurn() -> REFACTOR!
+        let railOrientation = this.tileOrientation + 3;
+        if (railOrientation >= Orientation._length) {railOrientation -= Orientation._length}
+
+        this.rotateTileToOrientation(railOrientation);
+        this.drawRail(this.tileHeight/2, this.tileHeight);
+        this.rotateTileToOrientation(this.tileOrientation);
     }
     // #endregion
     
@@ -122,9 +139,9 @@ export class TileGraphics {
         this.tileContext.stroke();
     }
 
-    private drawTicks(width: number, height: number) {
-        for(let i = 0; i<height; i+=10) {
-            this.drawLine(width*0.40, width*0.60, i, i);
+    private drawTicks(yStart: number, yEnd: number) {
+        for(let i = yStart; i<yEnd; i+=10) {
+            this.drawLine(this.tileWidth*0.40, this.tileWidth*0.60, i, i);
         }
     }
 
