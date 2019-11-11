@@ -29,28 +29,22 @@ export class Tile extends React.Component<ITileProps> {
     }
 
     componentDidMount() {
-        const context = this.getCanvasContext();
-
         // TODO: Should this be depedency injected? We can't create it until the components mount...
-        this.graphicEngine = new TileGraphics(context, this.width, this.height);
+        this.graphicEngine = new TileGraphics(this.getCanvasContext(), this.width, this.height);
 
-        if (context) {
-           this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
-        }
+        this.redrawTile();
     }
 
     getCanvasContext() {
-        if (!this.trainTrackCanvas.current) {
-            return;
-        }
-        
+        if (!this.trainTrackCanvas.current) { return; }
         return this.trainTrackCanvas.current.getContext('2d');
     }
 
     redrawTile() {
-        const context = this.getCanvasContext();
-        if (context) {
-            const draw = this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
+        // TODO: It would be nice to not check for context but the render function might cause errors 
+        //       since canvas doesn't get a context until it's first drawn
+        if (this.getCanvasContext()) {
+            this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
         }
     }
 
