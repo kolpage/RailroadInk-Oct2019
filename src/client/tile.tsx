@@ -35,7 +35,7 @@ export class Tile extends React.Component<ITileProps> {
         this.graphicEngine = new TileGraphics(context, this.width, this.height);
 
         if (context) {
-           const draw = this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
+           this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
         }
     }
 
@@ -58,7 +58,7 @@ export class Tile extends React.Component<ITileProps> {
         this.redrawTile();
         return (
             <div style={{width: this.width, height: this.height}}>
-                <canvas ref={this.trainTrackCanvas}></canvas>
+                <canvas ref={this.trainTrackCanvas} width={this.width} height={this.height}></canvas>
             </div>
         )
     }

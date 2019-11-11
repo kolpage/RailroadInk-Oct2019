@@ -19,7 +19,7 @@ export class TileGraphics {
     public DrawTile(tile: TileType, orientation: Orientation) {
         this.tileType = tile;
         this.clearCanvas(); // Clear out the current drawing
-        this.rotateTile(orientation);
+        this.rotateTileToOrientation(orientation);
 
         switch (tile) {
             case TileType.RoadStraight:
@@ -39,15 +39,15 @@ export class TileGraphics {
 
     }
 
-    private rotateTile(rotation: number) {
-        //this.clearCanvas();
-        this.rotate(rotation*90);
-        //this.DrawTile(this.tileType);
+    private rotateTileToOrientation(orientation: number) {
+        const turns = orientation - this.tileOrientation;
+        this.rotate(turns*90);
+        this.tileOrientation = orientation;
     }
     
     // #region Piece drawing functions
     private drawRailTurn() {
-        //this.rotateTile();
+        // TODO: Draw this (or rotate it by default) so that its 'up' position is the default way it gets drawn
         this.drawArch(this.tileWidth*(2/3));
         this.drawArch(this.tileWidth*(1/3));
     }
