@@ -43,5 +43,9 @@ function createWindow () {
 
 app.on('ready', createWindow);
 //Test.TileTest();
-Test.StandardDicePoolTest_NoSeed();
-Test.StandardDicePoolTest_WithSeed("Tony_was_here");
+//Test.StandardDicePoolTest_NoSeed();
+//Test.StandardDicePoolTest_WithSeed("Tony_was_here");
+Test.BoardTest_7x7_PrintBoard();
+Test.BoardTest_13x13_PrintBoard();
+Test.BoardTest_7x7_AddTilesToBoard();
+Test.BoardTest_7x7_AddThenRemoveTilesFromBoard();
