@@ -6,14 +6,12 @@ const RoadXEndPercent = 0.65;
 
 export class TileGraphics {
     private tileContext: CanvasRenderingContext2D;
-    private tileWidth: number;
-    private tileHeight: number;
+    private tileLength: number;
     private tileOrientation: Orientation;
 
-    constructor(context: CanvasRenderingContext2D, width: number, height: number) {
+    constructor(context: CanvasRenderingContext2D, length: number) {
         this.tileContext = context;
-        this.tileWidth = width;
-        this.tileHeight = height;
+        this.tileLength = length;
         this.tileOrientation = Orientation.up;
     }
 
@@ -59,62 +57,62 @@ export class TileGraphics {
     }  
 
     private drawStationStraight() {
-        this.drawRail(0, this.tileHeight/2);
-        this.drawRoad(this.tileHeight/2, this.tileHeight);
+        this.drawRail(0, this.tileLength/2);
+        this.drawRoad(this.tileLength/2, this.tileLength);
         this.drawStation();
     }
     
     private drawStationTurn() {
-        this.drawRail(0, this.tileHeight/2);
+        this.drawRail(0, this.tileLength/2);
 
         // TODO: Find a better way to draw the road in the right orientation
         let roadOrientation = this.tileOrientation + 3;
         if (roadOrientation >= Orientation._length) {roadOrientation -= Orientation._length}
 
         this.rotateTileToOrientation(roadOrientation);
-        this.drawRoad(this.tileHeight/2, this.tileHeight);
+        this.drawRoad(this.tileLength/2, this.tileLength);
         this.rotateTileToOrientation(this.tileOrientation);
         this.drawStation();
     }
 
     // #region Piece drawing functions
     private drawRoadStraight() {
-        this.drawRoad(0, this.tileHeight)
+        this.drawRoad(0, this.tileLength)
     }
 
     private drawRoad(yStart: number, yEnd: number) {
-        this.drawLine(this.tileWidth*RoadXStartPercent, this.tileWidth*RoadXStartPercent, yStart, yEnd);
-        this.drawDottedLine(10, this.tileWidth*(1/2), this.tileWidth*(1/2), yStart, yEnd);
-        this.drawLine(this.tileWidth*RoadXEndPercent, this.tileWidth*RoadXEndPercent, yStart, yEnd);
+        this.drawLine(this.tileLength*RoadXStartPercent, this.tileLength*RoadXStartPercent, yStart, yEnd);
+        this.drawDottedLine(10, this.tileLength*(1/2), this.tileLength*(1/2), yStart, yEnd);
+        this.drawLine(this.tileLength*RoadXEndPercent, this.tileLength*RoadXEndPercent, yStart, yEnd);
     }
 
     private drawRoadTurn() {
-        this.drawArc(this.tileWidth*RoadXStartPercent);
-        this.drawDashedArc(this.tileWidth*(1/2));
-        this.drawArc(this.tileWidth*RoadXEndPercent);
+        this.drawArc(this.tileLength*RoadXStartPercent);
+        this.drawDashedArc(this.tileLength*(1/2));
+        this.drawArc(this.tileLength*RoadXEndPercent);
     }
 
     private drawRoadThreeWay() {
         // TODO: Next two lines are also used in straight road...maybe share logic
-        this.drawLine(this.tileWidth/3, this.tileWidth/3, 0, this.tileHeight);
-        this.drawDottedLine(10, this.tileWidth/2, this.tileWidth/2, 0, this.tileHeight);
+        this.drawLine(this.tileLength/3, this.tileLength/3, 0, this.tileLength);
+        this.drawDottedLine(10, this.tileLength/2, this.tileLength/2, 0, this.tileLength);
 
-        this.drawArc(this.tileWidth*(2/3));
+        this.drawArc(this.tileLength*(2/3));
 
         this.drawStation();
     }  
 
     private drawRailStraight() {
-        this.drawRail(0, this.tileHeight);
+        this.drawRail(0, this.tileLength);
     }
 
     private drawRail(yStart: number, yEnd: number) {
-        this.drawLine(this.tileWidth/2, this.tileWidth/2, yStart, yEnd);
+        this.drawLine(this.tileLength/2, this.tileLength/2, yStart, yEnd);
         this.drawTicks(yStart, yEnd);
     }
 
     private drawRailTurn() {
-        this.drawArc(this.tileWidth*(1/2));
+        this.drawArc(this.tileLength*(1/2));
     }
 
     private drawRailThreeWay() {
@@ -127,7 +125,7 @@ export class TileGraphics {
         if (railOrientation >= Orientation._length) {railOrientation -= Orientation._length}
 
         this.rotateTileToOrientation(railOrientation);
-        this.drawRail(this.tileHeight/2, this.tileHeight);
+        this.drawRail(this.tileLength/2, this.tileLength);
         this.rotateTileToOrientation(this.tileOrientation);
     }
     // #endregion
@@ -135,13 +133,13 @@ export class TileGraphics {
     // #region Core drawing function
     private drawStation() {
         this.tileContext.beginPath();
-        this.tileContext.fillRect(this.tileWidth*(1/3), this.tileHeight*(1/3), this.tileWidth*(1/3), this.tileHeight*(1/3));
+        this.tileContext.fillRect(this.tileLength*(1/3), this.tileLength*(1/3), this.tileLength*(1/3), this.tileLength*(1/3));
         this.tileContext.stroke();
     }
 
     private drawTicks(yStart: number, yEnd: number) {
         for(let i = yStart; i<yEnd; i+=10) {
-            this.drawLine(this.tileWidth*0.40, this.tileWidth*0.60, i, i);
+            this.drawLine(this.tileLength*0.40, this.tileLength*0.60, i, i);
         }
     }
 
@@ -171,7 +169,7 @@ export class TileGraphics {
     }
     
     private clearCanvas() {
-        this.tileContext.clearRect(0, 0, this.tileWidth, this.tileHeight);
+        this.tileContext.clearRect(0, 0, this.tileLength, this.tileLength);
     }
 
     private rotateTileToOrientation(orientation: number) {
@@ -182,12 +180,12 @@ export class TileGraphics {
 
     private rotate(degrees: number) {
         // Move registration point to the center of the canvas
-        this.tileContext.translate(this.tileWidth/2, this.tileWidth/2);
+        this.tileContext.translate(this.tileLength/2, this.tileLength/2);
 	
         this.tileContext.rotate(degrees*Math.PI / 180);
     
         // Move registration point back to the top left corner of canvas
-        this.tileContext.translate(-this.tileWidth/2, -this.tileWidth/2);
+        this.tileContext.translate(-this.tileLength/2, -this.tileLength/2);
     }
 
     private writeWords(text: string, width: number, height: number) {

@@ -10,8 +10,7 @@ interface ITileProps {
 
 export class Tile extends React.Component<ITileProps> {
     trainTrackCanvas: any;
-    height: number;
-    width: number;
+    tileLength: number;
     graphicEngine: TileGraphics;
 
     constructor(props: ITileProps) {
@@ -19,13 +18,12 @@ export class Tile extends React.Component<ITileProps> {
         this.trainTrackCanvas = React.createRef();
 
         // TODO: Dont't bastard inject dimensions
-        this.height = 75;
-        this.width = 75;
+        this.tileLength = 75;
     }
 
     componentDidMount() {
         // TODO: Should this be depedency injected? We can't create it until the components mount...
-        this.graphicEngine = new TileGraphics(this.getCanvasContext(), this.width, this.height);
+        this.graphicEngine = new TileGraphics(this.getCanvasContext(), this.tileLength);
 
         this.redrawTile();
     }
@@ -46,8 +44,8 @@ export class Tile extends React.Component<ITileProps> {
     render() {
         this.redrawTile();
         return (
-            <div style={{width: this.width, height: this.height}}>
-                <canvas ref={this.trainTrackCanvas} width={this.width} height={this.height}></canvas>
+            <div style={{width: this.tileLength, height: this.tileLength}}>
+                <canvas ref={this.trainTrackCanvas} width={this.tileLength} height={this.tileLength}></canvas>
             </div>
         )
     }
