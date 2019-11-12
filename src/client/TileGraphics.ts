@@ -90,10 +90,7 @@ export class TileGraphics {
 
     private drawSingleStation(roadOrientation: Orientation) {
         this.drawRail(0, this.tileLength/2);
-
-        const adjustedRoadOrientation = this.getDrawingOrientation(roadOrientation);
-        this.rotateAndDraw(adjustedRoadOrientation, this.drawRoad.bind(this, 0, this.tileLength/2));
-
+        this.rotateAndDraw(roadOrientation, this.drawRoad.bind(this, 0, this.tileLength/2));
         this.drawStation();
     }
 
@@ -118,12 +115,9 @@ export class TileGraphics {
         this.drawLine(this.tileLength/3, this.tileLength/3, 0, this.tileLength);
         this.drawDottedLine(10, this.tileLength/2, this.tileLength/2, 0, this.tileLength);
 
-        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
-        // TODO: Something is wrong with the rotate function. This should be +2 not +1
-        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
-        this.rotateAndDraw(this.tileOrientation-1, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength/2));
-
-        //this.drawStation();
+        this.rotateAndDraw(Orientation.right, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.rotateAndDraw(Orientation.down, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.rotateAndDraw(Orientation.right, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength/2));
     }  
 
     private drawOverpass() {
@@ -135,14 +129,14 @@ export class TileGraphics {
     }
 
     private drawSpecialAllRoad() {
-        //this.drawArc(this.tileOrientation);
-        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
-        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
-        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
-        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.drawArc(this.tileLength*RoadXStartPercent);
+        this.rotateAndDraw(Orientation.right, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.rotateAndDraw(Orientation.down, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.rotateAndDraw(Orientation.left, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        //this.rotateAndDraw(Orientation.up, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
 
         this.drawDottedLine(10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength);
-        this.rotateAndDraw(this.tileOrientation+1, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength));
+        this.rotateAndDraw(Orientation.right, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength));
     }
 
     private drawRailStraight() {
@@ -161,36 +155,35 @@ export class TileGraphics {
     private drawRailThreeWay() {
         // TODO: Clean up how the ticks are drawn
         this.drawRailStraight();
-        const railOrientation = this.getDrawingOrientation(Orientation.right);
-        this.rotateAndDraw(railOrientation, this.drawRail.bind(this,0,this.tileLength/2));
+        this.rotateAndDraw(Orientation.right, this.drawRail.bind(this,0,this.tileLength/2));
     }
 
     private drawSpecialAllRail() {
         this.drawRailStraight();
-        this.rotateAndDraw(this.tileOrientation+1, this.drawRailStraight.bind(this));
+        this.rotateAndDraw(Orientation.right, this.drawRailStraight.bind(this));
     }
 
     private drawSpecialThreeRailOneRoad() {
-        this.rotateAndDraw(this.tileOrientation+2, this.drawStationStraight.bind(this));
-        this.rotateAndDraw(this.tileOrientation+1, this.drawRailStraight.bind(this));
+        this.rotateAndDraw(Orientation.down, this.drawStationStraight.bind(this));
+        this.rotateAndDraw(Orientation.right, this.drawRailStraight.bind(this));
     }
 
     private drawSpecialThreeRoadOneRail() {
-        this.rotateAndDraw(this.tileOrientation+2, this.drawStationStraight.bind(this));
-        this.rotateAndDraw(this.tileOrientation+1, this.drawRoadStraight.bind(this));
+        this.rotateAndDraw(Orientation.down, this.drawStationStraight.bind(this));
+        this.rotateAndDraw(Orientation.right, this.drawRoadStraight.bind(this));
     }
 
     private drawSpecialRoadRailAcross() {
         this.drawRoadStraight();
-        this.rotateAndDraw(this.tileOrientation+1, this.drawRailStraight.bind(this));
+        this.rotateAndDraw(Orientation.right, this.drawRailStraight.bind(this));
         this.drawStation();
     }
 
     private drawSpecialRoadRailAdjacent() {
-        this.rotateAndDraw(this.tileOrientation+1, this.drawRail.bind(this, 0, this.tileLength/2));
-        this.rotateAndDraw(this.tileOrientation+1, this.drawRail.bind(this, 0, this.tileLength/2));
-        this.rotateAndDraw(this.tileOrientation+1, this.drawRoad.bind(this, 0, this.tileLength/2));
-        this.rotateAndDraw(this.tileOrientation+1, this.drawRoad.bind(this, 0, this.tileLength/2));
+        this.rotateAndDraw(Orientation.right, this.drawRail.bind(this, 0, this.tileLength/2));
+        this.rotateAndDraw(Orientation.down, this.drawRail.bind(this, 0, this.tileLength/2));
+        this.rotateAndDraw(Orientation.left, this.drawRoad.bind(this, 0, this.tileLength/2));
+        this.rotateAndDraw(Orientation.up, this.drawRoad.bind(this, 0, this.tileLength/2));
 
         this.drawStation();
     }
@@ -198,9 +191,12 @@ export class TileGraphics {
     
     // #region Core drawing function
     private rotateAndDraw(orientation: Orientation, drawFunction: () => void) {
-        this.rotateTileToOrientation(orientation);
+        // TODO: This is probably a bad sign that state is getting saved and restored
+        const originalOrientation = this.tileOrientation;
+        const newOrientation = this.getDrawingOrientation(orientation);
+        this.rotateTileToOrientation(newOrientation);
         drawFunction();
-        this.rotateTileToOrientation(this.tileOrientation);
+        this.rotateTileToOrientation(originalOrientation);
     }
 
     private drawStation() {
@@ -271,9 +267,4 @@ export class TileGraphics {
         return drawOrientation;
     }
     // #endregion
-
-
-    private getRadius(width: number , height: number) {
-        return Math.sqrt(Math.pow(width,2) + Math.pow(height,2));
-    }
 }
