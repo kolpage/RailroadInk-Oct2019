@@ -12,7 +12,7 @@ interface IBoardProps {
 }
 
 interface IBoardState {
-    selectedDice: TileType; 
+    selectedDice: TileType;
 }
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
@@ -41,7 +41,9 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
 
     render() {
         let board = [];
-
+        // TODO: Make a section for 'special dice' 
+        const specialDice = [TileType.StationTurnMirror, TileType.SpecialAllRail, TileType.SpecialThreeRailOneRoad, TileType.SpecialRoadRailAcross, TileType.SpecialThreeRoadOneRail, TileType.RoadThreeWay, TileType.SpecialAllRoad, TileType.SpecialRoadRailAdjacent];
+        board.push(<Inventory dice={specialDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>);
         board.push(<Inventory dice={this.props.dice} onDiceSelected={this.updateSelectedDice.bind(this)}/>);
 
         for (var i = 0; i < this.props.rows; i++) {

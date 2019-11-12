@@ -39,12 +39,35 @@ export class TileGraphics {
             case TileType.StationTurn:
                 this.drawStationTurn();
                 break;
+            case TileType.StationTurnMirror:
+                this.drawStationTurnMirror();
+                break;
             case TileType.RoadThreeWay:
-                // TODO: Draw this correctly
                 this.drawRoadThreeWay();
                 break;
             case TileType.RailThreeWay:
                 this.drawRailThreeWay();
+                break;
+            case TileType.Overpass:
+                this.drawOverpass();
+                break;
+            case TileType.SpecialAllRail:
+                this.drawSpecialAllRail();
+                break;
+            case TileType.SpecialThreeRailOneRoad:
+                this.drawSpecialThreeRailOneRoad();
+                break;
+            case TileType.SpecialRoadRailAcross:
+                this.drawSpecialRoadRailAcross();
+                break;
+            case TileType.SpecialThreeRoadOneRail:
+                this.drawSpecialThreeRoadOneRail();
+                break;
+            case TileType.SpecialAllRoad:
+                this.drawSpecialAllRoad();
+                break;
+            case TileType.SpecialRoadRailAdjacent:
+                this.drawSpecialRoadRailAdjacent();
                 break;
             case TileType.Empty:
             default:
@@ -52,30 +75,28 @@ export class TileGraphics {
         }
     }
 
-    public DrawTileWithOrientation(tile: TileType, orientation: Orientation) {
-
-    }  
-
+    // #region Piece drawing functions
     private drawStationStraight() {
-        this.drawRail(0, this.tileLength/2);
-        this.drawRoad(this.tileLength/2, this.tileLength);
-        this.drawStation();
+        this.drawSingleStation(Orientation.down);
     }
     
     private drawStationTurn() {
+        this.drawSingleStation(Orientation.left);
+    }
+
+    private drawStationTurnMirror() {
+        this.drawSingleStation(Orientation.right);
+    }
+
+    private drawSingleStation(roadOrientation: Orientation) {
         this.drawRail(0, this.tileLength/2);
 
-        // TODO: Find a better way to draw the road in the right orientation
-        let roadOrientation = this.tileOrientation + 3;
-        if (roadOrientation >= Orientation._length) {roadOrientation -= Orientation._length}
+        const adjustedRoadOrientation = this.getDrawingOrientation(roadOrientation);
+        this.rotateAndDraw(adjustedRoadOrientation, this.drawRoad.bind(this, 0, this.tileLength/2));
 
-        this.rotateTileToOrientation(roadOrientation);
-        this.drawRoad(this.tileLength/2, this.tileLength);
-        this.rotateTileToOrientation(this.tileOrientation);
         this.drawStation();
     }
 
-    // #region Piece drawing functions
     private drawRoadStraight() {
         this.drawRoad(0, this.tileLength)
     }
@@ -97,10 +118,32 @@ export class TileGraphics {
         this.drawLine(this.tileLength/3, this.tileLength/3, 0, this.tileLength);
         this.drawDottedLine(10, this.tileLength/2, this.tileLength/2, 0, this.tileLength);
 
-        this.drawArc(this.tileLength*(2/3));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        // TODO: Something is wrong with the rotate function. This should be +2 not +1
+        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.rotateAndDraw(this.tileOrientation-1, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength/2));
 
-        this.drawStation();
+        //this.drawStation();
     }  
+
+    private drawOverpass() {
+        this.drawRoadStraight();
+        this.rotateTileToOrientation(this.tileOrientation+1);
+        this.drawRail(0, RoadXStartPercent*this.tileLength);
+        this.drawRail(RoadXEndPercent*this.tileLength, this.tileLength);
+        this.rotateTileToOrientation(this.tileOrientation);
+    }
+
+    private drawSpecialAllRoad() {
+        //this.drawArc(this.tileOrientation);
+        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
+
+        this.drawDottedLine(10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength);
+        this.rotateAndDraw(this.tileOrientation+1, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength));
+    }
 
     private drawRailStraight() {
         this.drawRail(0, this.tileLength);
@@ -118,19 +161,48 @@ export class TileGraphics {
     private drawRailThreeWay() {
         // TODO: Clean up how the ticks are drawn
         this.drawRailStraight();
+        const railOrientation = this.getDrawingOrientation(Orientation.right);
+        this.rotateAndDraw(railOrientation, this.drawRail.bind(this,0,this.tileLength/2));
+    }
 
-        // TODO: Find a better way to draw the road in the right orientation
-        // TODO: This code is also used by drawStationTurn() -> REFACTOR!
-        let railOrientation = this.tileOrientation + 3;
-        if (railOrientation >= Orientation._length) {railOrientation -= Orientation._length}
+    private drawSpecialAllRail() {
+        this.drawRailStraight();
+        this.rotateAndDraw(this.tileOrientation+1, this.drawRailStraight.bind(this));
+    }
 
-        this.rotateTileToOrientation(railOrientation);
-        this.drawRail(this.tileLength/2, this.tileLength);
-        this.rotateTileToOrientation(this.tileOrientation);
+    private drawSpecialThreeRailOneRoad() {
+        this.rotateAndDraw(this.tileOrientation+2, this.drawStationStraight.bind(this));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawRailStraight.bind(this));
+    }
+
+    private drawSpecialThreeRoadOneRail() {
+        this.rotateAndDraw(this.tileOrientation+2, this.drawStationStraight.bind(this));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawRoadStraight.bind(this));
+    }
+
+    private drawSpecialRoadRailAcross() {
+        this.drawRoadStraight();
+        this.rotateAndDraw(this.tileOrientation+1, this.drawRailStraight.bind(this));
+        this.drawStation();
+    }
+
+    private drawSpecialRoadRailAdjacent() {
+        this.rotateAndDraw(this.tileOrientation+1, this.drawRail.bind(this, 0, this.tileLength/2));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawRail.bind(this, 0, this.tileLength/2));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawRoad.bind(this, 0, this.tileLength/2));
+        this.rotateAndDraw(this.tileOrientation+1, this.drawRoad.bind(this, 0, this.tileLength/2));
+
+        this.drawStation();
     }
     // #endregion
     
     // #region Core drawing function
+    private rotateAndDraw(orientation: Orientation, drawFunction: () => void) {
+        this.rotateTileToOrientation(orientation);
+        drawFunction();
+        this.rotateTileToOrientation(this.tileOrientation);
+    }
+
     private drawStation() {
         this.tileContext.beginPath();
         this.tileContext.fillRect(this.tileLength*(1/3), this.tileLength*(1/3), this.tileLength*(1/3), this.tileLength*(1/3));
@@ -144,7 +216,7 @@ export class TileGraphics {
     }
 
     private drawDottedLine(segLength: number, xStart: number, xEnd: number, yStart: number, yEnd: number) {
-        this.tileContext.setLineDash([10]);
+        this.tileContext.setLineDash([segLength]);
         this.drawLine(xStart, xEnd, yStart, yEnd);
         this.tileContext.setLineDash([]);
     }
@@ -190,6 +262,13 @@ export class TileGraphics {
 
     private writeWords(text: string, width: number, height: number) {
         this.tileContext.fillText(text, 0, 0, width);
+    }
+
+    private getDrawingOrientation(defaultOrientation: Orientation) {
+        // TODO: Find a better way to draw the rail/road in the right orientation
+        let drawOrientation = this.tileOrientation + defaultOrientation;
+        if (drawOrientation >= Orientation._length) {drawOrientation -= Orientation._length}
+        return drawOrientation;
     }
     // #endregion
 
