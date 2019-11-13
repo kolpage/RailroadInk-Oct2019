@@ -4,6 +4,6 @@
 import {StandardDicePool, DicePoolBase} from '../game/DicePool';
 
 export function RollDice() {
-    const dicePool = new StandardDicePool("test");
+    const dicePool = new StandardDicePool(Math.random().toString());
     return dicePool.Roll();
 }
