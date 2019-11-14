@@ -4,15 +4,16 @@ import {Inventory} from './inventory';
 import './styles/board.scss';
 import './styles/inventory.scss';
 import { TileType } from '../common/Enums';
+import {RollDice} from './GameServices';
 
 interface IBoardProps {
     rows: number;
     columns: number;
-    dice: TileType[];
 }
 
 interface IBoardState {
     selectedDice: TileType;
+    rolledDice: TileType[]; // TODO: This should just be gotten from the server
 }
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
@@ -20,11 +21,16 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         super(props);
         this.state = {
             selectedDice: TileType.Empty, 
+            rolledDice: RollDice()
         }
     }
     
     updateSelectedDice(dice: TileType) {
-        this.setState({selectedDice: dice});
+        this.setState({selectedDice: dice, rolledDice: this.state.rolledDice});
+    }
+
+    rollDice() {
+        this.setState({selectedDice: this.state.selectedDice, rolledDice: RollDice()});
     }
 
     createRow(numberOfCells: number): React.ReactElement {
@@ -44,7 +50,8 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         // TODO: Make a section for 'special dice' 
         const specialDice = [TileType.SpecialAllRail, TileType.SpecialThreeRailOneRoad, TileType.SpecialRoadRailAcross, TileType.SpecialThreeRoadOneRail, TileType.SpecialAllRoad, TileType.SpecialRoadRailAdjacent];
         board.push(<Inventory dice={specialDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>);
-        board.push(<Inventory dice={this.props.dice} onDiceSelected={this.updateSelectedDice.bind(this)}/>);
+        board.push(<button onClick={this.rollDice.bind(this)} className='rollButton'>Roll Dice</button>);
+        board.push(<Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>);
 
         for (var i = 0; i < this.props.rows; i++) {
             board.push(this.createRow(this.props.columns));
