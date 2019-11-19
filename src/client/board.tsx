@@ -37,8 +37,10 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
         let row = [];
         for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
+            const tile = this.props.gameBoard.getTile(currentColumn, rowPosition);
             const cellKey = `${currentColumn}${rowPosition}`
-            row.push(<Square gameTile={this.props.gameBoard.getTile(currentColumn, rowPosition)} updateSquare={this.updateSquareTileType.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+            const isSquareLocked = !this.canTileBeUpdated(tile, this.props.gameTurn);
+            row.push(<Square gameTile={tile} updateSquare={this.updateSquareTileType.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} isLocked={isSquareLocked} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }
         return (
             <div className='row' key={"gameBoardRow" + rowPosition}>
@@ -52,21 +54,17 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     //       Maybe we can just have the square return the updated tile and all board needs to do is set the new tile on the board
     private updateSquareTileType(squareColumn: number, squareRow: number) {
         const updatedTile = this.state.gameBoard.getTile(squareColumn, squareRow);
-        if(this.canTileBeUpdated(updatedTile, this.props.gameTurn)) {
-            updatedTile.Type = this.state.selectedDice;
-            updatedTile.TurnPlayed = this.props.gameTurn;
-            this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
-            this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});
-        }        
+        updatedTile.Type = this.state.selectedDice;
+        updatedTile.TurnPlayed = this.props.gameTurn;
+        this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
+        this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});      
     }
 
     private rotateSquareTile(squareColumn: number, squareRow: number) {
         let updatedTile = this.state.gameBoard.getTile(squareColumn, squareRow);
-        if(this.canTileBeUpdated(updatedTile, this.props.gameTurn)) {
-            updatedTile.RotateTile();
-            this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
-            this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});
-        }
+        updatedTile.RotateTile();
+        this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
+        this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});
     }
 
     private updateSelectedDice(dice: TileType) {

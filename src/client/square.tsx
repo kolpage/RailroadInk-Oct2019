@@ -13,6 +13,7 @@ interface ISquareState {
 
 interface ISquareProps {
     gameTile: IGameTile;
+    isLocked: boolean; // TODO: think of a better name
     updateSquare: (squareColumn: number, squareRow: number) => void;
     rotateSquare: (squareColumn: number, squareRow: number) => void;
 
@@ -31,16 +32,17 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
     }
     
     changeSelected() {
-        const isSelected = !this.state.selected;
-        this.setState({selected: isSelected})
-
-        this.props.updateSquare(this.props.sqaureColumn, this.props.squareRow);
+        if(!this.props.isLocked) {
+            const isSelected = !this.state.selected;
+            this.setState({selected: isSelected})
+            this.props.updateSquare(this.props.sqaureColumn, this.props.squareRow);
+        }
     }
 
     drawRotateIcon()
     {
         // TODO: Only draw this icon if the tile can be roated
-       if(this.props.gameTile.Type != TileType.Empty)
+       if(!this.props.isLocked && (this.props.gameTile.Type != TileType.Empty))
        {
            // TODO: Use css class for styling image (some reason classes are not getting applied)
             return (
@@ -57,9 +59,9 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
     }
 
     rotateSquare() {
-        //let updatedTile = this.props.gameTile;
-        //updatedTile.RotateTile();
-        this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
+        if(!this.props.isLocked) {
+            this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
+        }
     }
 
     render() {
