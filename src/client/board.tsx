@@ -37,10 +37,11 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
         let row = [];
         for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
-            row.push(<Square gameTile={this.props.gameBoard.getTile(currentColumn, rowPosition)} updateSquare={this.updateSquareTileType.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} sqaureColumn={currentColumn} squareRow={rowPosition}/>);
+            const cellKey = `${currentColumn}${rowPosition}`
+            row.push(<Square gameTile={this.props.gameBoard.getTile(currentColumn, rowPosition)} updateSquare={this.updateSquareTileType.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }
         return (
-            <div className='row'>
+            <div className='row' key={"gameBoardRow" + rowPosition}>
                 {row}
             </div>
         );
@@ -80,18 +81,18 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
 
     render() {
         let board = [];
-        // TODO: Make a section for 'special dice' 
         const specialDice = [TileType.SpecialAllRail, TileType.SpecialThreeRailOneRoad, TileType.SpecialRoadRailAcross, TileType.SpecialThreeRoadOneRail, TileType.SpecialAllRoad, TileType.SpecialRoadRailAdjacent];
-        board.push(<Inventory dice={specialDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>);
-        board.push(<button onClick={this.rollDice.bind(this)} className='rollButton'>Roll Dice</button>);
-        board.push(<Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>);
-
+    
         for (var currentRow = 0; currentRow < this.props.rows; currentRow++) {
             board.push(this.createRow(currentRow, this.props.columns));
         }
 
+        // TODO: Make a section for 'special tiles'
         return (
             <div className='boardContainer'>
+                <Inventory dice={specialDice} onDiceSelected={this.updateSelectedDice.bind(this)} />
+                <button onClick={this.rollDice.bind(this)} className='rollButton'>Roll Dice</button>
+                <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>
                 {board}
             </div>
         );

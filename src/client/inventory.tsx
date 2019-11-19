@@ -12,9 +12,10 @@ export class Inventory extends React.Component<IInventoryProps> {
     createRow(): React.ReactElement {
         let row = [];
         for (var i = 0; i < this.props.dice.length; i++) {
-            row.push(<Dice tile={this.props.dice[i]} onDiceSelected={this.props.onDiceSelected} />);
+            // TODO: Don't use array index as key
+            row.push(<Dice tile={this.props.dice[i]} onDiceSelected={this.props.onDiceSelected} key={i}/>);
         }
-        //row.push(<Tile draw={TileGraphics.drawRoad}/>);
+
         return (
             <div className='row'>
                 {row}
