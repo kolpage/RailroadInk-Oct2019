@@ -53,13 +53,6 @@ export class GameBoard {
         }
     }
 
-    // TODO: This should be removed. It just use to pre-populated the board with a state for UI testing
-    public fillBoardWithTestData() {
-        this.board[0][0] = new GameTile(TileType.RailStraight, Orientation.up, 1);
-        this.board[0][1] = new GameTile(TileType.StationStraight, Orientation.up, 1);
-        this.board[0][2] = new GameTile(TileType.RoadTurn, Orientation.up, 1);
-    }
-
     private createEmptyBoard() {
         this.board = [];
         for(var currCol = 0; currCol < this.numberOfColumns; currCol++) {

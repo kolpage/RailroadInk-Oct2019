@@ -11,13 +11,14 @@ interface IBoardProps {
     rows: number;
     columns: number;
     gameBoard: GameBoard;
-    gameTurn: number;
+    
 }
 
 interface IBoardState {
     selectedDice: TileType;
     rolledDice: TileType[]; // TODO: This should just be gotten from the server
     gameBoard: GameBoard;
+    gameTurn: number;
 }
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
@@ -26,12 +27,13 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.state = {
             selectedDice: TileType.Empty, 
             rolledDice: RollDice(),
-            gameBoard: this.props.gameBoard
+            gameBoard: this.props.gameBoard,
+            gameTurn: 1
         }
     }
     
     private rollDice() {
-        this.setState({selectedDice: this.state.selectedDice, rolledDice: RollDice(), gameBoard: this.state.gameBoard});
+        this.setState({selectedDice: this.state.selectedDice, rolledDice: RollDice(), gameBoard: this.state.gameBoard, gameTurn: this.state.gameTurn+1});
     }
 
     private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
@@ -39,7 +41,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
             const tile = this.props.gameBoard.getTile(currentColumn, rowPosition);
             const cellKey = `${currentColumn}${rowPosition}`
-            const isSquareLocked = !this.canTileBeUpdated(tile, this.props.gameTurn);
+            const isSquareLocked = !this.canTileBeUpdated(tile, this.state.gameTurn);
             row.push(<Square gameTile={tile} updateSquare={this.updateSquareTileType.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} isLocked={isSquareLocked} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }
         return (
@@ -55,20 +57,20 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     private updateSquareTileType(squareColumn: number, squareRow: number) {
         const updatedTile = this.state.gameBoard.getTile(squareColumn, squareRow);
         updatedTile.Type = this.state.selectedDice;
-        updatedTile.TurnPlayed = this.props.gameTurn;
+        updatedTile.TurnPlayed = this.state.gameTurn;
         this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
-        this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});      
+        this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard, gameTurn: this.state.gameTurn});      
     }
 
     private rotateSquareTile(squareColumn: number, squareRow: number) {
         let updatedTile = this.state.gameBoard.getTile(squareColumn, squareRow);
         updatedTile.RotateTile();
         this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
-        this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});
+        this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard, gameTurn: this.state.gameTurn});
     }
 
     private updateSelectedDice(dice: TileType) {
-        this.setState({selectedDice: dice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});
+        this.setState({selectedDice: dice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard, gameTurn: this.state.gameTurn});
     }
     // #endregion
 

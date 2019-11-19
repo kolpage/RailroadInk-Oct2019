@@ -68,6 +68,7 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
         return (
             <div className='square'>
                 {this.drawRotateIcon()}
+                <div className='turnNumber'>{this.props.gameTile.TurnPlayed}</div>
                 <div onClick={this.changeSelected.bind(this)}>
                     <Tile tile={this.props.gameTile.Type} tileOrientation={this.props.gameTile.TileOrientation} />
                 </div>
