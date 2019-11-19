@@ -5,15 +5,19 @@ import './styles/board.scss';
 import './styles/inventory.scss';
 import { TileType } from '../common/Enums';
 import {RollDice} from './GameServices';
+import { GameBoard, GameTile, IGameTile } from './GameModels';
 
 interface IBoardProps {
     rows: number;
     columns: number;
+    gameBoard: GameBoard;
+    gameTurn: number;
 }
 
 interface IBoardState {
     selectedDice: TileType;
     rolledDice: TileType[]; // TODO: This should just be gotten from the server
+    gameBoard: GameBoard;
 }
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
@@ -21,28 +25,57 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         super(props);
         this.state = {
             selectedDice: TileType.Empty, 
-            rolledDice: RollDice()
+            rolledDice: RollDice(),
+            gameBoard: this.props.gameBoard
         }
     }
     
-    updateSelectedDice(dice: TileType) {
-        this.setState({selectedDice: dice, rolledDice: this.state.rolledDice});
+    private rollDice() {
+        this.setState({selectedDice: this.state.selectedDice, rolledDice: RollDice(), gameBoard: this.state.gameBoard});
     }
 
-    rollDice() {
-        this.setState({selectedDice: this.state.selectedDice, rolledDice: RollDice()});
-    }
-
-    createRow(numberOfCells: number): React.ReactElement {
+    private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
         let row = [];
-        for (var i = 0; i < numberOfCells; i++) {
-            row.push(<Square selectedTile={this.state.selectedDice}/>);
+        for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
+            row.push(<Square gameTile={this.props.gameBoard.getTile(currentColumn, rowPosition)} updateSquare={this.updateSquareTileType.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} sqaureColumn={currentColumn} squareRow={rowPosition}/>);
         }
         return (
             <div className='row'>
                 {row}
             </div>
         );
+    }
+
+    // #region: Child callback functions
+    // TODO: I don't like this pattern of adding a callback/delegate for each action the square wants to do. Probably need state MGMT (or just find a better pattern)
+    //       Maybe we can just have the square return the updated tile and all board needs to do is set the new tile on the board
+    private updateSquareTileType(squareColumn: number, squareRow: number) {
+        const updatedTile = this.state.gameBoard.getTile(squareColumn, squareRow);
+        if(this.canTileBeUpdated(updatedTile, this.props.gameTurn)) {
+            updatedTile.Type = this.state.selectedDice;
+            updatedTile.TurnPlayed = this.props.gameTurn;
+            this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
+            this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});
+        }        
+    }
+
+    private rotateSquareTile(squareColumn: number, squareRow: number) {
+        let updatedTile = this.state.gameBoard.getTile(squareColumn, squareRow);
+        if(this.canTileBeUpdated(updatedTile, this.props.gameTurn)) {
+            updatedTile.RotateTile();
+            this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
+            this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});
+        }
+    }
+
+    private updateSelectedDice(dice: TileType) {
+        this.setState({selectedDice: dice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard});
+    }
+    // #endregion
+
+    // TODO: This should leave somewhere else...maybe on tile or square
+    private canTileBeUpdated(tile: IGameTile, currentTurn: number) {
+        return (tile.TurnPlayed == null || tile.TurnPlayed == currentTurn);
     }
 
     render() {
@@ -53,8 +86,8 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         board.push(<button onClick={this.rollDice.bind(this)} className='rollButton'>Roll Dice</button>);
         board.push(<Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>);
 
-        for (var i = 0; i < this.props.rows; i++) {
-            board.push(this.createRow(this.props.columns));
+        for (var currentRow = 0; currentRow < this.props.rows; currentRow++) {
+            board.push(this.createRow(currentRow, this.props.columns));
         }
 
         return (

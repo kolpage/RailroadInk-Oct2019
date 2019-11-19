@@ -2,17 +2,24 @@ import * as React from 'react';
 import './styles/square.scss';
 import { TileType, Orientation } from '../common/Enums';
 import { Tile } from './tile';
+import { IGameTile } from './GameModels';
 
 const RefreshArrowIcon = require("./Assests/RefreshArrow.png")
 
 interface ISquareState {
+    // TODO: Push this state up into board
     selected: boolean;
-    tile: TileType;
-    tileOrientation: Orientation;
 }
 
 interface ISquareProps {
-    selectedTile: TileType;
+    gameTile: IGameTile;
+    updateSquare: (squareColumn: number, squareRow: number) => void;
+    rotateSquare: (squareColumn: number, squareRow: number) => void;
+
+    // TODO: This is not good. A gameboard square should not know its location but doing it for now so that the square 
+    //       can tell the board what square needs to be updated. Using something like Redux might clean this up. 
+    sqaureColumn: number;
+    squareRow: number;
 }
 
 export class Square extends React.Component<ISquareProps, ISquareState> {
@@ -20,20 +27,20 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
         super(props);
         this.state = {
             selected: false,
-            tile: TileType.Empty, 
-            tileOrientation: Orientation.up
         }
     }
     
     changeSelected() {
         const isSelected = !this.state.selected;
-        this.setState({selected: isSelected, tile: this.props.selectedTile, tileOrientation: this.state.tileOrientation})
+        this.setState({selected: isSelected})
+
+        this.props.updateSquare(this.props.sqaureColumn, this.props.squareRow);
     }
 
-    drawRotate()
+    drawRotateIcon()
     {
-        // TODO: This shouldn't depend on selected but on not being Empty
-       if(this.state.selected)
+        // TODO: Only draw this icon if the tile can be roated
+       if(this.props.gameTile.Type != TileType.Empty)
        {
            // TODO: Use css class for styling image (some reason classes are not getting applied)
             return (
@@ -50,20 +57,17 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
     }
 
     rotateSquare() {
-        // TODO: Move enum "next" function to somewhere else
-        let newOrientation = this.state.tileOrientation + 1;
-        if(newOrientation >= Orientation._length) {
-            newOrientation = 0;
-        }
-        this.setState({selected: this.state.selected, tile: this.state.tile, tileOrientation: newOrientation})
+        //let updatedTile = this.props.gameTile;
+        //updatedTile.RotateTile();
+        this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
     }
 
     render() {
         return (
             <div className='square'>
-                {this.drawRotate()}
+                {this.drawRotateIcon()}
                 <div onClick={this.changeSelected.bind(this)}>
-                    <Tile tile={this.state.tile} tileOrientation={this.state.tileOrientation} />
+                    <Tile tile={this.props.gameTile.Type} tileOrientation={this.props.gameTile.TileOrientation} />
                 </div>
             </div>
         );
