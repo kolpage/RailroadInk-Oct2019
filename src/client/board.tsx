@@ -42,7 +42,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
             const tile = this.props.gameBoard.getTile(currentColumn, rowPosition);
             const cellKey = `${currentColumn}${rowPosition}`
             const isSquareLocked = !this.canTileBeUpdated(tile, this.state.gameTurn);
-            row.push(<Square gameTile={tile} updateSquare={this.updateSquareTileType.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} isLocked={isSquareLocked} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+            row.push(<Square gameTile={tile} updateSquare={this.updateSquareTileType.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} isLocked={isSquareLocked} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }
         return (
             <div className='row' key={"gameBoardRow" + rowPosition}>
@@ -67,6 +67,13 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         updatedTile.RotateTile();
         this.state.gameBoard.setTile(updatedTile, squareColumn, squareRow);
         this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard, gameTurn: this.state.gameTurn});
+    }
+
+    private clearSquareTile(squareColumn: number, squareRow: number) {
+        const emptyTile = new GameTile();
+        this.state.gameBoard.setTile(emptyTile, squareColumn, squareRow);
+        this.setState({selectedDice: this.state.selectedDice, rolledDice: this.state.rolledDice, gameBoard: this.state.gameBoard, gameTurn: this.state.gameTurn});
+    
     }
 
     private updateSelectedDice(dice: TileType) {

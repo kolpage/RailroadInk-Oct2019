@@ -52,3 +52,6 @@ tasks.json
         }
     ]
 }
+
+Credits:
+Remove by Arfan Khan Kamol from the Noun Project (icon)
