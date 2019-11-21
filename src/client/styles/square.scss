@@ -15,15 +15,13 @@
     margin: 2px;
 }
 
-.removeButton {
+.lowerRightButton {
     bottom: 0;
     right: 0;
     position: absolute;
 }
 
-.rotateButton {
-    width: 25px;
-    height: 25px;
+.upperLeftButton {
     position: absolute;
 }
 
@@ -34,18 +32,22 @@
 }
  
 figure{
-    width: 25px;
-    height: 25px; // container-width
     overflow:hidden; // hide bounds of image 
     margin:0;   // reset margin of figure tag
 
     img{
         display:block; // remove inline-block spaces
         width:100%; // make image streatch
-
-        .removeButton{
-            // crop remove button
-            margin:-20% 0;
-        }
     }
+}
+
+.removeButton{
+    width: 15px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+}
+
+.rotateButton{
+    width: 22px;
+    margin-top: 2px;
 }

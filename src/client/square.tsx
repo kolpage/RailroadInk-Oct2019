@@ -5,7 +5,7 @@ import { Tile } from './tile';
 import { IGameTile } from './GameModels';
 
 const RefreshArrowIcon = require("./Assests/RefreshArrow.png")
-const RemoveIcon = require("./Assests/Remove.png")
+const RemoveIcon = require("./Assests/RemoveCrop.png")
 
 
 interface ISquareState {
@@ -49,10 +49,10 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
             return (
                 <div 
                     onClick={this.rotateSquare.bind(this)} 
-                    className='rotateButton'
+                    className='upperLeftButton'
                 >
                     <figure>
-                        <img src={RefreshArrowIcon} alt="rotate" />
+                        <img src={RefreshArrowIcon} className='rotateButton' alt="rotate" />
                     </figure>
                 </div>
             );
@@ -70,10 +70,10 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
             return (
                 <div 
                     onClick={this.removeTile.bind(this)} 
-                    className='removeButton'
+                    className='lowerRightButton'
                 >
                     <figure>
-                        <img src={RemoveIcon} alt="remove" />
+                        <img src={RemoveIcon} className='removeButton' alt="remove" />
                     </figure>
                 </div>
             );
