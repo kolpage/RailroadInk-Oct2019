@@ -1,7 +1,8 @@
-import { BaseTile, EdgeBaseTile } from "./tiles";
-import { Edge, TileType, Orientation } from "../common/Enums";
+import { BaseTile, EdgeBaseTile, PlayableBaseTile } from "./tiles";
+import { Edge, TileType, Orientation, EdgeMatchingStatus } from "../common/Enums";
 import { TileFactory } from "./TileFactory";
 import { Tile } from "../client/tile";
+import { PositionValidator } from "../common/PositionValidator";
 
 /** Represents the game board the tiles are played on. Rows and columns are 0 indexed.
  *  Ex. Telling board to put something at Row 3 Column 6 is the 4th row down from the top and the last column. 
@@ -16,19 +17,122 @@ export class Board{
     private get boardHeight(): number{
         return this.playableBoardHeight + 2;
     };
-    private tileFactory = new TileFactory();
+    private tileFactory: TileFactory;
 
-    constructor(playAreaWidth: number, playAreaHeight: number){
+    constructor(playAreaWidth: number, playAreaHeight: number, tileFactory: TileFactory){
         this.playableBoardWidth = playAreaWidth;
         this.playableBoardHeight = playAreaHeight;
+        this.tileFactory = tileFactory
         this.initialize();
         this.setBoardEdges();
     }
 
+    /** 
+     * Returns true if a tile placed in the specified position and orientation
+     * follows all game tile placement rules. False if it violates a rule.
+     */
+    public IsTilePositionValid(tile: PlayableBaseTile, rowIndex: number, columnIndex: number): boolean{
+        //Bad coordinates or there's already a tile played there
+        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex) 
+           || !!this.GetTile(rowIndex, columnIndex)){
+            return false;
+        }
+        
+        let edgeMatchStatus: EdgeMatchingStatus;
+        let nearbyTile: BaseTile;
+        //Check up
+        nearbyTile = this.GetTileAbove(rowIndex, columnIndex);
+        if(nearbyTile){
+            if(PositionValidator.ValidateEdges(tile.GetTopEdge(), nearbyTile.GetBottomEdge()) === EdgeMatchingStatus.invalid){
+                return false;
+            }
+        }
+        
+        //Check down
+        nearbyTile = this.GetTileBelow(rowIndex, columnIndex);
+        if(nearbyTile){
+            if(PositionValidator.ValidateEdges(tile.GetBottomEdge(), nearbyTile.GetTopEdge()) === EdgeMatchingStatus.invalid){
+                return false;
+            }
+        }
+
+        //Check left
+        nearbyTile = this.GetTileLeft(rowIndex, columnIndex);
+        if(nearbyTile){
+            if(PositionValidator.ValidateEdges(tile.GetLeftEdge(), nearbyTile.GetRightEdge()) === EdgeMatchingStatus.invalid){
+                return false;
+            }
+        }
+
+        //Check right
+        nearbyTile = this.GetTileRight(rowIndex, columnIndex);
+        if(nearbyTile){
+            if(PositionValidator.ValidateEdges(tile.GetRightEdge(), nearbyTile.GetLeftEdge()) === EdgeMatchingStatus.invalid){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /** Gets a playable tile from the board. Expects to be given  */
+    public GetTile(rowIndex: number, columnIndex: number): PlayableBaseTile | undefined{
+        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
+            return undefined;
+        }
+
+        const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
+        const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        return this.board[boardRowIndex][boardColumnIndex] as PlayableBaseTile;
+    }
+
+    public GetTileAbove(rowIndex: number, columnIndex: number): BaseTile | undefined{
+        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
+            return undefined;
+        }
+
+        let boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
+        const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        boardRowIndex--;
+        return this.board[boardRowIndex][boardColumnIndex];
+    }
+
+    public GetTileBelow(rowIndex: number, columnIndex: number): BaseTile | undefined{
+        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
+            return undefined;
+        }
+
+        let boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
+        const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        boardRowIndex++;
+        return this.board[boardRowIndex][boardColumnIndex];
+    }
+
+    public GetTileLeft(rowIndex: number, columnIndex: number): BaseTile | undefined{
+        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
+            return undefined;
+        }
+
+        const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
+        let boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        boardColumnIndex--;
+        return this.board[boardRowIndex][boardColumnIndex];
+    }
+
+    public GetTileRight(rowIndex: number, columnIndex: number): BaseTile | undefined{
+        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
+            return undefined;
+        }
+
+        const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
+        let boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        boardColumnIndex++;
+        return this.board[boardRowIndex][boardColumnIndex];
+    }
+
     /** Sets a tile on the board. Returns true if tile was sucessfully set, false otherwise. */
-    public SetTile(tileType: TileType, 
-        turn: number, 
-        orientation: Orientation, 
+    public SetTile(
+        tile: PlayableBaseTile,
         rowIndex: number, 
         columnIndex: number, 
         allowOverwrite: boolean
@@ -40,11 +144,6 @@ export class Board{
         const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
         const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
         if(!allowOverwrite && this.board[boardRowIndex][boardColumnIndex] !== undefined){
-            return false;
-        }
-
-        const tile = this.tileFactory.CreateTile(tileType, turn, orientation);
-        if(!tile){
             return false;
         }
 

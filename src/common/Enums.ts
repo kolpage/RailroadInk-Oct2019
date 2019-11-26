@@ -16,7 +16,9 @@ export enum Orientation{
 export enum Edge{
     empty,
     road,
+    exitRoad,
     rail,
+    exitRail,
     river,
     lake,
     meteor,
@@ -46,4 +48,12 @@ export enum TileType{
     SpecialAllRail,
     SpecialRoadRailAdjacent,
     SpecialRoadRailAcross
+}
+
+/** Matching statuses of edge checks */
+export enum EdgeMatchingStatus{
+    valid, //Tile edges follow all rules and don't incur point penalties
+    mismatch, //Tile edges follow all rules but will incur error points.
+    open, //Tile edges follow all rules but  incur error points if this way at end of game.
+    invalid, //Tile edges don't follow all rules. 
 }

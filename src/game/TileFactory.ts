@@ -4,7 +4,7 @@ import { TileType, Orientation } from "../common/Enums";
 export class TileFactory{
     constructor(){ }
 
-    public CreateTile(tileType: TileType, turn: number, orientation: Orientation): Tiles.BaseTile{
+    public CreateTile(tileType: TileType, turn: number, orientation: Orientation): Tiles.PlayableBaseTile{
         switch(tileType){
             case TileType.RailTurn: return new Tiles.RailTurnTile(orientation, turn);
             case TileType.RailThreeWay: return new Tiles.RailThreeWayTile(orientation, turn);
