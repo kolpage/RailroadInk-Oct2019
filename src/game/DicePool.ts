@@ -4,7 +4,7 @@ import { TileType } from "../common/Enums";
 const seedrandom = require('seedrandom');
 
 /** Base implementation of the dice pool. */
-export class DicePoolBase{
+export class BaseDicePool{
     protected dice: BaseDie[];
     protected randomNumberGenerator: Function;
 
@@ -24,7 +24,7 @@ export class DicePoolBase{
 }
 
 /** Represents the dice pool for a game with no expansions. */
-export class StandardDicePool extends DicePoolBase{
+export class StandardDicePool extends BaseDicePool{
     constructor(seed?: string){
         super(seed);
         this.dice.push(new RouteDie(this.randomNumberGenerator));

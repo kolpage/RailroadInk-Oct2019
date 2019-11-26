@@ -306,7 +306,7 @@ export class SpecialRoadRailAcrossTile extends PlayableBaseTile{
 /** Represents a rail exit tile that can be connected to */
 export class RailEdgeTile extends EdgeBaseTile{
     constructor(){
-        const initEdges: Edge[] = [Edge.rail, Edge.rail, Edge.rail, Edge.rail];
+        const initEdges: Edge[] = [Edge.exitRail, Edge.exitRail, Edge.exitRail, Edge.exitRail];
         super(initEdges);
     }
 
@@ -319,7 +319,7 @@ export class RailEdgeTile extends EdgeBaseTile{
 /** Represents a road exit tile that can be connected to */
 export class RoadEdgeTile extends EdgeBaseTile{
     constructor(){
-        const initEdges: Edge[] = [Edge.road, Edge.road, Edge.road, Edge.road];
+        const initEdges: Edge[] = [Edge.exitRoad, Edge.exitRoad, Edge.exitRoad, Edge.exitRoad];
         super(initEdges);
     }
 
