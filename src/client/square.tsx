@@ -1,17 +1,11 @@
 import * as React from 'react';
 import './styles/square.scss';
-import { TileType, Orientation } from '../common/Enums';
+import { TileType } from '../common/Enums';
 import { Tile } from './tile';
 import { IGameTile } from './GameModels';
 
 const RefreshArrowIcon = require("./Assests/RefreshArrow.png")
 const RemoveIcon = require("./Assests/RemoveCrop.png")
-
-
-interface ISquareState {
-    // TODO: Push this state up into board
-    selected: boolean;
-}
 
 interface ISquareProps {
     gameTile: IGameTile;
@@ -26,25 +20,17 @@ interface ISquareProps {
     squareRow: number;
 }
 
-export class Square extends React.Component<ISquareProps, ISquareState> {
-    constructor(props: ISquareProps) {
-        super(props);
-        this.state = {
-            selected: false,
-        }
-    }
-    
+export class Square extends React.Component<ISquareProps> {
+
     changeSelected() {
         if(!this.props.isLocked) {
-            const isSelected = !this.state.selected;
-            this.setState({selected: isSelected})
             this.props.updateSquare(this.props.sqaureColumn, this.props.squareRow);
         }
     }
 
     drawRotateButton() {
         // TODO: Only draw this icon if the tile can be roated
-       if(this.isTileActive())
+       if(this.isSquareActive())
        {
             return (
                 <div 
@@ -61,12 +47,12 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
        return <div></div>;
     }
 
-    private isTileActive() {
+    private isSquareActive() {
         return !this.props.isLocked && (this.props.gameTile.Type != TileType.Empty);
     }
 
     drawRemoveButton() {
-        if(this.isTileActive()) {
+        if(this.isSquareActive()) {
             return (
                 <div 
                     onClick={this.removeTile.bind(this)} 
@@ -96,7 +82,7 @@ export class Square extends React.Component<ISquareProps, ISquareState> {
                 {this.drawRemoveButton()}
                 <div className='turnNumber'>{this.props.gameTile.TurnPlayed}</div>
                 <div onClick={this.changeSelected.bind(this)}>
-                    <Tile tile={this.props.gameTile.Type} tileOrientation={this.props.gameTile.TileOrientation} />
+                    <Tile tile={this.props.gameTile} />
                 </div>
             </div>
         );

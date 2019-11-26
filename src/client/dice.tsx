@@ -3,10 +3,11 @@ import * as ReactDOM from 'react-dom';
 import './styles/square.scss';
 import {Tile} from './tile'
 import { TileType, Orientation } from '../common/Enums';
+import { IGameTile } from './GameModels';
 
 interface IDiceProps {
-    tile: TileType;
-    onDiceSelected: (tile:TileType) => void;
+    tile: IGameTile;
+    onDiceSelected: (tile:IGameTile) => void;
 }
 
 export class Dice extends React.Component<IDiceProps> {
@@ -21,7 +22,7 @@ export class Dice extends React.Component<IDiceProps> {
                 className='dice' 
                 onClick={this.diceSelected.bind(this)}
             >
-                <Tile tile={this.props.tile} tileOrientation={Orientation.up}/>
+                <Tile tile={this.props.tile} />
             </div>
         );
     }

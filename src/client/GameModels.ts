@@ -8,6 +8,12 @@ export interface IGameTile {
     RotateTile: () => void;
 }
 
+//<summary>Represents a turn in the game</summary>
+export class GameTurn {
+    tilesPlaued: IGameTile[];
+    
+}
+
 export class GameTile implements IGameTile {
     public Type: TileType;
     public TileOrientation: Orientation;

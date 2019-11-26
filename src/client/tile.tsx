@@ -1,11 +1,10 @@
 import * as React from 'react';
 import './styles/square.scss';
 import { TileGraphics } from './TileGraphics';
-import { TileType, Orientation } from '../common/Enums';
+import { IGameTile } from './GameModels';
 
 interface ITileProps {
-    tile: TileType,
-    tileOrientation: Orientation
+    tile: IGameTile,
 }
 
 export class Tile extends React.Component<ITileProps> {
@@ -37,7 +36,7 @@ export class Tile extends React.Component<ITileProps> {
         // TODO: It would be nice to not check for context but the render function might cause errors 
         //       since canvas doesn't get a context until it's first drawn
         if (this.getCanvasContext()) {
-            this.graphicEngine.DrawTile(this.props.tile, this.props.tileOrientation);
+            this.graphicEngine.DrawTile(this.props.tile.Type, this.props.tile.TileOrientation);
         }
     }
 

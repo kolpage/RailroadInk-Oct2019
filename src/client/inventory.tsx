@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {Dice} from './dice';
 import './styles/inventory.scss';
-import { TileType } from '../common/Enums';
+import { IGameTile } from './GameModels';
 
 interface IInventoryProps {
-    dice: TileType[];
-    onDiceSelected: (tile:TileType) => void; 
+    dice: IGameTile[];
+    onDiceSelected: (tile:IGameTile) => void; 
 }
 
 export class Inventory extends React.Component<IInventoryProps> {
