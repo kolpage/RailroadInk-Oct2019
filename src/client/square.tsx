@@ -1,6 +1,5 @@
 import * as React from 'react';
 import './styles/square.scss';
-import { TileType } from '../common/Enums';
 import { Tile } from './tile';
 import { IGameTile } from './GameModels';
 
@@ -9,7 +8,7 @@ const RemoveIcon = require("./Assests/RemoveCrop.png")
 
 interface ISquareProps {
     gameTile: IGameTile;
-    isLocked: boolean; // TODO: think of a better name
+    currentGameTurn: number; // TODO: Pass in this infomration in a better way
     updateSquare: (squareColumn: number, squareRow: number) => void;
     rotateSquare: (squareColumn: number, squareRow: number) => void;
     clearSquare: (squareColumn: number, squareRow: number) => void;
@@ -23,7 +22,7 @@ interface ISquareProps {
 export class Square extends React.Component<ISquareProps> {
 
     changeSelected() {
-        if(!this.props.isLocked) {
+        if(this.canSqaureBeUpdted()) {
             this.props.updateSquare(this.props.sqaureColumn, this.props.squareRow);
         }
     }
@@ -47,8 +46,12 @@ export class Square extends React.Component<ISquareProps> {
        return <div></div>;
     }
 
+    private canSqaureBeUpdted() {
+        return (this.props.gameTile.TurnPlayed == null || this.props.gameTile.TurnPlayed == this.props.currentGameTurn);
+    }
+
     private isSquareActive() {
-        return !this.props.isLocked && (this.props.gameTile.Type != TileType.Empty);
+        return this.canSqaureBeUpdted() && !this.props.gameTile.IsTileEmpty();
     }
 
     drawRemoveButton() {

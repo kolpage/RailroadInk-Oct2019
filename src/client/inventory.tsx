@@ -1,19 +1,19 @@
 import * as React from 'react';
-import {Dice} from './dice';
+import { Dice } from './dice';
 import './styles/inventory.scss';
-import { IGameTile } from './GameModels';
+import { GameDice } from './GameModels';
 
 interface IInventoryProps {
-    dice: IGameTile[];
-    onDiceSelected: (tile:IGameTile) => void; 
+    dice: GameDice[];
+    onDiceSelected: (tile:GameDice) => void; 
 }
 
 export class Inventory extends React.Component<IInventoryProps> {
     createRow(): React.ReactElement {
         let row = [];
         for (var i = 0; i < this.props.dice.length; i++) {
-            // TODO: Don't use array index as key
-            row.push(<Dice tile={this.props.dice[i]} onDiceSelected={this.props.onDiceSelected} key={i}/>);
+            const dice = this.props.dice[i];
+            row.push(<Dice dice={dice} onDiceSelected={this.props.onDiceSelected} key={dice.Id}/>);
         }
 
         return (

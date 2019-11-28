@@ -3,7 +3,12 @@
 
 import {StandardDicePool} from '../game/DicePool';
 import { TileType } from '../common/Enums';
-import { GameTile } from './GameModels';
+import { GameTile, GameDice, GameBoard } from './GameModels';
+
+export function GetBoard() {
+    // TODO: Actally get board from sever
+    return new GameBoard(7,7);
+}
 
 export function RollDice() {
     const dicePool = new StandardDicePool(Math.random().toString());
@@ -18,5 +23,6 @@ export function GetSpeicalDice() {
 }  
 
 function createDiceFromTileType(tileType: TileType) {
-    return new GameTile(tileType);
+    const gameTile = new GameTile(tileType);
+    return new GameDice(gameTile);
 }  

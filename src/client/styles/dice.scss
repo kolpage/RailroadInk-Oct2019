@@ -1,0 +1,13 @@
+.dice {
+    // TODO: Use Sass magic to combine shared square and dice properties 
+    //       OR make the dice component inherit from squre (not sure if you can do this)
+    width: 75px;
+    height: 75px;
+    border: 2px solid black;
+
+    margin: 2px;
+}
+
+.disabled {
+    opacity:0.5 ;
+}

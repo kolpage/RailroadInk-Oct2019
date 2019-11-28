@@ -6,12 +6,13 @@ export interface IGameTile {
     TurnPlayed?: number; // TODO: Currently using null to indicate the tile hasn't been played...maybe not needed
 
     RotateTile: () => void;
+    IsTileEmpty: () => boolean;
 }
 
 //<summary>Represents a turn in the game</summary>
 export class GameTurn {
     tilesPlaued: IGameTile[];
-    
+
 }
 
 export class GameTile implements IGameTile {
@@ -32,30 +33,54 @@ export class GameTile implements IGameTile {
         }
         this.TileOrientation = newOrientation;
     }
+
+    public IsTileEmpty() {
+        return this.Type == TileType.Empty;
+    }
+}
+
+export class GameDice {
+    static idCounter: number = 0; //TODO: Gross static code...
+
+    public Played: boolean;
+    public Tile: IGameTile;
+    public Id: number; //TODO: This probably should be a public member
+
+    constructor(tile: IGameTile = new GameTile(TileType.Empty)) {
+        this.Tile = tile;
+        this.Played = false;
+        this.Id = GameDice.idCounter++;
+    }
 }
 
 export class GameBoard {
-    private numberOfColumns: number;
-    private numberOrFows: number;
+    public readonly numberOfColumns: number;
+    public readonly numberOrRows: number;
     
     private board: IGameTile[][];
 
     public constructor(numberOfColumns: number, numberOfRows: number) {
         this.numberOfColumns = numberOfColumns;
-        this.numberOrFows = numberOfRows;
+        this.numberOrRows = numberOfRows;
 
         this.createEmptyBoard();
     }
 
     public getTile(col: number, row: number) {
-        if (col < this.numberOfColumns || row < this.numberOrFows) {
+        if (col < this.numberOfColumns || row < this.numberOrRows) {
             return this.board[col][row];
         }
     }
 
     public setTile(tile: GameTile, col: number, row: number) {
-        if (col < this.numberOfColumns || row < this.numberOrFows) {
+        if (col < this.numberOfColumns || row < this.numberOrRows) {
             this.board[col][row] = tile;
+        }
+    }
+
+    public clearTile(col: number, row: number) {
+        if (col < this.numberOfColumns || row < this.numberOrRows) {
+            this.board[col][row] = new GameTile(TileType.Empty);
         }
     }
 
@@ -63,7 +88,7 @@ export class GameBoard {
         this.board = [];
         for(var currCol = 0; currCol < this.numberOfColumns; currCol++) {
             this.board[currCol] = [];
-            for(var currRow = 0; currRow < this.numberOrFows; currRow++) {
+            for(var currRow = 0; currRow < this.numberOrRows; currRow++) {
                 this.board[currCol][currRow] = new GameTile();
             }
         }

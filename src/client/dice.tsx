@@ -1,28 +1,37 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import './styles/square.scss';
-import {Tile} from './tile'
-import { TileType, Orientation } from '../common/Enums';
-import { IGameTile } from './GameModels';
+import './styles/dice.scss';
+import { Tile } from './tile'
+import { GameDice } from './GameModels';
 
 interface IDiceProps {
-    tile: IGameTile;
-    onDiceSelected: (tile:IGameTile) => void;
+    dice: GameDice;
+    onDiceSelected: (dice:GameDice) => void;
 }
 
 export class Dice extends React.Component<IDiceProps> {
     diceSelected() {
-        this.props.onDiceSelected(this.props.tile);
+        if (!this.props.dice.Played) {
+            this.props.onDiceSelected(this.props.dice);
+        }
+    }
+
+    getStatusClass() {
+        if(this.props.dice.Played) {
+            return 'disabled';
+        }
+        else {
+            return 'active';
+        }
     }
     
     render() {
-        // TODO: Default the orientation of tile so that things that don't care don't need to pass in a value
         return (
             <div 
-                className='dice' 
+                className={'dice ' + this.getStatusClass()}
                 onClick={this.diceSelected.bind(this)}
             >
-                <Tile tile={this.props.tile} />
+                <Tile tile={this.props.dice.Tile} />
             </div>
         );
     }
