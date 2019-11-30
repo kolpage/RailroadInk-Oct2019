@@ -5,24 +5,31 @@ import { IGameTile } from './GameModels';
 
 interface ITileProps {
     tile: IGameTile,
+    length: number,
 }
 
 export class Tile extends React.Component<ITileProps> {
     trainTrackCanvas: any;
     tileLength: number;
     graphicEngine: TileGraphics;
+    height: number;
+    width: number;
+    styleClass: string;
+
+    public static defaultProps = {
+        length: 75
+    };
 
     constructor(props: ITileProps) {
         super(props);
         this.trainTrackCanvas = React.createRef();
-
-        // TODO: Dont't bastard inject dimensions
-        this.tileLength = 75;
+        this.height = this.props.length;
+        this.width = this.props.length;
     }
 
     componentDidMount() {
         // TODO: Should this be depedency injected? We can't create it until the components mount...
-        this.graphicEngine = new TileGraphics(this.getCanvasContext(), this.tileLength);
+        this.graphicEngine = new TileGraphics(this.getCanvasContext(), this.props.length);
 
         this.redrawTile();
     }
@@ -43,9 +50,28 @@ export class Tile extends React.Component<ITileProps> {
     render() {
         this.redrawTile();
         return (
-            <div style={{width: this.tileLength, height: this.tileLength}}>
-                <canvas ref={this.trainTrackCanvas} width={this.tileLength} height={this.tileLength}></canvas>
+            <div className={this.styleClass} style={{width: this.width, height: this.height}}>
+                <canvas ref={this.trainTrackCanvas} width={this.width} height={this.height}></canvas>
             </div>
         )
+    }
+}
+
+export class ExitTile extends Tile{
+    constructor(props: ITileProps) {
+        super(props);
+        this.width = this.props.length;
+        this.height = this.props.length*(1/3);
+        this.styleClass = 'exitCell'
+    }
+}
+
+// TODO: Combine the two ExitTile classes
+export class ExitTileSide extends Tile{
+    constructor(props: ITileProps) {
+        super(props);
+        this.width = this.props.length*(1/3);
+        this.height = this.props.length;
+        this.styleClass = 'exitCellSide'
     }
 }

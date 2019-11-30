@@ -29,8 +29,8 @@ import { Test } from './test/Test';
 function createWindow () {
   // Create the browser window.
   let win = new BrowserWindow({
-    width: 700,
-    height: 850,
+    width: 650,
+    height: 860,
     webPreferences: {
       nodeIntegration: true
     }

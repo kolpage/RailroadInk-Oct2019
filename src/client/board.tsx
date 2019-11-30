@@ -3,9 +3,11 @@ import { Square } from './square';
 import { Inventory } from './inventory';
 import './styles/board.scss';
 import './styles/inventory.scss';
+import './styles/tile.scss';
 import { RollDice, GetSpeicalDice } from './GameServices';
-import { GameBoard, GameDice } from './GameModels';
-import { TileType } from '../common/Enums';
+import { GameBoard, GameDice, GameTile } from './GameModels';
+import { TileType, Orientation } from '../common/Enums';
+import { Tile, ExitTile, ExitTileSide } from './tile';
 
 interface IBoardProps {
     gameBoard: GameBoard;
@@ -36,20 +38,6 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     
     private rollDice() {
         this.setState({rolledDice: RollDice(), gameTurn: this.state.gameTurn+1});
-    }
-
-    private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
-        let row = [];
-        for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
-            const tile = this.props.gameBoard.getTile(currentColumn, rowPosition);
-            const cellKey = `${currentColumn}${rowPosition}`
-            row.push(<Square gameTile={tile} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} currentGameTurn={this.state.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
-        }
-        return (
-            <div className='row' key={"gameBoardRow" + rowPosition}>
-                {row}
-            </div>
-        );
     }
 
     // #region: Child callback functions
@@ -116,7 +104,55 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
     // #endregion
 
-    render() {
+    // TODO: Move this to its own component
+    private drawBoarder(): React.ReactElement {
+        const roadTile = new GameTile(TileType.RoadStraight);
+        const railTile = new GameTile(TileType.RailStraight);
+        const emptyTile = new GameTile(TileType.Empty);
+        return (
+            <div className='row'>
+                <ExitTile tile={emptyTile} />
+                <ExitTile tile={roadTile} />
+                <ExitTile tile={emptyTile} />
+                <ExitTile tile={railTile} />
+                <ExitTile tile={emptyTile} />
+                <ExitTile tile={roadTile} />
+            </div>
+        );
+    }
+
+    private drawSideBoarder(): React.ReactElement {
+        const roadTile = new GameTile(TileType.RoadStraight, Orientation.right);
+        const railTile = new GameTile(TileType.RailStraight, Orientation.right);
+        const emptyTile = new GameTile(TileType.Empty, Orientation.right);
+        return (
+            <div className='sideExitBoarder'>
+                <ExitTileSide tile={emptyTile} />
+                <ExitTileSide tile={railTile} />
+                <ExitTileSide tile={emptyTile} />
+                <ExitTileSide tile={roadTile} />
+                <ExitTileSide tile={emptyTile} />
+                <ExitTileSide tile={railTile} />
+                <ExitTileSide tile={emptyTile} />
+            </div>
+        );
+    }
+
+    private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
+        let row = [];
+        for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
+            const tile = this.props.gameBoard.getTile(currentColumn, rowPosition);
+            const cellKey = `${currentColumn}${rowPosition}`
+            row.push(<Square gameTile={tile} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} currentGameTurn={this.state.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+        }
+        return (
+            <div className='row' key={"gameBoardRow" + rowPosition}>
+                {row}
+            </div>
+        );
+    }
+
+    private buildPlayArea() {
         let board = [];
 
         for (var currentRow = 0; currentRow < this.props.gameBoard.numberOrRows; currentRow++) {
@@ -124,11 +160,25 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         }
 
         return (
+            <div className='row'>
+                {this.drawSideBoarder()}
+                <div>
+                    {this.drawBoarder()}
+                    {board}
+                    {this.drawBoarder()}
+                </div>
+                {this.drawSideBoarder()}
+            </div>
+        );
+    }
+
+    render() {
+        return (
             <div className='boardContainer'>
                 <Inventory dice={this.specialDice} onDiceSelected={this.updateSelectedDice.bind(this)} />
-                <button onClick={this.rollDice.bind(this)} className='rollButton'>Roll Dice</button>
                 <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>
-                {board}
+                <button onClick={this.rollDice.bind(this)} className='rollButton'>Roll Dice</button>
+                {this.buildPlayArea()}
             </div>
         );
     }

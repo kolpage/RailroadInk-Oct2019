@@ -3,6 +3,13 @@
     flex-direction: row;
 }
 
+.column {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+}
+
 .boardContainer {
     display: flex;
     flex-direction: column;
@@ -12,3 +19,4 @@
     width: 15%;
     margin: 5px;
 }
+

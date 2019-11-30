@@ -256,10 +256,6 @@ export class TileGraphics {
         this.tileContext.translate(-this.tileLength/2, -this.tileLength/2);
     }
 
-    private writeWords(text: string, width: number, height: number) {
-        this.tileContext.fillText(text, 0, 0, width);
-    }
-
     private getDrawingOrientation(defaultOrientation: Orientation) {
         // TODO: Find a better way to draw the rail/road in the right orientation
         let drawOrientation = this.tileOrientation + defaultOrientation;
