@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { Board } from './Components/board';
+import { Board } from './Components/Board';
 import { GetBoard } from './GameServices';
 
 const Index = () => {

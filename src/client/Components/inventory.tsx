@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dice } from './dice';
+import { Dice } from './Dice';
 import '../styles/inventory.scss';
 import { GameDice } from '../GameModels';
 

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import '../styles/dice.scss';
-import { Tile } from './tile'
+import { Tile } from './Tile'
 import { GameDice } from '../GameModels';
 
 interface IDiceProps {

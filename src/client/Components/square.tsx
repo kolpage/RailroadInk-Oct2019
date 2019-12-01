@@ -1,6 +1,6 @@
 import * as React from 'react';
 import '../styles/square.scss';
-import { Tile } from './tile';
+import { Tile } from './Tile';
 import { IGameTile } from '../GameModels';
 
 const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
