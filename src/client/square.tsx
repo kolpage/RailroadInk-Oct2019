@@ -14,7 +14,7 @@ interface ISquareProps {
     clearSquare: (squareColumn: number, squareRow: number) => void;
 
     // TODO: This is not good. A gameboard square should not know its location but doing it for now so that the square 
-    //       can tell the board what square needs to be updated. Using something like Redux might clean this up. 
+    //       can tell the board what square needs to be updated. 
     sqaureColumn: number;
     squareRow: number;
 }
@@ -51,7 +51,11 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     private isSquareActive() {
-        return this.canSqaureBeUpdted() && !this.props.gameTile.IsTileEmpty();
+        return this.canSqaureBeUpdted() && !this.isSquareEmpty();
+    }
+
+    private isSquareEmpty() {
+        return this.props.gameTile.IsTileEmpty();
     }
 
     drawRemoveButton() {
@@ -75,7 +79,9 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     rotateSquare() {
-        this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
+        if (!this.isSquareEmpty()) { 
+            this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
+        }
     }
 
     render() {
@@ -84,7 +90,7 @@ export class Square extends React.Component<ISquareProps> {
                 {this.drawRotateButton()}
                 {this.drawRemoveButton()}
                 <div className='turnNumber'>{this.props.gameTile.TurnPlayed}</div>
-                <div onClick={this.changeSelected.bind(this)}>
+                <div onClick={this.changeSelected.bind(this)} onContextMenu={this.rotateSquare.bind(this)}>
                     <Tile tile={this.props.gameTile} />
                 </div>
             </div>

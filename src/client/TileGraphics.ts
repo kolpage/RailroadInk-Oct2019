@@ -112,7 +112,7 @@ export class TileGraphics {
 
     private drawRoadThreeWay() {
         // TODO: Next two lines are also used in straight road...maybe share logic
-        this.drawLine(this.tileLength/3, this.tileLength/3, 0, this.tileLength);
+        this.drawLine(this.tileLength*RoadXStartPercent, this.tileLength*RoadXStartPercent, 0, this.tileLength);
         this.drawDottedLine(10, this.tileLength/2, this.tileLength/2, 0, this.tileLength);
 
         this.rotateAndDraw(Orientation.right, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
@@ -133,7 +133,6 @@ export class TileGraphics {
         this.rotateAndDraw(Orientation.right, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
         this.rotateAndDraw(Orientation.down, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
         this.rotateAndDraw(Orientation.left, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
-        //this.rotateAndDraw(Orientation.up, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
 
         this.drawDottedLine(10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength);
         this.rotateAndDraw(Orientation.right, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength));
@@ -257,7 +256,7 @@ export class TileGraphics {
     }
 
     private getDrawingOrientation(defaultOrientation: Orientation) {
-        // TODO: Find a better way to draw the rail/road in the right orientation
+        // TODO: Find a better way to draw the rail/road in the correct orientation
         let drawOrientation = this.tileOrientation + defaultOrientation;
         if (drawOrientation >= Orientation._length) {drawOrientation -= Orientation._length}
         return drawOrientation;

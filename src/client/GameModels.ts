@@ -12,7 +12,7 @@ export interface IGameTile {
 //<summary>Represents a turn in the game</summary>
 export class GameTurn {
     tilesPlaued: IGameTile[];
-
+    
 }
 
 export class GameTile implements IGameTile {
@@ -51,7 +51,7 @@ export class GameDice {
 
     public Played: boolean;
     public Tile: IGameTile;
-    public Id: number; //TODO: This probably should be a public member
+    public Id: number; //TODO: This probably shouldn't be a public member
 
     constructor(tile: IGameTile = new GameTile(TileType.Empty)) {
         this.Tile = tile;
