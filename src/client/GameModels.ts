@@ -30,6 +30,13 @@ export class GameTile implements IGameTile {
         let newOrientation = this.TileOrientation + 1;
         if(newOrientation >= Orientation._length) {
             newOrientation = 0;
+
+            // TODO: Find a better way to handle mirror tiles
+            if (this.Type == TileType.StationTurn) {
+                this.Type = TileType.StationTurnMirror
+            } else if (this.Type == TileType.StationTurnMirror) {
+              this.Type = TileType.StationTurn  
+            }
         }
         this.TileOrientation = newOrientation;
     }

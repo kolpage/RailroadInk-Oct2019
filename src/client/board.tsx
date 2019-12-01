@@ -79,6 +79,8 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     // TODO: Don't depend on the TileType enum (probably should just better track what dice are played)
     private resetDice(tileType: TileType) {
         let found = false;
+        tileType = this.getNonMirrorType(tileType);
+
         this.state.rolledDice.every(dice => {
             if (dice.Tile.Type == tileType && dice.Played) {
                 dice.Played = false;
@@ -97,6 +99,15 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
                 return true;
             });
         }
+    }
+
+    // TODO: Encapsulate this check so that board is not making it 
+    private getNonMirrorType(tile: TileType) {
+        if (tile == TileType.StationTurnMirror) {
+            return TileType.StationTurn;
+        }
+
+        return tile;
     }
 
     private updateSelectedDice(dice: GameDice) {
