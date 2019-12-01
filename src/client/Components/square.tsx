@@ -1,10 +1,10 @@
 import * as React from 'react';
-import './styles/square.scss';
+import '../styles/square.scss';
 import { Tile } from './tile';
-import { IGameTile } from './GameModels';
+import { IGameTile } from '../GameModels';
 
-const RefreshArrowIcon = require("./Assests/RefreshArrow.png")
-const RemoveIcon = require("./Assests/RemoveCrop.png")
+const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
+const RemoveIcon = require("../Assests/RemoveCrop.png")
 
 interface ISquareProps {
     gameTile: IGameTile;

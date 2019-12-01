@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Square } from './square';
 import { Inventory } from './inventory';
-import './styles/board.scss';
-import './styles/inventory.scss';
-import './styles/tile.scss';
-import { RollDice, GetSpeicalDice } from './GameServices';
-import { GameBoard, GameDice, GameTile } from './GameModels';
-import { TileType, Orientation } from '../common/Enums';
+import '../styles/board.scss';
+import '../styles/inventory.scss';
+import '../styles/tile.scss';
+import { RollDice, GetSpeicalDice } from '../GameServices';
+import { GameBoard, GameDice, GameTile } from '../GameModels';
+import { TileType, Orientation } from '../../common/Enums';
 import { Tile, ExitTile, ExitTileSide } from './tile';
 
 interface IBoardProps {

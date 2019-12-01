@@ -1,7 +1,7 @@
 import * as React from 'react';
-import './styles/square.scss';
-import { TileGraphics } from './TileGraphics';
-import { IGameTile } from './GameModels';
+import '../styles/square.scss';
+import { TileGraphics } from '../TileGraphics';
+import { IGameTile } from '../GameModels';
 
 interface ITileProps {
     tile: IGameTile,

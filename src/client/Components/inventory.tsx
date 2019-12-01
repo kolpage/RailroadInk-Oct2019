@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Dice } from './dice';
-import './styles/inventory.scss';
-import { GameDice } from './GameModels';
+import '../styles/inventory.scss';
+import { GameDice } from '../GameModels';
 
 interface IInventoryProps {
     dice: GameDice[];

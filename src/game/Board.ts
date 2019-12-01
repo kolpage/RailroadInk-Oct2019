@@ -1,7 +1,6 @@
 import { BaseTile, EdgeBaseTile, PlayableBaseTile } from "./tiles";
 import { Edge, TileType, Orientation, EdgeMatchingStatus } from "../common/Enums";
 import { TileFactory } from "./TileFactory";
-import { Tile } from "../client/tile";
 import { PositionValidator } from "../common/PositionValidator";
 
 /** Represents the game board the tiles are played on. Rows and columns are 0 indexed.
