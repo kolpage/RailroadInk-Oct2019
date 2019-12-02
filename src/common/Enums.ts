@@ -57,3 +57,13 @@ export enum EdgeMatchingStatus{
     open, //Tile edges follow all rules but  incur error points if this way at end of game.
     invalid, //Tile edges don't follow all rules. 
 }
+
+/** Reason a move is invalid */
+export enum MoveInvalidReason{
+    pieceNotAvailable
+}
+
+/** Reason a turn is invalid */
+export enum TurnInvalidReason{
+    requiredDiceNotPlayed
+}

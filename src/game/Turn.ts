@@ -15,6 +15,7 @@ export class BaseTurn{
     private playedTiles: Move[];
     private turnNumber: number;
     private board: Board;
+    private isTurnOver: boolean = false;;
 
     constructor(turnNumber: number, rolledDice: TileType[], board: Board){
         this.turnNumber = turnNumber;
@@ -28,6 +29,25 @@ export class BaseTurn{
                 played: false
             });
         }
+    }
+
+    /** Marks the turn as over. */
+    public SetTurnOver(): boolean{
+        if(this.CanTurnBeDone()){
+            this.isTurnOver = true;
+            return true;
+        }
+        return false;
+    }
+
+    /** Returns true if the turn is complete. */
+    public GetIsTurnOver(): boolean{
+        return this.isTurnOver;
+    }
+
+    /** Gets the turn number. */
+    public GetTurnNumber(): number{
+        return this.turnNumber;
     }
 
     /** Makes the requested move. True if move was successful. False otherwise */
@@ -50,22 +70,22 @@ export class BaseTurn{
     }
 
     /** Gets all the dice rolled for this turn. */
-    public getRolledDice(): TileType[]{
+    public GetRolledDice(): TileType[]{
         return this.diceToPlay.map(die => die.tileType);
     }
 
     /** Gets all the dice that can still be played this turn. */
-    public getAvailableDiceToPlay(): TileType[]{
+    public GetAvailableDiceToPlay(): TileType[]{
         return this.diceToPlay.filter(die => !die.played).map((die => die.tileType));
     }
 
     /** Gets all the dice that must be played this turn. */
-    public getRequiredDiceToPlay(): TileType[]{
+    public GetRequiredDiceToPlay(): TileType[]{
         return this.diceToPlay.filter(die => !die.played && die.required).map(die => die.tileType);
     }
 
     /** True if the player can end their turn. */
     public CanTurnBeDone(): boolean{
-        return this.getRequiredDiceToPlay().length > 0;
+        return this.GetRequiredDiceToPlay().length > 0;
     }
 }
