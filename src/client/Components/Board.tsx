@@ -8,6 +8,7 @@ import { RollDice, GetSpeicalDice } from '../GameServices';
 import { GameBoard, GameDice, GameTile } from '../GameModels';
 import { TileType, Orientation } from '../../common/Enums';
 import { Tile, ExitTile, ExitTileSide } from './Tile';
+import { Grid } from './Grid';
 
 interface IBoardProps {
     gameBoard: GameBoard;
@@ -76,6 +77,10 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.resetDice(tileType);
     }
 
+    updateBoard(updatedBoardState: GameBoard) {
+        this.setState({gameBoard: updatedBoardState });
+    }
+
     // TODO: Don't depend on the TileType enum (probably should just better track what dice are played)
     private resetDice(tileType: TileType) {
         let found = false;
@@ -115,81 +120,13 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
     // #endregion
 
-    // TODO: Move this to its own component
-    private drawBoarder(): React.ReactElement {
-        const roadTile = new GameTile(TileType.RoadStraight);
-        const railTile = new GameTile(TileType.RailStraight);
-        const emptyTile = new GameTile(TileType.Empty);
-        return (
-            <div className='row'>
-                <ExitTile tile={emptyTile} />
-                <ExitTile tile={roadTile} />
-                <ExitTile tile={emptyTile} />
-                <ExitTile tile={railTile} />
-                <ExitTile tile={emptyTile} />
-                <ExitTile tile={roadTile} />
-            </div>
-        );
-    }
-
-    private drawSideBoarder(): React.ReactElement {
-        const roadTile = new GameTile(TileType.RoadStraight, Orientation.right);
-        const railTile = new GameTile(TileType.RailStraight, Orientation.right);
-        const emptyTile = new GameTile(TileType.Empty, Orientation.right);
-        return (
-            <div className='sideExitBoarder'>
-                <ExitTileSide tile={emptyTile} />
-                <ExitTileSide tile={railTile} />
-                <ExitTileSide tile={emptyTile} />
-                <ExitTileSide tile={roadTile} />
-                <ExitTileSide tile={emptyTile} />
-                <ExitTileSide tile={railTile} />
-                <ExitTileSide tile={emptyTile} />
-            </div>
-        );
-    }
-
-    private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
-        let row = [];
-        for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
-            const tile = this.props.gameBoard.getTile(currentColumn, rowPosition);
-            const cellKey = `${currentColumn}${rowPosition}`
-            row.push(<Square gameTile={tile} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} currentGameTurn={this.state.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
-        }
-        return (
-            <div className='row' key={"gameBoardRow" + rowPosition}>
-                {row}
-            </div>
-        );
-    }
-
-    private buildPlayArea() {
-        let board = [];
-
-        for (var currentRow = 0; currentRow < this.props.gameBoard.numberOrRows; currentRow++) {
-            board.push(this.createRow(currentRow, this.props.gameBoard.numberOfColumns));
-        }
-
-        return (
-            <div className='row'>
-                {this.drawSideBoarder()}
-                <div>
-                    {this.drawBoarder()}
-                    {board}
-                    {this.drawBoarder()}
-                </div>
-                {this.drawSideBoarder()}
-            </div>
-        );
-    }
-
     render() {
         return (
             <div className='boardContainer'>
                 <Inventory dice={this.specialDice} onDiceSelected={this.updateSelectedDice.bind(this)} />
                 <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>
                 <button onClick={this.rollDice.bind(this)} className='rollButton'>Roll Dice</button>
-                {this.buildPlayArea()}
+                <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} updateBoard={this.updateBoard.bind(this)} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)}/>
             </div>
         );
     }

@@ -12,7 +12,9 @@ export interface IGameTile {
 //<summary>Represents a turn in the game</summary>
 export class GameTurn {
     tilesPlaued: IGameTile[];
-    
+    TurnNumber: number;
+    RolledDice: GameDice;
+    SelectedDice: GameDice;
 }
 
 export class GameTile implements IGameTile {
@@ -58,6 +60,14 @@ export class GameDice {
         this.Played = false;
         this.Id = GameDice.idCounter++;
     }
+
+    public GetTile() {
+        return this.Tile.Type;
+    }
+
+    public IsEmpty() {
+        return this.Tile.IsTileEmpty;
+    }
 }
 
 export class GameBoard {
@@ -71,6 +81,12 @@ export class GameBoard {
         this.numberOrRows = numberOfRows;
 
         this.createEmptyBoard();
+    }
+
+    public PlayTile(gameTile: IGameTile, col: number, row: number) {
+        if (!gameTile.IsTileEmpty()) {
+            this.setTile(gameTile, col, row);
+        }
     }
 
     public getTile(col: number, row: number) {

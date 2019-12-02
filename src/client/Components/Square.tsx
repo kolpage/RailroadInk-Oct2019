@@ -79,7 +79,7 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     rotateSquare() {
-        if (!this.isSquareEmpty()) { 
+        if (this.isSquareActive()) { 
             this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
         }
     }
