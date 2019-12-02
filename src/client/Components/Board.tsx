@@ -5,9 +5,8 @@ import '../styles/board.scss';
 import '../styles/inventory.scss';
 import '../styles/tile.scss';
 import { RollDice, GetSpeicalDice } from '../GameServices';
-import { GameBoard, GameDice, GameTile } from '../GameModels';
+import { GameBoard, GameDice, GameTile, Move } from '../GameModels';
 import { TileType, Orientation } from '../../common/Enums';
-import { Tile, ExitTile, ExitTileSide } from './Tile';
 import { Grid } from './Grid';
 
 interface IBoardProps {
@@ -42,43 +41,37 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
 
     // #region: Child callback functions
-    // TODO: I don't like this pattern of adding a callback/delegate for each action the square wants to do. Probably need state MGMT (or just find a better pattern)
-    //       Maybe we can just have the square return the updated tile and all board needs to do is set the new tile on the board
-    private playSelectedTile(squareColumn: number, squareRow: number) {
-        if (this.state.selectedDice.Tile.IsTileEmpty()) {return;} // TODO: Gross procedural code
-        
-        let updatedTile = this.state.gameBoard.getTile(squareColumn, squareRow);
-        updatedTile.Type = this.state.selectedDice.Tile.Type;
-        updatedTile.TurnPlayed = this.state.gameTurn;
-        let updatedBoard = this.state.gameBoard;
-        updatedBoard.setTile(updatedTile, squareColumn, squareRow);
+    private playSelectedDice(move: Move) {
+        if (!this.state.selectedDice.IsEmpty()) {
+            // TODO: Don't have board update the move. Not sure how to handle this since I don't want to pass the currently selected 
+            //       dice to the grid since it doesn't really need to know that. 
+            move.TilePlayed.Type = this.state.selectedDice.GetTileType();
+            move.TilePlayed.TurnPlayed = this.state.gameTurn;
+            let updatedBoard = this.state.gameBoard;
+            updatedBoard.AddMove(move);
 
-        let updatePlayedDice = this.state.playedDice;
-        updatePlayedDice.push(this.state.selectedDice);
-        this.state.selectedDice.Played = true;
+            let updatePlayedDice = this.state.playedDice;
+            updatePlayedDice.push(this.state.selectedDice);
+            this.state.selectedDice.Played = true;
 
-        this.setState({gameBoard: updatedBoard, playedDice: updatePlayedDice, selectedDice: new GameDice()});      
+            this.setState({gameBoard: updatedBoard, playedDice: updatePlayedDice, selectedDice: new GameDice()});   
+        }  
     }
 
-    private rotateSquareTile(squareColumn: number, squareRow: number) {
-        let updatedTile = this.state.gameBoard.getTile(squareColumn, squareRow);
-        updatedTile.RotateTile();
+    private updateMoveOnBoard(move: Move) {
+        // TODO: Update Moves property
         let updatedBoard = this.state.gameBoard;
-        updatedBoard.setTile(updatedTile, squareColumn, squareRow);
+        updatedBoard.AddMove(move);
         this.setState({gameBoard: updatedBoard});
     }
 
-    private clearSquareTile(squareColumn: number, squareRow: number) {
+    private removeMoveFromBoard(move: Move) {
+        // TODO: Update Moves property
         let updatedBoard = this.state.gameBoard;
-        const tileType = updatedBoard.getTile(squareColumn, squareRow).Type // TODO: Get rid of reference to type enum
-        updatedBoard.clearTile(squareColumn, squareRow);
+        updatedBoard.RemoveMove(move);
         this.setState({gameBoard: updatedBoard});
 
-        this.resetDice(tileType);
-    }
-
-    updateBoard(updatedBoardState: GameBoard) {
-        this.setState({gameBoard: updatedBoardState });
+        this.resetDice(move.TilePlayed.Type); // TODO: Get rid of reference to type enum
     }
 
     // TODO: Don't depend on the TileType enum (probably should just better track what dice are played)
@@ -126,7 +119,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
                 <Inventory dice={this.specialDice} onDiceSelected={this.updateSelectedDice.bind(this)} />
                 <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice.bind(this)}/>
                 <button onClick={this.rollDice.bind(this)} className='rollButton'>Roll Dice</button>
-                <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} updateBoard={this.updateBoard.bind(this)} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)}/>
+                <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} addMoveToBoard={this.playSelectedDice.bind(this)} updateMoveOnBoard={this.updateMoveOnBoard.bind(this)} clearMoveOnBoard={this.removeMoveFromBoard.bind(this)}/>
             </div>
         );
     }

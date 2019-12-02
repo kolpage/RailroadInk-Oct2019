@@ -10,11 +10,24 @@ export interface IGameTile {
 }
 
 //<summary>Represents a turn in the game</summary>
-export class GameTurn {
-    tilesPlaued: IGameTile[];
+export interface IGameTurn {
+    Moves: Move[];
     TurnNumber: number;
-    RolledDice: GameDice;
+    RolledDice: GameDice[];
     SelectedDice: GameDice;
+    Board: GameBoard;
+}
+
+export class Move {
+    TilePlayed: IGameTile;
+    RowPosition: number;
+    ColumnPosition: number;
+
+    constructor(tilePlayed: IGameTile, tileColumnPosition: number, tileRowPosition: number) {
+        this.TilePlayed = tilePlayed;
+        this.ColumnPosition = tileColumnPosition;
+        this.RowPosition = tileRowPosition;
+    }
 }
 
 export class GameTile implements IGameTile {
@@ -61,12 +74,12 @@ export class GameDice {
         this.Id = GameDice.idCounter++;
     }
 
-    public GetTile() {
+    public GetTileType() {
         return this.Tile.Type;
     }
 
     public IsEmpty() {
-        return this.Tile.IsTileEmpty;
+        return this.Tile.IsTileEmpty();
     }
 }
 
@@ -81,6 +94,14 @@ export class GameBoard {
         this.numberOrRows = numberOfRows;
 
         this.createEmptyBoard();
+    }
+
+    public AddMove(move: Move) {
+        this.PlayTile(move.TilePlayed, move.ColumnPosition, move.RowPosition);
+    }
+
+    public RemoveMove(move: Move) {
+        this.clearTile(move.ColumnPosition, move.RowPosition);
     }
 
     public PlayTile(gameTile: IGameTile, col: number, row: number) {
