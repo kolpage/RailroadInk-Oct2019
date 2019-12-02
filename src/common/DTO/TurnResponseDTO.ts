@@ -10,19 +10,8 @@ export class TurnResponseDTO{
             && this.InvalidTurnReasons.length == 0;
     }
 
-    constructor(invalidMoves?: InvalidMoveResponseDTO[], invalidTurnReasons?: TurnInvalidReason[]){
-        if(invalidMoves !== undefined){
-            this.InvalidMoves = invalidMoves;
-        }
-        else{
-            this.InvalidMoves = [];
-        }
-
-        if(invalidTurnReasons !== undefined){
-            this.InvalidTurnReasons = invalidTurnReasons;
-        }
-        else{
-            this.InvalidTurnReasons = [];
-        }
+    constructor(invalidMoves: InvalidMoveResponseDTO[] = [], invalidTurnReasons: TurnInvalidReason[] = []){
+        this.InvalidMoves = invalidMoves;
+        this.InvalidTurnReasons = invalidTurnReasons;
     }
 }
