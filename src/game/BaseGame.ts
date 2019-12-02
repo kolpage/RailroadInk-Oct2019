@@ -47,6 +47,7 @@ export class BaseGame {
             }
             this.currentTurn.SetTurnOver();
             this.beginNextTurn();
+            return new TurnResponseDTO();
         }
         
     }
