@@ -1,5 +1,5 @@
 import { BaseTile, EdgeBaseTile, PlayableBaseTile } from "./tiles";
-import { Edge, TileType, Orientation, EdgeMatchingStatus } from "../common/Enums";
+import { Edge, TileType, Orientation, EdgeMatchingStatus, TilePlacementResult as TilePlacementResult } from "../common/Enums";
 import { TileFactory } from "./TileFactory";
 import { PositionValidator } from "../common/PositionValidator";
 
@@ -37,7 +37,6 @@ export class Board{
             return false;
         }
         
-        let edgeMatchStatus: EdgeMatchingStatus;
         let nearbyTile: BaseTile;
         //Check up
         nearbyTile = this.GetTileAbove(rowIndex, columnIndex);
@@ -135,19 +134,19 @@ export class Board{
         rowIndex: number, 
         columnIndex: number, 
         allowOverwrite: boolean
-    ): boolean{
+    ): TilePlacementResult{
         if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
-            return false;
+            return TilePlacementResult.invalidCoordinates;
         }
 
         const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
         const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
         if(!allowOverwrite && this.board[boardRowIndex][boardColumnIndex] !== undefined){
-            return false;
+            return TilePlacementResult.alreadyTileAtLocation;
         }
 
         this.board[boardRowIndex][boardColumnIndex] = tile;
-        return true;        
+        return TilePlacementResult.valid;        
     }
 
     /** Removes the tile at the specified position. Returns the tile if there was a tile there, otherwise undefined. */

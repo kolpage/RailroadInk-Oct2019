@@ -1,4 +1,4 @@
-import { Orientation, Edge } from "../common/Enums";
+import { Orientation, Edge, TileType } from "../common/Enums";
 
 /** The base class for every tile. */
 export class BaseTile{
@@ -43,6 +43,10 @@ export class BaseTile{
         output += "Bottom Edge: " + Edge[this.GetBottomEdge()] + '\n';
         output += "Left Edge: " + Edge[this.GetLeftEdge()] + '\n';
         return output;
+    }
+
+    public GetTileType(): TileType | undefined{
+        return undefined;
     }
 
     public GetAbbrName(): string{
@@ -102,6 +106,11 @@ export class RailTurnTile extends PlayableBaseTile{
         super(initEdges, orientation, turn, false);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RailTurn;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "RLTN";
@@ -113,6 +122,11 @@ export class RailThreeWayTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.rail, Edge.empty, Edge.rail];
         super(initEdges, orientation, turn, false);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RailThreeWay;
     }
 
     /** For debug only */
@@ -128,6 +142,11 @@ export class RailStraightTile extends PlayableBaseTile{
         super(initEdges, orientation, turn, false);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RailStraight;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "RLST";
@@ -139,6 +158,11 @@ export class RoadTurnTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.empty, Edge.empty, Edge.road];
         super(initEdges, orientation, turn, false);
+    }
+    
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RoadTurn;
     }
 
     /** For debug only */
@@ -154,6 +178,11 @@ export class RoadThreeWayTile extends PlayableBaseTile{
         super(initEdges, orientation, turn, false);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RoadThreeWay;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "RD3W";
@@ -165,6 +194,11 @@ export class RoadStraightTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.empty, Edge.road, Edge.empty];
         super(initEdges, orientation, turn, false);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RoadStraight;
     }
 
     /** For debug only */
@@ -180,6 +214,11 @@ export class OverpassTile extends PlayableBaseTile{
         super(initEdges, orientation, turn, false);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.Overpass;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "OVPS";
@@ -191,6 +230,11 @@ export class StationStraightTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.empty, Edge.road, Edge.empty];
         super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.StationStraight;
     }
 
     /** For debug only */
@@ -206,6 +250,11 @@ export class StationTurnTile extends PlayableBaseTile{
         super(initEdges, orientation, turn, true);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.StationTurn;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "STTN";
@@ -217,6 +266,11 @@ export class StationTurnMirrorTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.road, Edge.empty, Edge.empty];
         super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.StationTurnMirror;
     }
 
     /** For debug only */
@@ -232,6 +286,11 @@ export class SpecialThreeRoadOneRailTile extends PlayableBaseTile{
         super(initEdges, orientation, turn, true);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.SpecialThreeRoadOneRail;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "3D1L";
@@ -243,6 +302,11 @@ export class SpecialThreeRailOneRoadTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.rail, Edge.rail, Edge.rail];
         super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.SpecialThreeRailOneRoad;
     }
 
     /** For debug only */
@@ -258,6 +322,11 @@ export class SpecialAllRoadTile extends PlayableBaseTile{
         super(initEdges, orientation, turn, true);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.SpecialAllRoad;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "4RDS";
@@ -269,6 +338,11 @@ export class SpecialAllRailTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.rail, Edge.rail, Edge.rail];
         super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.SpecialAllRail;
     }
 
     /** For debug only */
@@ -284,6 +358,11 @@ export class SpecialRoadRailAdjacentTile extends PlayableBaseTile{
         super(initEdges, orientation, turn, true);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.SpecialRoadRailAdjacent;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "DDLL";
@@ -295,6 +374,11 @@ export class SpecialRoadRailAcrossTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.rail, Edge.road, Edge.rail];
         super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.SpecialRoadRailAcross;
     }
 
     /** For debug only */
@@ -310,6 +394,11 @@ export class RailEdgeTile extends EdgeBaseTile{
         super(initEdges);
     }
 
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RailEdge;
+    }
+
     /** For debug only */
     public GetAbbrName(): string{
         return "RLEG";
@@ -321,6 +410,11 @@ export class RoadEdgeTile extends EdgeBaseTile{
     constructor(){
         const initEdges: Edge[] = [Edge.exitRoad, Edge.exitRoad, Edge.exitRoad, Edge.exitRoad];
         super(initEdges);
+    }
+    
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RoadEdge;
     }
 
     /** For debug only */
@@ -334,6 +428,11 @@ export class WallEdgeTile extends EdgeBaseTile{
     constructor(){
         const initEdges: Edge[] = [Edge.any, Edge.any, Edge.any, Edge.any];
         super(initEdges);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.WallEdge;
     }
 
     /** For debug only */

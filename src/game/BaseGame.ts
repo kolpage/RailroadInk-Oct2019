@@ -2,11 +2,11 @@ import { Board } from "./Board";
 import { BaseDicePool } from "./DicePool";
 import { TileFactory } from "./TileFactory";
 import { BaseTurn } from "./Turn";
-import { TileType, MoveInvalidReason } from "../common/Enums";
-import { truncate } from "fs";
+import { TileType, TilePlacementResult, TurnInvalidReason } from "../common/Enums";
 import { MoveDTO } from "../common/DTO/MoveDTO";
 import { TurnResponseDTO } from "../common/DTO/TurnResponseDTO";
 import { InvalidMoveResponseDTO } from "../common/DTO/InvalidMoveResponseDTO";
+import { SpecialTileTracker } from "../common/SpecialTileTracker";
 
 export class BaseGame {
     private boardWidth: number = 7;
@@ -14,6 +14,7 @@ export class BaseGame {
     private numberOfTurns: number;
     private currentTurn: BaseTurn | undefined;
     private previousTurns: BaseTurn[];
+    private specialTileTracker: SpecialTileTracker;
     private board: Board;
     //private scoreCalc: BaseScoreCalculator;
     private dicePool: BaseDicePool;
@@ -25,6 +26,7 @@ export class BaseGame {
         this.numberOfTurns = numberOfTurns;
         this.dicePool = dicePool;
         this.tileFactory = new TileFactory();
+        this.specialTileTracker = new SpecialTileTracker();
         this.previousTurns = [];
         this.board = new Board(this.boardWidth, this.boardHeight, this.tileFactory);
 
@@ -36,28 +38,44 @@ export class BaseGame {
      * @param moves List of moves to be made.
      */
     public MakeMove(moves: MoveDTO[]): TurnResponseDTO{
-        if(this.currentTurn !== undefined && !this.currentTurn.GetIsTurnOver()){
+        if(this.isActiveTurn()){
             for(var i = 0; i < moves.length; i++){
-                const move = moves[i];
+                const move: MoveDTO = moves[i];
                 const tile = this.tileFactory.CreateTile(move.Tile, this.currentTurn.GetTurnNumber(), move.Orientation);
-                const wasMoveSuccessful = this.currentTurn.Move(move.Tile, tile, move.RowIndex, move.ColumnIndex);
-                if(!wasMoveSuccessful){
-                    return new TurnResponseDTO([new InvalidMoveResponseDTO(i, move, MoveInvalidReason.pieceNotAvailable, "The piece was not available.")]);
+                const tilePlacementResult = this.currentTurn.Move(move.Tile, tile, move.RowIndex, move.ColumnIndex);
+                if(tilePlacementResult !== TilePlacementResult.valid){
+                    this.currentTurn.UndoTurnChanges();
+                    return new TurnResponseDTO([new InvalidMoveResponseDTO(i, move, tilePlacementResult)]);
                 }
             }
-            this.currentTurn.SetTurnOver();
-            this.beginNextTurn();
-            return new TurnResponseDTO();
+            if(this.currentTurn.CanTurnBeDone()){
+                this.currentTurn.CommitTurn();
+                this.beginNextTurn();
+                return new TurnResponseDTO();
+            }
+            else{
+                this.currentTurn.UndoTurnChanges();
+                return new TurnResponseDTO([], [TurnInvalidReason.requiredDiceNotPlayed]);
+            }
         }
-        
+        else{
+            return new TurnResponseDTO([], [TurnInvalidReason.noActiveTurns]);
+        }
     }
 
     /**
-     * Returns true if all the required dice have been played and the next turn can be started. False otherwise.
+     * Returns true if there is an active turn moves can be played to.
+     */
+    private isActiveTurn(): boolean{
+        return this.currentTurn !== undefined && !this.currentTurn.GetIsTurnOver();
+    }
+
+    /**
+     * Returns true if the current turn is marked as over and the next turn can be started. False otherwise.
      */
     public CanAdvanceToNextTurn(): boolean{
         if(this.currentTurn !== undefined){
-            return this.currentTurn.CanTurnBeDone();
+            return this.currentTurn.GetIsTurnOver();
         }
         return true;
     }
@@ -107,7 +125,7 @@ export class BaseGame {
         if(this.currentTurn !== undefined){
             nextTurnNumber = this.currentTurn.GetTurnNumber() + 1;
         }
-        this.currentTurn = new BaseTurn(nextTurnNumber, rolledDice, this.board);
+        this.currentTurn = new BaseTurn(nextTurnNumber, rolledDice, this.specialTileTracker, this.board);
     }
 
 }

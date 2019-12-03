@@ -1,4 +1,4 @@
-import { TileType, MoveInvalidReason } from "../Enums";
+import { TileType, TilePlacementResult } from "../Enums";
 import { MoveDTO } from "./MoveDTO";
 
 export class InvalidMoveResponseDTO{
@@ -7,13 +7,11 @@ export class InvalidMoveResponseDTO{
      */
     public MoveIndex: number;
     public Move: MoveDTO;
-    public InvalidReason: MoveInvalidReason;
-    public ErrorMessage: string;
+    public InvalidReason: TilePlacementResult;
 
-    constructor(moveIndex: number, move: MoveDTO, invalidReason: MoveInvalidReason, errorMessage: string){
+    constructor(moveIndex: number, move: MoveDTO, invalidReason: TilePlacementResult){
         this.MoveIndex = moveIndex;
         this.Move = move;
         this.InvalidReason = invalidReason;
-        this.ErrorMessage = errorMessage;
     };
 }

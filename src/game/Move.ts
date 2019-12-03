@@ -13,17 +13,17 @@ export class Move{
     }
 
     /** Gets the tile played this move. */
-    public get_tile(): PlayableBaseTile{
+    public GetTile(): PlayableBaseTile{
         return this.tile;
     }
 
     /** Gets the row index of this move. */
-    public get_rowIndex(): number{
+    public GetRowIndex(): number{
         return this.rowIndex;
     }
 
     /** Gets the column index of this move. */
-    public get_columnIndex(): number{
+    public GetColumnIndex(): number{
         return this.columnIndex;
     }
 }
