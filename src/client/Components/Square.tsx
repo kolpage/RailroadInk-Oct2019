@@ -13,8 +13,6 @@ interface ISquareProps {
     rotateSquare: (squareColumn: number, squareRow: number) => void;
     clearSquare: (squareColumn: number, squareRow: number) => void;
 
-    // TODO: This is not good. A gameboard square should not know its location but doing it for now so that the square 
-    //       can tell the board what square needs to be updated. 
     sqaureColumn: number;
     squareRow: number;
 }

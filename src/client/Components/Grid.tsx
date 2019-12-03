@@ -7,11 +7,9 @@ import { Dice } from './Dice';
 
 
 interface IGridProps {
-    //gameTurn: IGameTurn;
     gameBoard: GameBoard;
     gameTurn: number; // TODO: Use GameTurn object
 
-    // TODO: Don't just use pass through
     addMoveToBoard: (move: Move) => void;
     updateMoveOnBoard: (move: Move) => void;
     clearMoveOnBoard: (move: Move) => void;
@@ -19,24 +17,7 @@ interface IGridProps {
 
 // TODO: Find a better name. This component represents the play area where you draw roads and rails. 
 export class Grid extends React.Component<IGridProps> {
-    // #region: Child callback functions
-    // TODO: I don't like this pattern of adding a callback/delegate for each action the square wants to do. Probably need state MGMT (or just find a better pattern)
-    //       Maybe we can just have the square return the updated tile and all board needs to do is set the new tile on the board
     private playSelectedTile(squareColumn: number, squareRow: number) {
-        // if (this.props.gameTurn.SelectedDice.IsEmpty()) {return;} // TODO: Gross procedural code
-        
-        // let tileToUpdate = this.props.gameBoard.getTile(squareColumn, squareRow);
-        // tileToUpdate.Type = this.props.gameTurn.SelectedDice.GetTile();
-        // tileToUpdate.TurnPlayed = this.props.gameTurn.TurnNumber;
-
-        // //this.props.updateBoard()
-        // let updatedBoard = this.props.gameBoard;
-        // updatedBoard.setTile(tileToUpdate, squareColumn, squareRow);
-
-        // let updatePlayedDice = this.state.playedDice;
-        // updatePlayedDice.push(this.state.selectedDice);
-        // this.state.selectedDice.Played = true;
-
         const tileToUpdate = this.props.gameBoard.GetTile(squareColumn, squareRow);
         const move = new Move(tileToUpdate, squareColumn, squareRow);
         this.props.addMoveToBoard(move);      
@@ -97,12 +78,12 @@ export class Grid extends React.Component<IGridProps> {
 
 }
 
+// TODO: This should probably be in its own file (though it doesn't seem to have much reuse outside of how Grid is using it)
 interface IGridBoarderProps {
     boarderOrientation: Orientation
 }
 
 export class GridBoarder extends React.Component<IGridBoarderProps> {
-    // TODO: Move this to its own component
     private drawBoarder(): React.ReactElement {
         const roadTile = new GameTile(TileType.RoadStraight);
         const railTile = new GameTile(TileType.RailStraight);

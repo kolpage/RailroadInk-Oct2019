@@ -39,7 +39,6 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.setState({rolledDice: RollDice(), gameTurn: this.state.gameTurn+1});
     }
 
-    // #region: Child callback functions
     private playSelectedDice(move: Move) {
         if (!this.state.selectedDice.IsEmpty()) {
             // TODO: Don't have board update the move. Not sure how to handle this since I don't want to pass the currently selected 
@@ -58,7 +57,6 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
 
     private updateMoveOnBoard(move: Move) {
-        // TODO: Update Moves property
         let updatedBoard = this.state.gameBoard;
         updatedBoard.MakeMove(move);
 
@@ -69,7 +67,6 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
 
     private removeMoveFromBoard(move: Move) {
-        // TODO: Update Moves property
         let updatedBoard = this.state.gameBoard;
         updatedBoard.RemoveMove(move);
 
@@ -118,7 +115,6 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     private updateSelectedDice(dice: GameDice) {
         this.setState({selectedDice: dice});
     }
-    // #endregion
 
     render() {
         return (
