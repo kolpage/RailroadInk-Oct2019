@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { GameBoard, GameTile, IGameTurn, Move } from '../GameModels';
+import { GameBoard, GameTile, Move } from '../GameModels';
 import { Square } from './Square';
 import { TileType, Orientation } from '../../common/Enums';
 import { ExitTile, ExitTileSide } from './Tile';
@@ -37,13 +37,13 @@ export class Grid extends React.Component<IGridProps> {
         // updatePlayedDice.push(this.state.selectedDice);
         // this.state.selectedDice.Played = true;
 
-        const tileToUpdate = this.props.gameBoard.getTile(squareColumn, squareRow);
+        const tileToUpdate = this.props.gameBoard.GetTile(squareColumn, squareRow);
         const move = new Move(tileToUpdate, squareColumn, squareRow);
         this.props.addMoveToBoard(move);      
     }
 
     private rotateSquareTile(squareColumn: number, squareRow: number) {
-        let tileToRotate = this.props.gameBoard.getTile(squareColumn, squareRow);
+        let tileToRotate = this.props.gameBoard.GetTile(squareColumn, squareRow);
         tileToRotate.RotateTile();
         const move = new Move(tileToRotate, squareColumn, squareRow);
 
@@ -51,7 +51,7 @@ export class Grid extends React.Component<IGridProps> {
     }
 
     private clearSquareTile(squareColumn: number, squareRow: number) {
-        let tileToClear = this.props.gameBoard.getTile(squareColumn, squareRow);
+        let tileToClear = this.props.gameBoard.GetTile(squareColumn, squareRow);
         const move = new Move(tileToClear, squareColumn, squareRow);
 
         this.props.clearMoveOnBoard(move);
@@ -70,7 +70,7 @@ export class Grid extends React.Component<IGridProps> {
     private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
         let row = [];
         for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
-            const tile = this.props.gameBoard.getTile(currentColumn, rowPosition);
+            const tile = this.props.gameBoard.GetTile(currentColumn, rowPosition);
             const cellKey = `${currentColumn}${rowPosition}`
             row.push(<Square gameTile={tile} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }

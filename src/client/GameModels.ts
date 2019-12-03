@@ -9,27 +9,6 @@ export interface IGameTile {
     IsTileEmpty: () => boolean;
 }
 
-//<summary>Represents a turn in the game</summary>
-export interface IGameTurn {
-    Moves: Move[];
-    TurnNumber: number;
-    RolledDice: GameDice[];
-    SelectedDice: GameDice;
-    Board: GameBoard;
-}
-
-export class Move {
-    TilePlayed: IGameTile;
-    RowPosition: number;
-    ColumnPosition: number;
-
-    constructor(tilePlayed: IGameTile, tileColumnPosition: number, tileRowPosition: number) {
-        this.TilePlayed = tilePlayed;
-        this.ColumnPosition = tileColumnPosition;
-        this.RowPosition = tileRowPosition;
-    }
-}
-
 export class GameTile implements IGameTile {
     public Type: TileType;
     public TileOrientation: Orientation;
@@ -83,6 +62,58 @@ export class GameDice {
     }
 }
 
+//<summary>Represents a turn in the game</summary>
+export class GameTurn {
+    TurnNumber: number;
+    RolledDice: GameDice[];
+    SelectedDice: GameDice;
+    Board: GameBoard;
+}
+
+export class TurnMoves {
+    private moves: Move[] = [];
+
+    public AddMove(move: Move) {
+        this.moves.push(move);
+    }
+
+    public RemoveMove(moveToRemove: Move) {
+        this.moves.forEach( (move, index) => {
+            if (move.IsMoveAtSamePosition(moveToRemove)) {
+                this.moves.splice(index, 1);
+            }
+        });
+    }
+
+    public UpdateMove(updatedMove: Move) {
+        this.RemoveMove(updatedMove);
+        this.AddMove(updatedMove);
+    }
+
+    //TODO: Remove debug code
+    public PrintMoves() {
+        this.moves.forEach((move) =>{
+            console.log(move.TilePlayed.Type.toString());
+        });
+    }
+}
+
+export class Move {
+    TilePlayed: IGameTile;
+    RowPosition: number;
+    ColumnPosition: number;
+
+    constructor(tilePlayed: IGameTile, tileColumnPosition: number, tileRowPosition: number) {
+        this.TilePlayed = tilePlayed;
+        this.ColumnPosition = tileColumnPosition;
+        this.RowPosition = tileRowPosition;
+    }
+
+    public IsMoveAtSamePosition(move: Move) {
+        return (this.RowPosition === move.RowPosition) && (this.ColumnPosition === move.ColumnPosition);
+    }
+}
+
 export class GameBoard {
     public readonly numberOfColumns: number;
     public readonly numberOrRows: number;
@@ -96,33 +127,33 @@ export class GameBoard {
         this.createEmptyBoard();
     }
 
-    public AddMove(move: Move) {
-        this.PlayTile(move.TilePlayed, move.ColumnPosition, move.RowPosition);
+    public MakeMove(move: Move) {
+        this.playTile(move.TilePlayed, move.ColumnPosition, move.RowPosition);
     }
 
     public RemoveMove(move: Move) {
         this.clearTile(move.ColumnPosition, move.RowPosition);
     }
 
-    public PlayTile(gameTile: IGameTile, col: number, row: number) {
-        if (!gameTile.IsTileEmpty()) {
-            this.setTile(gameTile, col, row);
-        }
-    }
-
-    public getTile(col: number, row: number) {
+    public GetTile(col: number, row: number) {
         if (col < this.numberOfColumns || row < this.numberOrRows) {
             return this.board[col][row];
         }
     }
 
-    public setTile(tile: GameTile, col: number, row: number) {
+    private playTile(gameTile: IGameTile, col: number, row: number) {
+        if (!gameTile.IsTileEmpty()) {
+            this.setTile(gameTile, col, row);
+        }
+    }
+
+    private setTile(tile: GameTile, col: number, row: number) {
         if (col < this.numberOfColumns || row < this.numberOrRows) {
             this.board[col][row] = tile;
         }
     }
 
-    public clearTile(col: number, row: number) {
+    private clearTile(col: number, row: number) {
         if (col < this.numberOfColumns || row < this.numberOrRows) {
             this.board[col][row] = new GameTile(TileType.Empty);
         }

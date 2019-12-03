@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Square } from './Square';
 import { Inventory } from './Inventory';
 import '../styles/board.scss';
 import '../styles/inventory.scss';
 import '../styles/tile.scss';
 import { RollDice, GetSpeicalDice } from '../GameServices';
-import { GameBoard, GameDice, GameTile, Move } from '../GameModels';
+import { GameBoard, GameDice, GameTile, Move, TurnMoves } from '../GameModels';
 import { TileType, Orientation } from '../../common/Enums';
 import { Grid } from './Grid';
 
@@ -16,7 +15,7 @@ interface IBoardProps {
 interface IBoardState {
     selectedDice: GameDice;
     rolledDice: GameDice[]; // TODO: This should just be gotten from the server
-    playedDice: GameDice[];
+    playedTiles: TurnMoves;
     gameBoard: GameBoard;
     gameTurn: number;
 }
@@ -30,7 +29,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.state = {
             selectedDice: new GameDice(), 
             rolledDice: RollDice(),
-            playedDice: [],
+            playedTiles: new TurnMoves(),
             gameBoard: this.props.gameBoard,
             gameTurn: 1
         }
@@ -48,28 +47,36 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
             move.TilePlayed.Type = this.state.selectedDice.GetTileType();
             move.TilePlayed.TurnPlayed = this.state.gameTurn;
             let updatedBoard = this.state.gameBoard;
-            updatedBoard.AddMove(move);
+            updatedBoard.MakeMove(move);
 
-            let updatePlayedDice = this.state.playedDice;
-            updatePlayedDice.push(this.state.selectedDice);
+            let updatedPlayedTiles = this.state.playedTiles
+            updatedPlayedTiles.AddMove(move);
             this.state.selectedDice.Played = true;
 
-            this.setState({gameBoard: updatedBoard, playedDice: updatePlayedDice, selectedDice: new GameDice()});   
+            this.setState({gameBoard: updatedBoard, playedTiles: updatedPlayedTiles, selectedDice: new GameDice()});   
         }  
     }
 
     private updateMoveOnBoard(move: Move) {
         // TODO: Update Moves property
         let updatedBoard = this.state.gameBoard;
-        updatedBoard.AddMove(move);
-        this.setState({gameBoard: updatedBoard});
+        updatedBoard.MakeMove(move);
+
+        let updatedPlayedTiles = this.state.playedTiles;
+        updatedPlayedTiles.UpdateMove(move);
+
+        this.setState({gameBoard: updatedBoard, playedTiles: updatedPlayedTiles});
     }
 
     private removeMoveFromBoard(move: Move) {
         // TODO: Update Moves property
         let updatedBoard = this.state.gameBoard;
         updatedBoard.RemoveMove(move);
-        this.setState({gameBoard: updatedBoard});
+
+        let updatedPlayedTiles = this.state.playedTiles;
+        updatedPlayedTiles.RemoveMove(move);
+
+        this.setState({gameBoard: updatedBoard, playedTiles: updatedPlayedTiles});
 
         this.resetDice(move.TilePlayed.Type); // TODO: Get rid of reference to type enum
     }
