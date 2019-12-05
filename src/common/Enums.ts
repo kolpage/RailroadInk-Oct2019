@@ -59,11 +59,16 @@ export enum EdgeMatchingStatus{
 }
 
 /** Reason a move is invalid */
-export enum MoveInvalidReason{
-    pieceNotAvailable
+export enum TilePlacementResult{
+    valid,
+    violatesGameRules,
+    invalidCoordinates,
+    alreadyTileAtLocation,
+    tileNotAvailable
 }
 
 /** Reason a turn is invalid */
 export enum TurnInvalidReason{
-    requiredDiceNotPlayed
+    requiredDiceNotPlayed,
+    noActiveTurns
 }

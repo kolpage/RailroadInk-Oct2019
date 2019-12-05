@@ -1,7 +1,8 @@
-import { TileType } from "../common/Enums";
+import { TileType, TilePlacementResult } from "../common/Enums";
 import { Move } from "./Move";
 import { PlayableBaseTile } from "./tiles";
 import { Board } from "./Board";
+import { SpecialTileTracker } from "../common/SpecialTileTracker";
 
 export interface IPlayableDice{
     tileType: TileType,
@@ -11,15 +12,19 @@ export interface IPlayableDice{
 
 /** Object representing the state of a single turn */
 export class BaseTurn{
+    private isTurnCommitted: boolean = false;
+    private playedSpecialTile: boolean = false;
     private diceToPlay: IPlayableDice[];
     private playedTiles: Move[];
     private turnNumber: number;
     private board: Board;
-    private isTurnOver: boolean = false;;
+    private isTurnOver: boolean = false;
+    private specialTileTracker: SpecialTileTracker;
 
-    constructor(turnNumber: number, rolledDice: TileType[], board: Board){
+    constructor(turnNumber: number, rolledDice: TileType[], specialTileTracker: SpecialTileTracker, board: Board){
         this.turnNumber = turnNumber;
         this.board = board;
+        this.specialTileTracker = specialTileTracker;
         this.diceToPlay = [];
         this.playedTiles = [];
         for(const rolledDie of rolledDice){
@@ -31,13 +36,41 @@ export class BaseTurn{
         }
     }
 
-    /** Marks the turn as over. */
-    public SetTurnOver(): boolean{
-        if(this.CanTurnBeDone()){
-            this.isTurnOver = true;
-            return true;
+    /**
+     * Undoes any moves made during this turn. Cannot be done once turn is committed.
+     */
+    public UndoTurnChanges(): void{
+        if(!this.isTurnCommitted){
+            this.diceToPlay.forEach(die => die.played = false);
+            this.playedTiles.forEach(move => {
+                this.board.RemoveTile(move.GetRowIndex(), move.GetColumnIndex());
+            })
+            this.playedTiles = [];
+            this.playedSpecialTile = false;
         }
-        return false;
+    }
+
+    /**
+     * Ends the turn and locks in the moves made for this turn. They can no longer be undone. 
+     * Updates the board and special tile tracker objects.
+     */
+    public CommitTurn(): void{
+        if(!this.isTurnCommitted && this.CanTurnBeDone()){
+            this.isTurnCommitted = true;
+            this.playedTiles.forEach(move => {
+                const tile = move.GetTile();
+                const die: IPlayableDice = this.diceToPlay.find(die => die.tileType === tile.GetTileType());
+                if(die === undefined){
+                    this.specialTileTracker.PlayTile(tile.GetTileType());
+                }
+            });
+            this.setTurnOver();
+        }
+    }
+
+    /** Marks the turn as over. */
+    private setTurnOver(): void{
+        this.isTurnOver = true;
     }
 
     /** Returns true if the turn is complete. */
@@ -56,17 +89,40 @@ export class BaseTurn{
         playedTile: PlayableBaseTile, 
         rowIndex: number, 
         columnIndex: number
-    ): boolean{
-
-        const wasTileSet = this.board.SetTile(playedTile, rowIndex, columnIndex, false);
-        if(wasTileSet){
-            this.playedTiles.push(new Move(playedTile, rowIndex, columnIndex));
-            const die = this.diceToPlay.find(die => die.tileType === tileType && !die.played);
-            if(die){
-                die.played = true;
-            }
+    ): TilePlacementResult{
+        const isDieAvailable = this.isTileAvailable(tileType);
+        if(!isDieAvailable){
+            return TilePlacementResult.tileNotAvailable;
         }
-        return wasTileSet;
+
+        const isMoveAllowed = this.board.IsTilePositionValid(playedTile, rowIndex, columnIndex);
+        if(!isMoveAllowed){
+            return TilePlacementResult.violatesGameRules;
+        }
+
+        this.board.SetTile(playedTile, rowIndex, columnIndex, false);
+        this.playedTiles.push(new Move(playedTile, rowIndex, columnIndex));
+        const die = this.diceToPlay.find(die => die.tileType === tileType && !die.played);
+        if(die){
+            die.played = true;
+        }
+        else{
+            //If it can't find the die in the dice to play array, it must be a special tile.
+            this.playedSpecialTile = true;
+        }
+        return TilePlacementResult.valid;
+    }
+
+    /**
+     * Checks if the specified tile is available for play. First checks rolled dice, then checks the special tiles.
+     * @param tile The tile to see if available.
+     */
+    private isTileAvailable(tile: TileType): boolean{
+        let isDieAvailable = this.diceToPlay.some(die => die.tileType === tile && !die.played);
+        if(!isDieAvailable){
+            isDieAvailable = !this.playedSpecialTile && this.specialTileTracker.CanPlayTile(tile);
+        }
+        return isDieAvailable;
     }
 
     /** Gets all the dice rolled for this turn. */

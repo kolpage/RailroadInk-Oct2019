@@ -1,9 +1,10 @@
 import { BaseTile, PlayableBaseTile } from "../game/tiles";
-import { TileType, Orientation } from "../common/Enums";
+import { TileType, Orientation, TilePlacementResult } from "../common/Enums";
 import { TileFactory } from "../game/TileFactory";
 import { StandardDicePool } from "../game/DicePool";
 import { Board } from "../game/Board";
 import { BaseTurn } from "../game/Turn";
+import { SpecialTileTracker } from "../common/SpecialTileTracker";
 
 export class Test{
     public static TileTest(){
@@ -102,9 +103,9 @@ export class Test{
         const tileFactory = new TileFactory();
         const board = new Board(7,7,tileFactory);
         const turnNumber = 1;
-        const turn = new BaseTurn(turnNumber, [TileType.RoadStraight, TileType.RoadTurn, TileType.RailStraight, TileType.StationStraight], board);
-        let isMoveAllowed: boolean;
-        let wasMoveSuccessful: boolean;
+        const specialTileTracker = new SpecialTileTracker();
+        const turn = new BaseTurn(turnNumber, [TileType.RoadStraight, TileType.RoadTurn, TileType.RailStraight, TileType.StationStraight], specialTileTracker, board);
+        let wasMoveSuccessful: TilePlacementResult;
 
         //Place straight road against top right exit
         const straightRoadTile = tileFactory.CreateTile(TileType.RoadStraight, turnNumber, Orientation.up);
@@ -113,7 +114,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RoadStraight, straightRoadTile, 0, 5);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight road tile because tile was already in place.");
             return;
         }
@@ -125,7 +126,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RoadTurn, turnRoadTile, 1, 5);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place turn road tile because tile was already in place.");
             return;
         }
@@ -136,7 +137,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.StationStraight, stationTile, 1, 4);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight station tile because tile was already in place.");
             return;
         }
@@ -148,7 +149,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RailStraight, straightRailTile, 1, 3);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight rail tile because tile was already in place.");
             return;
         }
@@ -160,9 +161,9 @@ export class Test{
         const tileFactory = new TileFactory();
         const board = new Board(7,7,tileFactory);
         const turnNumber = 1;
-        const turn = new BaseTurn(turnNumber, [TileType.RoadStraight, TileType.RoadTurn, TileType.RailStraight, TileType.StationStraight], board);
-        let isMoveAllowed: boolean;
-        let wasMoveSuccessful: boolean;
+        const specialTileTracker = new SpecialTileTracker();
+        const turn = new BaseTurn(turnNumber, [TileType.RoadStraight, TileType.RoadTurn, TileType.RailStraight, TileType.StationStraight],specialTileTracker, board);
+        let wasMoveSuccessful: TilePlacementResult;
 
         //Place straight road against top right exit
         const straightRoadTile = tileFactory.CreateTile(TileType.RoadStraight, turnNumber, Orientation.up);
@@ -171,7 +172,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RoadStraight, straightRoadTile, 0, 5);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight road tile because tile was already in place.");
             return;
         }
@@ -183,7 +184,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RoadTurn, turnRoadTile, 1, 5);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place turn road tile because tile was already in place.");
             return;
         }
@@ -195,7 +196,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.StationStraight, stationTile, 1, 4);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight station tile because tile was already in place.");
             return;
         }
@@ -207,7 +208,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RailStraight, straightRailTile, 1, 3);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight rail tile because tile was already in place.");
             return;
         }
@@ -219,9 +220,9 @@ export class Test{
         const tileFactory = new TileFactory();
         const board = new Board(7,7,tileFactory);
         const turnNumber = 1;
-        const turn = new BaseTurn(turnNumber, [TileType.RoadStraight, TileType.RoadTurn, TileType.RailStraight, TileType.StationStraight], board);
-        let isMoveAllowed: boolean;
-        let wasMoveSuccessful: boolean;
+        const specialTileTracker = new SpecialTileTracker();
+        const turn = new BaseTurn(turnNumber, [TileType.RoadStraight, TileType.RoadTurn, TileType.RailStraight, TileType.StationStraight], specialTileTracker, board);
+        let wasMoveSuccessful: TilePlacementResult;
 
         //Place straight road against top right exit
         const straightRoadTile = tileFactory.CreateTile(TileType.RoadStraight, turnNumber, Orientation.up);
@@ -230,7 +231,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RoadStraight, straightRoadTile, 0, 5);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight road tile because tile was already in place.");
             return;
         }
@@ -242,7 +243,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RoadTurn, turnRoadTile, 1, 5);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place turn road tile because tile was already in place.");
             return;
         }
@@ -253,7 +254,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.StationStraight, stationTile, 1, 4);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight station tile because tile was already in place.");
             return;
         }
@@ -265,7 +266,7 @@ export class Test{
             return;
         }
         wasMoveSuccessful = turn.Move(TileType.RailStraight, straightRailTile, 1, 3);
-        if(!wasMoveSuccessful){
+        if(wasMoveSuccessful !== TilePlacementResult.valid){
             console.log("ERROR: Could not place straight rail tile because tile was already in place.");
             return;
         }
