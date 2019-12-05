@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '../styles/square.scss';
 import { Tile } from './Tile';
-import { IGameTile } from '../GameModels';
+import { IGameTile } from '../Models/GameTile';
 
 const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
 const RemoveIcon = require("../Assests/RemoveCrop.png")

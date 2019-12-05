@@ -1,12 +1,18 @@
+// import update from 'react-addons-update';
+import update from 'immutability-helper';
+
 import * as React from 'react';
 import { Inventory } from './Inventory';
 import '../styles/board.scss';
 import '../styles/inventory.scss';
 import '../styles/tile.scss';
 import { RollDice, GetSpeicalDice } from '../GameServices';
-import { GameBoard, GameDice, GameTile, Move, TurnMoves } from '../GameModels';
-import { TileType, Orientation } from '../../common/Enums';
+import { GameDice } from '../Models/GameDice';
+import { TileType } from '../../common/Enums';
 import { Grid } from './Grid';
+import { GameBoard } from '../Models/GameBoard';
+import { TurnMoves } from '../Models/GameTurn';
+import { Move } from '../Models/GameTurn';
 
 interface IBoardProps {
     gameBoard: GameBoard;

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { GameBoard, GameTile, Move } from '../GameModels';
 import { Square } from './Square';
 import { TileType, Orientation } from '../../common/Enums';
 import { ExitTile, ExitTileSide } from './Tile';
-import { Dice } from './Dice';
+import { GameBoard } from '../Models/GameBoard';
+import { Move } from '../Models/GameTurn';
+import { GameTile } from '../Models/GameTile';
 
 
 interface IGridProps {
