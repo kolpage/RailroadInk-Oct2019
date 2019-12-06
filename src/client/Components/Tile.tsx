@@ -66,7 +66,6 @@ export class ExitTile extends Tile{
     }
 }
 
-// TODO: Combine the two ExitTile classes
 export class ExitTileSide extends Tile{
     constructor(props: ITileProps) {
         super(props);

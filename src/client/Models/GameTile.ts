@@ -10,6 +10,7 @@ export interface IGameTile {
     MirrorTile:() => void;
     IsTileEmpty: () => boolean;
     CanTileBeMirror: () => boolean;
+    AreTilesEquivalent: (otherTile: IGameTile) => boolean;
 }
 
 export class GameTile implements IGameTile {
@@ -32,15 +33,7 @@ export class GameTile implements IGameTile {
     }
 
     public MirrorTile() {
-        // TODO: Gross. Switchstatment means this should be poloymorphic
-        switch (this.Type) {
-            case TileType.StationTurn:
-                this.Type = TileType.StationTurnMirror;
-                break;
-            case TileType.StationTurnMirror:
-                this.Type = TileType.StationTurn;
-                break;
-        }
+        this.Type = this.getMirroredType();
     }
 
     public IsTileEmpty() {
@@ -50,5 +43,25 @@ export class GameTile implements IGameTile {
     public CanTileBeMirror() {
         // TODO: Make this poloymorphic behavior 
         return (this.Type == TileType.StationTurn || this.Type == TileType.StationTurnMirror);
+    }
+
+    public AreTilesEquivalent(otherTile: IGameTile) {
+        return this.areTilesSameType(otherTile) || (this.getMirroredType() === otherTile.Type);
+    }
+
+    private areTilesSameType(otherTile: IGameTile) {
+        return this.Type === otherTile.Type;
+    }
+
+    private getMirroredType() {
+        // TODO: Gross. Switchstatment means this should be poloymorphic
+        switch (this.Type) {
+            case TileType.StationTurn:
+                return TileType.StationTurnMirror;
+            case TileType.StationTurnMirror:
+                return TileType.StationTurn;
+            default: 
+                return this.Type;
+        }
     }
 }

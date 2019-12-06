@@ -59,4 +59,8 @@ export class Move {
     public IsMoveAtSamePosition(move: Move) {
         return (this.RowPosition === move.RowPosition) && (this.ColumnPosition === move.ColumnPosition);
     }
+
+    public PlayTile(gameTile: IGameTile) {
+        
+    }
 }

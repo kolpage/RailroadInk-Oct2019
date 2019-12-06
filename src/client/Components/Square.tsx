@@ -20,6 +20,15 @@ interface ISquareProps {
 }
 
 export class Square extends React.Component<ISquareProps> {
+    constructor(props: ISquareProps) {
+        super(props);
+        this.bindFunction();
+    }
+
+    private bindFunction() {
+        this.playSelectedTile = this.playSelectedTile.bind(this);
+        this.rotateSquare = this.rotateSquare.bind(this);
+    }
 
     playSelectedTile() {
         if(this.isSquarePlayable()) {
@@ -99,7 +108,7 @@ export class Square extends React.Component<ISquareProps> {
                 {this.drawMirrorButton()}
                 {this.drawRemoveButton()}
                 <div className='turnNumber'>{this.props.gameTile.TurnPlayed}</div>
-                <div onClick={this.playSelectedTile.bind(this)} onContextMenu={this.rotateSquare.bind(this)}>
+                <div onClick={this.playSelectedTile} onContextMenu={this.rotateSquare}>
                     <Tile tile={this.props.gameTile} />
                 </div>
             </div>

@@ -18,6 +18,18 @@ interface IGridProps {
 
 // TODO: Find a better name. This component represents the play area where you draw roads and rails. 
 export class Grid extends React.Component<IGridProps> {
+    constructor(props: IGridProps) {
+        super(props);
+        this.bindFunction();
+    }
+
+    private bindFunction() {
+        this.playSelectedTile = this.playSelectedTile.bind(this);
+        this.rotateSquareTile = this.rotateSquareTile.bind(this);
+        this.clearSquareTile = this.clearSquareTile.bind(this);
+        this.mirrorSquareTile = this.mirrorSquareTile.bind(this);
+    }
+
     private playSelectedTile(squareColumn: number, squareRow: number) {
         const tileToUpdate = this.props.gameBoard.GetTile(squareColumn, squareRow);
         const move = new Move(tileToUpdate, squareColumn, squareRow);
@@ -60,7 +72,7 @@ export class Grid extends React.Component<IGridProps> {
             const tile = this.props.gameBoard.GetTile(currentColumn, rowPosition);
             const cellKey = `${currentColumn}${rowPosition}`
             // TODO: Reduce the amount of parameters Square takes
-            row.push(<Square gameTile={tile} playSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} mirrorSquare={this.mirrorSquareTile.bind(this)} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+            row.push(<Square gameTile={tile} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }
         return (
             <div className='row' key={"gameBoardRow" + rowPosition}>
@@ -92,9 +104,9 @@ interface IGridBoarderProps {
 
 export class GridBoarder extends React.Component<IGridBoarderProps> {
     private drawBoarder(): React.ReactElement {
-        const roadTile = new GameTile(TileType.RoadStraight);
-        const railTile = new GameTile(TileType.RailStraight);
-        const emptyTile = new GameTile(TileType.Empty);
+        const roadTile = new GameTile(TileType.RoadStraight, this.props.boarderOrientation);
+        const railTile = new GameTile(TileType.RailStraight, this.props.boarderOrientation);
+        const emptyTile = new GameTile(TileType.Empty, this.props.boarderOrientation);
         return (
             <div className='row'>
                 <ExitTile tile={emptyTile} />
@@ -108,9 +120,9 @@ export class GridBoarder extends React.Component<IGridBoarderProps> {
     }
 
     private drawSideBoarder(): React.ReactElement {
-        const roadTile = new GameTile(TileType.RoadStraight, Orientation.right);
-        const railTile = new GameTile(TileType.RailStraight, Orientation.right);
-        const emptyTile = new GameTile(TileType.Empty, Orientation.right);
+        const roadTile = new GameTile(TileType.RoadStraight, this.props.boarderOrientation);
+        const railTile = new GameTile(TileType.RailStraight, this.props.boarderOrientation);
+        const emptyTile = new GameTile(TileType.Empty, this.props.boarderOrientation);
         return (
             <div className='sideExitBoarder'>
                 <ExitTileSide tile={emptyTile} />

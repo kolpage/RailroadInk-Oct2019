@@ -23,25 +23,40 @@
 
 
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, screen } from 'electron';
 import { Test } from './test/Test';
+const windowStateKeeper = require('electron-window-state');
 
-function createWindow () {
-  // Create the browser window.
+function createWindowWithState() {
+  // Load the previous state with fallback to defaults
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: width,
+    defaultHeight: height,
+  });
+ 
+  // Create the window using the state information
   let win = new BrowserWindow({
-    width: 650,
-    height: 860,
+    'x': mainWindowState.x,
+    'y': mainWindowState.y,
+    'width': mainWindowState.width,
+    'height': mainWindowState.height,
     webPreferences: {
       nodeIntegration: true
     }
   });
+ 
+  // Let us register listeners on the window, so we can update the state
+  // automatically (the listeners will be removed when the window is closed)
+  // and restore the maximized or full screen state
+  mainWindowState.manage(win);
 
   // and load the index.html of the app.
   win.loadFile('index.html');
   win.webContents.openDevTools(); // TODO: Remove this line when client dev is done
 }
 
-app.on('ready', createWindow);
+app.on('ready', createWindowWithState);
 //Test.TileTest();
 //Test.StandardDicePoolTest_NoSeed();
 //Test.StandardDicePoolTest_WithSeed("Tony_was_here");

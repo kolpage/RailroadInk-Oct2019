@@ -16,7 +16,7 @@ export class GameBoard {
     }
 
     public MakeMoveOnEmptyTile(move: Move) {
-        
+
     }
 
     public MakeMove(move: Move) {
@@ -39,7 +39,7 @@ export class GameBoard {
         }
     }
 
-    private setTile(tile: GameTile, col: number, row: number) {
+    private setTile(tile: IGameTile, col: number, row: number) {
         if (col < this.numberOfColumns || row < this.numberOrRows) {
             this.board[col][row] = tile;
         }
