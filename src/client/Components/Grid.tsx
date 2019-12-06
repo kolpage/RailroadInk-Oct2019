@@ -28,15 +28,20 @@ export class Grid extends React.Component<IGridProps> {
         let tileToRotate = this.props.gameBoard.GetTile(squareColumn, squareRow);
         tileToRotate.RotateTile();
         const move = new Move(tileToRotate, squareColumn, squareRow);
-
         this.props.updateMoveOnBoard(move);
     }
 
     private clearSquareTile(squareColumn: number, squareRow: number) {
         let tileToClear = this.props.gameBoard.GetTile(squareColumn, squareRow);
         const move = new Move(tileToClear, squareColumn, squareRow);
-
         this.props.clearMoveOnBoard(move);
+    }
+
+    private mirrorSquareTile(squareColumn: number, squareRow: number) {
+        let tileToMirror = this.props.gameBoard.GetTile(squareColumn, squareRow);
+        tileToMirror.MirrorTile();
+        const move = new Move(tileToMirror, squareColumn, squareRow);
+        this.props.updateMoveOnBoard(move);
     }
 
     private buildPlayAreaGrid() {
@@ -54,7 +59,8 @@ export class Grid extends React.Component<IGridProps> {
         for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
             const tile = this.props.gameBoard.GetTile(currentColumn, rowPosition);
             const cellKey = `${currentColumn}${rowPosition}`
-            row.push(<Square gameTile={tile} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+            // TODO: Reduce the amount of parameters Square takes
+            row.push(<Square gameTile={tile} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} mirrorSquare={this.mirrorSquareTile.bind(this)} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }
         return (
             <div className='row' key={"gameBoardRow" + rowPosition}>

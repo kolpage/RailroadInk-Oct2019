@@ -1,4 +1,5 @@
 import { TileType, Orientation } from "../../common/Enums";
+import { Tile } from "../Components/Tile";
 
 export interface IGameTile {
     Type: TileType;
@@ -6,7 +7,9 @@ export interface IGameTile {
     TurnPlayed?: number; // TODO: Currently using null to indicate the tile hasn't been played...maybe not needed
 
     RotateTile: () => void;
+    MirrorTile:() => void;
     IsTileEmpty: () => boolean;
+    CanTileBeMirror: () => boolean;
 }
 
 export class GameTile implements IGameTile {
@@ -24,18 +27,28 @@ export class GameTile implements IGameTile {
         let newOrientation = this.TileOrientation + 1;
         if(newOrientation >= Orientation._length) {
             newOrientation = 0;
-
-            // TODO: Find a better way to handle mirror tiles
-            if (this.Type == TileType.StationTurn) {
-                this.Type = TileType.StationTurnMirror
-            } else if (this.Type == TileType.StationTurnMirror) {
-              this.Type = TileType.StationTurn  
-            }
         }
         this.TileOrientation = newOrientation;
     }
 
+    public MirrorTile() {
+        // TODO: Gross. Switchstatment means this should be poloymorphic
+        switch (this.Type) {
+            case TileType.StationTurn:
+                this.Type = TileType.StationTurnMirror;
+                break;
+            case TileType.StationTurnMirror:
+                this.Type = TileType.StationTurn;
+                break;
+        }
+    }
+
     public IsTileEmpty() {
         return this.Type == TileType.Empty;
+    }
+
+    public CanTileBeMirror() {
+        // TODO: Make this poloymorphic behavior 
+        return (this.Type == TileType.StationTurn || this.Type == TileType.StationTurnMirror);
     }
 }

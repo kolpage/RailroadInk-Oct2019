@@ -2,6 +2,9 @@ import { GameDice } from "./GameDice";
 import { IGameTile } from "./GameTile";
 import { GameBoard } from "./GameBoard";
 
+// import update from 'react-addons-update';
+import update from 'immutability-helper';
+
 //<summary>Represents a turn in the game</summary>
 export class GameTurn {
     TurnNumber: number;

@@ -39,5 +39,5 @@ export function TranslateMoveToDTO(move: Move) {
 }
 
 function PrepareMovesForDTO(moves: TurnMoves) {
-    var movesDTO = moves.GetMoves().map( move => this.TranslateMoveToDTO(move));
+    return moves.GetMoves().map( move => this.TranslateMoveToDTO(move));
 }
