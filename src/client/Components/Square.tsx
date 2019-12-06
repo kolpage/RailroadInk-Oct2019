@@ -10,7 +10,7 @@ interface ISquareProps {
     // TODO: Use Move instead of IGameTile & rc
     gameTile: IGameTile;
     currentGameTurn: number; // TODO: Pass in this infomration in a better way
-    updateSquare: (squareColumn: number, squareRow: number) => void;
+    playSquare: (squareColumn: number, squareRow: number) => void;
     rotateSquare: (squareColumn: number, squareRow: number) => void;
     clearSquare: (squareColumn: number, squareRow: number) => void;
     mirrorSquare: (squareColumn: number, squareRow: number) => void;
@@ -21,9 +21,9 @@ interface ISquareProps {
 
 export class Square extends React.Component<ISquareProps> {
 
-    changeSelected() {
-        if(this.canSqaureBeUpdted()) {
-            this.props.updateSquare(this.props.sqaureColumn, this.props.squareRow);
+    playSelectedTile() {
+        if(this.isSquarePlayable()) {
+            this.props.playSquare(this.props.sqaureColumn, this.props.squareRow);
         }
     }
 
@@ -47,6 +47,10 @@ export class Square extends React.Component<ISquareProps> {
 
     private canSqaureBeUpdted() {
         return (this.props.gameTile.TurnPlayed == null || this.props.gameTile.TurnPlayed == this.props.currentGameTurn);
+    }
+
+    private isSquarePlayable() {
+        return this.props.gameTile.IsTileEmpty() && this.canSqaureBeUpdted();
     }
 
     private isSquareActive() {
@@ -95,7 +99,7 @@ export class Square extends React.Component<ISquareProps> {
                 {this.drawMirrorButton()}
                 {this.drawRemoveButton()}
                 <div className='turnNumber'>{this.props.gameTile.TurnPlayed}</div>
-                <div onClick={this.changeSelected.bind(this)} onContextMenu={this.rotateSquare.bind(this)}>
+                <div onClick={this.playSelectedTile.bind(this)} onContextMenu={this.rotateSquare.bind(this)}>
                     <Tile tile={this.props.gameTile} />
                 </div>
             </div>

@@ -21,7 +21,7 @@ export class Grid extends React.Component<IGridProps> {
     private playSelectedTile(squareColumn: number, squareRow: number) {
         const tileToUpdate = this.props.gameBoard.GetTile(squareColumn, squareRow);
         const move = new Move(tileToUpdate, squareColumn, squareRow);
-        this.props.addMoveToBoard(move);      
+        this.props.addMoveToBoard(move); 
     }
 
     private rotateSquareTile(squareColumn: number, squareRow: number) {
@@ -60,7 +60,7 @@ export class Grid extends React.Component<IGridProps> {
             const tile = this.props.gameBoard.GetTile(currentColumn, rowPosition);
             const cellKey = `${currentColumn}${rowPosition}`
             // TODO: Reduce the amount of parameters Square takes
-            row.push(<Square gameTile={tile} updateSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} mirrorSquare={this.mirrorSquareTile.bind(this)} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+            row.push(<Square gameTile={tile} playSquare={this.playSelectedTile.bind(this)} rotateSquare={this.rotateSquareTile.bind(this)} clearSquare={this.clearSquareTile.bind(this)} mirrorSquare={this.mirrorSquareTile.bind(this)} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }
         return (
             <div className='row' key={"gameBoardRow" + rowPosition}>
