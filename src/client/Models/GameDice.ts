@@ -2,7 +2,6 @@ import { TileType } from '../../common/Enums';
 import { IGameTile, GameTile } from './GameTile';
 
 
-
 export class GameDice {
     static idCounter: number = 0; //TODO: Gross static code...
 
@@ -26,6 +25,10 @@ export class GameDice {
 
     public SetGameTurn(gameTurn: number) {
         this.Tile.TurnPlayed = gameTurn;
+    }
+
+    public MarkAsPlayed() {
+        this.Played = true;
     }
 }
 

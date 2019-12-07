@@ -11,6 +11,7 @@ import { GameDice } from '../Models/GameDice';
 import { Grid } from './Grid';
 import { GameBoard } from '../Models/GameBoard';
 import { TurnMoves, Move } from '../Models/GameTurn';
+import { IGameTile } from '../Models/GameTile';
 
 
 interface IBoardProps {
@@ -50,16 +51,19 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.removeMoveFromBoard = this.removeMoveFromBoard.bind(this);
         this.rollDice = this.rollDice.bind(this);
         this.updateRolledDice = this.updateRolledDice.bind(this);
+        this.canAdvanceTurn = this.canAdvanceTurn.bind(this);
     }
     
     private rollDice() {
         AdvanceTurn(this.state.playedTiles);
+        // TODO: Dice for next turn should just be returned from the main process
         RollDice(this.updateRolledDice);
     }
 
     private updateRolledDice(gameDice: GameDice[]) {
-        const nextGameTurn = this.state.gameTurn+1;
         // TODO: Get game turn from server and not manually set it here
+        const nextGameTurn = this.state.gameTurn+1;
+        
         gameDice.forEach(dice => {
             dice.SetGameTurn(nextGameTurn);
         });
@@ -76,7 +80,13 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
 
             let updatedPlayedTiles = this.state.playedTiles
             updatedPlayedTiles.AddMove(move);
-            this.state.selectedDice.Played = true;
+            this.state.selectedDice.MarkAsPlayed();
+
+            // TODO: Handle tracking the turn special dice were played better
+            if (this.isSpecialTile(move.TilePlayed)) {
+                move.TilePlayed.TurnPlayed = this.state.gameTurn;
+                this.updateSpecialDiceForMove(move);
+            }
 
             this.setState({gameBoard: updatedBoard, playedTiles: updatedPlayedTiles, selectedDice: new GameDice()});   
         }  
@@ -127,8 +137,36 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         }
     }
 
+    // TODO: Moves these check somewhere else (models if possible)
     private updateSelectedDice(dice: GameDice) {
-        this.setState({selectedDice: dice});
+        // TODO: Clean up this check
+       if (!this.isSpecialDice(dice) || (this.isSpecialDice(dice) && this.canPlaySpecialDice())) {
+           console.log(dice.Tile.Type + " " + dice.Tile.TurnPlayed);
+            this.setState({selectedDice: dice});
+        }
+    }
+
+    private canAdvanceTurn() {
+        // TODO: Allow for debug mode to roll dice whenever
+        // FUTURE: This check will likely need to be update when there are optional dice to play
+        return this.state.rolledDice.every((dice) => dice.Played);
+    }
+
+    private isSpecialDice(dice: GameDice) {
+        return this.isSpecialTile(dice.Tile);
+    }
+
+    private isSpecialTile(tile: IGameTile) {
+        return this.specialDice.some((specialDice) => tile.AreTilesEquivalent(specialDice.Tile));
+    }
+
+    private canPlaySpecialDice() {
+        return this.specialDice.every((specialDice) => (specialDice.Tile.TurnPlayed < this.state.gameTurn) || !specialDice.Played);
+    }
+
+    private updateSpecialDiceForMove(move: Move) {
+        let specialDiceToUpdate = this.specialDice.find((dice) => dice.Tile.AreTilesEquivalent(move.TilePlayed));
+        specialDiceToUpdate.SetGameTurn(this.state.gameTurn); // TODO: Don't hide state change
     }
 
     render() {
@@ -139,7 +177,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
                 <Inventory dice={this.specialDice} onDiceSelected={this.updateSelectedDice} />
                 <div className='column'>
                     <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
-                    <button onClick={this.rollDice} className='rollButton'>Roll Dice</button>
+                    <button onClick={this.rollDice} disabled={!this.canAdvanceTurn()} className='rollButton'>Roll Dice</button>
                 </div>
                 <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} addMoveToBoard={this.playSelectedDice} updateMoveOnBoard={this.updateMoveOnBoard} clearMoveOnBoard={this.removeMoveFromBoard}/>
                 </div>
