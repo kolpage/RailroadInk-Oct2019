@@ -1,6 +1,6 @@
 .inventory {
     padding: 5px;
-    width: auto;
+    width: 100px; // TODO: Don't hard code width. This should just be the width of the squares/tiles in it
     height: auto;
     border: 1px solid gray;
 }

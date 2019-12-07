@@ -17,16 +17,16 @@ interface IBoardProps {
     gameBoard: GameBoard;
 }
 
+// TODO: Elevate this state (it should come from the server anyways)
 interface IBoardState {
     selectedDice: GameDice;
-    rolledDice: GameDice[]; // TODO: This should just be gotten from the server
+    rolledDice: GameDice[];
     playedTiles: TurnMoves;
     gameBoard: GameBoard;
     gameTurn: number;
 }
 
 export class Board extends React.Component<IBoardProps, IBoardState> {
-    // TODO: Elevate this state (it should come from the server anyways)
     private specialDice = GetSpeicalDice();
     
     constructor(props: IBoardProps) {
@@ -129,10 +129,14 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     render() {
         return (
             <div className='boardContainer'>
+                <div className='row'>
                 <Inventory dice={this.specialDice} onDiceSelected={this.updateSelectedDice} />
-                <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
-                <button onClick={this.rollDice} className='rollButton'>Roll Dice</button>
+                <div className='column'>
+                    <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
+                    <button onClick={this.rollDice} className='rollButton'>Roll Dice</button>
+                </div>
                 <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} addMoveToBoard={this.playSelectedDice} updateMoveOnBoard={this.updateMoveOnBoard} clearMoveOnBoard={this.removeMoveFromBoard}/>
+                </div>
             </div>
         );
     }

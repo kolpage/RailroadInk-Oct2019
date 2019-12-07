@@ -17,7 +17,7 @@ export class Inventory extends React.Component<IInventoryProps> {
         }
 
         return (
-            <div className='row'>
+            <div className='column'>
                 {row}
             </div>
         );
