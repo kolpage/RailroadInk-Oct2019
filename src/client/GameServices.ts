@@ -11,16 +11,24 @@ import { MoveDTO } from '../common/DTO/MoveDTO';
 import { GameTile } from './Models/GameTile';
 import { GameBoard } from './Models/GameBoard';
 import { GameDice } from './Models/GameDice';
+import { ipcRenderer } from 'electron';
+import { RollDiceEvent } from'../common/Constants';
 
 export function GetBoard() {
     // TODO: Actally get board from sever
     return new GameBoard(7,7);
 }
 
-export function RollDice() {
-    const dicePool = new StandardDicePool(Math.random().toString());
-    const rawDiceValues = dicePool.Roll();
-    return rawDiceValues.map(createDiceFromTileType)
+export function RollDice(callback: (gameDice: GameDice[]) => void) {
+    ipcRenderer.invoke(RollDiceEvent).then((result) => {
+        const dice = result.map(createDiceFromTileType);
+        callback(dice);
+        //console.log("RollDiceEvent returned with: " + result)
+    });
+
+    //const dicePool = new StandardDicePool(Math.random().toString());
+    //const rawDiceValues = dicePool.Roll();
+    //return rawDiceValues.map(createDiceFromTileType)
 }
 
 // TODO: Not sure if this will actully be given from the server

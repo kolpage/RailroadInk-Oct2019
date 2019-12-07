@@ -23,8 +23,10 @@
 
 
 
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import { Test } from './test/Test';
+import { RollDiceEvent } from './common/Constants';
+import { StandardDicePool } from './game/DicePool';
 const windowStateKeeper = require('electron-window-state');
 
 function createWindowWithState() {
@@ -55,6 +57,12 @@ function createWindowWithState() {
   win.loadFile('index.html');
   win.webContents.openDevTools(); // TODO: Remove this line when client dev is done
 }
+
+ipcMain.handle(RollDiceEvent, (event, arg) => {
+  const dicePool = new StandardDicePool(Math.random().toString());
+  const rawDiceValues = dicePool.Roll();
+  return rawDiceValues;
+});
 
 app.on('ready', createWindowWithState);
 //Test.TileTest();

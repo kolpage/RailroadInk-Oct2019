@@ -12,6 +12,7 @@ import { Grid } from './Grid';
 import { GameBoard } from '../Models/GameBoard';
 import { TurnMoves, Move } from '../Models/GameTurn';
 
+
 interface IBoardProps {
     gameBoard: GameBoard;
 }
@@ -32,12 +33,14 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         super(props);
         this.state = {
             selectedDice: new GameDice(), 
-            rolledDice: RollDice(),
+            rolledDice: [],
             playedTiles: new TurnMoves(),
             gameBoard: this.props.gameBoard,
-            gameTurn: 1
+            gameTurn: 0
         }
         this.bindFunction();
+
+        this.rollDice();
     }
 
     private bindFunction() {
@@ -46,10 +49,15 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.updateSelectedDice = this.updateSelectedDice.bind(this);
         this.removeMoveFromBoard = this.removeMoveFromBoard.bind(this);
         this.rollDice = this.rollDice.bind(this);
+        this.updateRolledDice = this.updateRolledDice.bind(this);
     }
     
     private rollDice() {
-        this.setState({rolledDice: RollDice(), gameTurn: this.state.gameTurn+1});
+        RollDice(this.updateRolledDice);
+    }
+
+    private updateRolledDice(gameDice: GameDice[]) {
+        this.setState({rolledDice: gameDice, gameTurn: this.state.gameTurn+1});
     }
 
     private playSelectedDice(move: Move) {
