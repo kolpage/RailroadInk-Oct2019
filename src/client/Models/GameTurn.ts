@@ -60,7 +60,7 @@ export class Move {
         return (this.RowPosition === move.RowPosition) && (this.ColumnPosition === move.ColumnPosition);
     }
 
-    public PlayTile(gameTile: IGameTile) {
-        
+    public PlayDice(gameDice: GameDice) {
+        this.TilePlayed.TransferTile(gameDice.Tile);
     }
 }

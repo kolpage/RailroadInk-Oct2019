@@ -58,15 +58,19 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
 
     private updateRolledDice(gameDice: GameDice[]) {
-        this.setState({rolledDice: gameDice, gameTurn: this.state.gameTurn+1});
+        const nextGameTurn = this.state.gameTurn+1;
+        // TODO: Get game turn from server and not manually set it here
+        gameDice.forEach(dice => {
+            dice.SetGameTurn(nextGameTurn);
+        });
+        this.setState({rolledDice: gameDice, gameTurn: nextGameTurn});
     }
 
     private playSelectedDice(move: Move) {
         if (!this.state.selectedDice.IsEmpty()) {
             // TODO: Don't have board update the move. Not sure how to handle this since I don't want to pass the currently selected 
             //       dice to the grid since it doesn't really need to know that. 
-            move.TilePlayed.Type = this.state.selectedDice.GetTileType();
-            move.TilePlayed.TurnPlayed = this.state.gameTurn;
+            move.PlayDice(this.state.selectedDice);
             let updatedBoard = this.state.gameBoard;
             updatedBoard.MakeMove(move);
 

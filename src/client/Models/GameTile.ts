@@ -6,6 +6,7 @@ export interface IGameTile {
     TileOrientation: Orientation;
     TurnPlayed?: number; // TODO: Currently using null to indicate the tile hasn't been played...maybe not needed
 
+    TransferTile: (updatedTile: IGameTile) => void;
     RotateTile: () => void;
     MirrorTile:() => void;
     IsTileEmpty: () => boolean;
@@ -22,6 +23,12 @@ export class GameTile implements IGameTile {
         this.Type = type;
         this.TileOrientation = orientation;
         this.TurnPlayed = turnPlayed;
+    }
+
+    public TransferTile(updatedTile) {
+        this.Type = updatedTile.Type;
+        this.TileOrientation = updatedTile.TileOrientation;
+        this.TurnPlayed = updatedTile.TurnPlayed;
     }
 
     public RotateTile() {

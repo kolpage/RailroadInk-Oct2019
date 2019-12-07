@@ -23,6 +23,10 @@ export class GameDice {
     public IsEmpty() {
         return this.Tile.IsTileEmpty();
     }
+
+    public SetGameTurn(gameTurn: number) {
+        this.Tile.TurnPlayed = gameTurn;
+    }
 }
 
 
