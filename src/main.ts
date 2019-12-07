@@ -25,8 +25,9 @@
 
 import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import { Test } from './test/Test';
-import { RollDiceEvent } from './common/Constants';
+import { RollDiceEvent, AdvanceTurnEvent } from './common/Constants';
 import { StandardDicePool } from './game/DicePool';
+import { MoveDTO } from './common/DTO/MoveDTO';
 const windowStateKeeper = require('electron-window-state');
 
 function createWindowWithState() {
@@ -58,10 +59,16 @@ function createWindowWithState() {
   win.webContents.openDevTools(); // TODO: Remove this line when client dev is done
 }
 
+// TODO: Move event handlers to own file
 ipcMain.handle(RollDiceEvent, (event, arg) => {
   const dicePool = new StandardDicePool(Math.random().toString());
   const rawDiceValues = dicePool.Roll();
   return rawDiceValues;
+});
+
+ipcMain.handle(AdvanceTurnEvent, (event, args) => {
+  // TODO: Do something with the turn moves (i.e. args)
+  
 });
 
 app.on('ready', createWindowWithState);

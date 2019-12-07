@@ -6,7 +6,7 @@ import { Inventory } from './Inventory';
 import '../styles/board.scss';
 import '../styles/inventory.scss';
 import '../styles/tile.scss';
-import { RollDice, GetSpeicalDice } from '../GameServices';
+import { RollDice, GetSpeicalDice, AdvanceTurn } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
 import { Grid } from './Grid';
 import { GameBoard } from '../Models/GameBoard';
@@ -53,6 +53,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
     
     private rollDice() {
+        AdvanceTurn(this.state.playedTiles);
         RollDice(this.updateRolledDice);
     }
 

@@ -11,7 +11,7 @@ import { GameTile } from './Models/GameTile';
 import { GameBoard } from './Models/GameBoard';
 import { GameDice } from './Models/GameDice';
 import { ipcRenderer } from 'electron';
-import { RollDiceEvent } from'../common/Constants';
+import { RollDiceEvent, AdvanceTurnEvent } from'../common/Constants';
 
 export function GetBoard() {
     // TODO: Actally get board from sever
@@ -22,6 +22,13 @@ export function RollDice(callback: (gameDice: GameDice[]) => void) {
     ipcRenderer.invoke(RollDiceEvent).then((result) => {
         const dice = result.map(createDiceFromTileType);
         callback(dice);
+    });
+}
+
+export function AdvanceTurn(moves: TurnMoves) {
+    const movesToSend: MoveDTO[] = PrepareMovesForDTO(moves);
+    ipcRenderer.invoke(AdvanceTurnEvent, movesToSend).then((result) => {
+
     });
 }
 
@@ -41,5 +48,5 @@ export function TranslateMoveToDTO(move: Move) {
 }
 
 function PrepareMovesForDTO(moves: TurnMoves) {
-    return moves.GetMoves().map( move => this.TranslateMoveToDTO(move));
+    return moves.GetMoves().map( move => TranslateMoveToDTO(move));
 }
