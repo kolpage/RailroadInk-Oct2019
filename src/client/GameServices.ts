@@ -4,7 +4,6 @@
 // import update from 'react-addons-update';
 import update from 'immutability-helper';
 
-import {StandardDicePool} from '../game/DicePool';
 import { TileType } from '../common/Enums';
 import { Move, TurnMoves } from './Models/GameTurn';
 import { MoveDTO } from '../common/DTO/MoveDTO';
@@ -23,12 +22,7 @@ export function RollDice(callback: (gameDice: GameDice[]) => void) {
     ipcRenderer.invoke(RollDiceEvent).then((result) => {
         const dice = result.map(createDiceFromTileType);
         callback(dice);
-        //console.log("RollDiceEvent returned with: " + result)
     });
-
-    //const dicePool = new StandardDicePool(Math.random().toString());
-    //const rawDiceValues = dicePool.Roll();
-    //return rawDiceValues.map(createDiceFromTileType)
 }
 
 // TODO: Not sure if this will actully be given from the server

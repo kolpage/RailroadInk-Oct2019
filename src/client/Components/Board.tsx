@@ -127,6 +127,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
 
     render() {
+        // TODO: Refactor out to more components
         return (
             <div className='boardContainer'>
                 <div className='row'>
