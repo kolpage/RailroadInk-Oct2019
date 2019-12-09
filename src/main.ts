@@ -23,27 +23,57 @@
 
 
 
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import { Test } from './test/Test';
 import { PositionValidatorTests, TestRunner } from './test/UnitTests';
+import { RollDiceEvent, AdvanceTurnEvent } from './common/Constants';
+import { StandardDicePool } from './game/DicePool';
+import { MoveDTO } from './common/DTO/MoveDTO';
+const windowStateKeeper = require('electron-window-state');
 
-function createWindow () {
-  // Create the browser window.
+function createWindowWithState() {
+  // Load the previous state with fallback to defaults
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: width,
+    defaultHeight: height,
+  });
+ 
+  // Create the window using the state information
   let win = new BrowserWindow({
-    width: 650,
-    height: 860,
+    'x': mainWindowState.x,
+    'y': mainWindowState.y,
+    'width': mainWindowState.width,
+    'height': mainWindowState.height,
     webPreferences: {
       nodeIntegration: true
     }
   });
+ 
+  // Let us register listeners on the window, so we can update the state
+  // automatically (the listeners will be removed when the window is closed)
+  // and restore the maximized or full screen state
+  mainWindowState.manage(win);
 
   // and load the index.html of the app.
   win.loadFile('index.html');
   win.webContents.openDevTools(); // TODO: Remove this line when client dev is done
 }
 
-app.on('ready', createWindow);
-var positionUnitTest = new TestRunner<PositionValidatorTests>(PositionValidatorTests);
+// TODO: Move event handlers to own file
+ipcMain.handle(RollDiceEvent, (event, arg) => {
+  const dicePool = new StandardDicePool(Math.random().toString());
+  const rawDiceValues = dicePool.Roll();
+  return rawDiceValues;
+});
+
+ipcMain.handle(AdvanceTurnEvent, (event, args) => {
+  // TODO: Do something with the turn moves (i.e. args)
+  
+});
+
+app.on('ready', createWindowWithState);
+//var positionUnitTest = new TestRunner<PositionValidatorTests>(PositionValidatorTests);
 //Test.TileTest();
 //Test.StandardDicePoolTest_NoSeed();
 //Test.StandardDicePoolTest_WithSeed("Tony_was_here");

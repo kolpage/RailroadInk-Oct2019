@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import '../styles/dice.scss';
 import { Tile } from './Tile'
-import { GameDice } from '../GameModels';
+import { GameDice } from '../Models/GameDice';
 
 interface IDiceProps {
     dice: GameDice;

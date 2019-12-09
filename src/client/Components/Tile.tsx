@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '../styles/square.scss';
 import { TileGraphics } from '../TileGraphics';
-import { IGameTile } from '../GameModels';
+import { IGameTile } from '../Models/GameTile';
 
 interface ITileProps {
     tile: IGameTile,
@@ -66,7 +66,6 @@ export class ExitTile extends Tile{
     }
 }
 
-// TODO: Combine the two ExitTile classes
 export class ExitTileSide extends Tile{
     constructor(props: ITileProps) {
         super(props);
