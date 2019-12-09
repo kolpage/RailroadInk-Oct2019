@@ -14,17 +14,12 @@ export class PositionValidator{
             return EdgeMatchingStatus.valid;
         }
 
-        //Case 2: One of the passed in edges is undefined - open
-        if(edgeOne === undefined || edgeTwo === undefined){
-            return EdgeMatchingStatus.open;
-        }
-
-        //Case 3: One of the passed in edges is a wall - valid
+        //Case 2: One of the passed in edges is a wall - valid
         if(edgeOne === Edge.any || edgeTwo === Edge.any){
             return EdgeMatchingStatus.valid;
         }
 
-        //Case 4: One of the passed in edges is empty - depends on other tile
+        //Case 3: One of the passed in edges is empty - depends on other tile
         let emptyEdge: Edge | undefined;
         let otherEdge: Edge | undefined;
         if(edgeOne === Edge.empty){
@@ -39,6 +34,14 @@ export class PositionValidator{
             return PositionValidator.ValidateEmptyEdge(otherEdge);
         }
 
+        //Case 4: One of the passed in edges is undefined - open
+        if(edgeOne === undefined){
+            return PositionValidator.ValidateUndefinedEdge(edgeTwo);
+        }
+        else if(edgeTwo === undefined){
+            return PositionValidator.ValidateUndefinedEdge(edgeOne);
+        }
+
         //Case 5: One of the edges is meteor - valid
         if(edgeOne === Edge.meteor || edgeTwo === Edge.meteor){
             return EdgeMatchingStatus.valid;
@@ -46,6 +49,21 @@ export class PositionValidator{
 
         //Case 6: Don't match in a way that breaks the rules
         return EdgeMatchingStatus.invalid;
+    }
+
+    public static ValidateUndefinedEdge(otherEdge: Edge | undefined): EdgeMatchingStatus{
+        switch(otherEdge){
+            case undefined:
+            case Edge.empty:
+            case Edge.exitRail:
+            case Edge.exitRoad:
+            case Edge.lake:
+            case Edge.meteor:
+            case Edge.any:
+                return EdgeMatchingStatus.valid;
+            default:
+                return EdgeMatchingStatus.open;
+        }
     }
 
     /** 
@@ -62,12 +80,12 @@ export class PositionValidator{
     }
 
     /** Returns the matching status for a given side vs. Empty */
-    public static ValidateEmptyEdge(otherEdge: Edge): EdgeMatchingStatus{
+    public static ValidateEmptyEdge(otherEdge: Edge | undefined): EdgeMatchingStatus{
          switch(otherEdge){
+            case undefined:
             case Edge.exitRail:
-            case Edge.exitRoad: 
-               return EdgeMatchingStatus.invalid;
-            case Edge.lava:
+            case Edge.exitRoad:
+            case Edge.lake:
             case Edge.meteor:
             case Edge.empty:
             case Edge.any:

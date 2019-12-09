@@ -25,6 +25,7 @@
 
 import { app, BrowserWindow } from 'electron';
 import { Test } from './test/Test';
+import { PositionValidatorTests, TestRunner } from './test/UnitTests';
 
 function createWindow () {
   // Create the browser window.
@@ -42,6 +43,7 @@ function createWindow () {
 }
 
 app.on('ready', createWindow);
+var positionUnitTest = new TestRunner<PositionValidatorTests>(PositionValidatorTests);
 //Test.TileTest();
 //Test.StandardDicePoolTest_NoSeed();
 //Test.StandardDicePoolTest_WithSeed("Tony_was_here");
