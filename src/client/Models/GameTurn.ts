@@ -36,13 +36,6 @@ export class TurnMoves {
         this.RemoveMove(updatedMove);
         this.AddMove(updatedMove);
     }
-
-    //TODO: Remove debug code
-    public PrintMoves() {
-        this.moves.forEach((move) =>{
-            console.log(move.TilePlayed.Type.toString());
-        });
-    }
 }
 
 export class Move {

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import '../styles/dice.scss';
 import { Tile } from './Tile'
 import { GameDice } from '../Models/GameDice';
@@ -24,12 +23,29 @@ export class Dice extends React.Component<IDiceProps> {
             return 'active';
         }
     }
+
+    private isDraggable() {
+        return !this.props.dice.Played;
+    }
+
+    private handleDragStart(e) {
+        this.diceSelected();
+    }
+
+    private handleDragEnd(e) {
+        if (e.dataTransfer.dropEffect === 'none') {
+
+        }
+    }
     
     render() {
         return (
             <div 
                 className={'dice ' + this.getStatusClass()}
                 onClick={this.diceSelected.bind(this)}
+                draggable={this.isDraggable()}
+                onDragStart={this.handleDragStart.bind(this)}
+                onDragEnd={this.handleDragEnd.bind(this)}
             >
                 <Tile tile={this.props.dice.Tile} />
             </div>

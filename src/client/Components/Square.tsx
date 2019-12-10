@@ -33,7 +33,9 @@ export class Square extends React.Component<ISquareProps> {
     playSelectedTile() {
         if(this.isSquarePlayable()) {
             this.props.playSquare(this.props.sqaureColumn, this.props.squareRow);
+            return true;
         }
+        return false;
     }
 
     drawMirrorButton() {
@@ -102,13 +104,25 @@ export class Square extends React.Component<ISquareProps> {
         }
     }
 
+    private handleDragOver(e) {
+        e.preventDefault();
+    }
+
+    private handleDragDrop(e) {
+        e.preventDefault();
+        return this.playSelectedTile();
+    }
+
     render() {
         return (
             <div className='square'>
                 {this.drawMirrorButton()}
                 {this.drawRemoveButton()}
                 <div className='turnNumber'>{this.props.gameTile.TurnPlayed}</div>
-                <div onClick={this.playSelectedTile} onContextMenu={this.rotateSquare}>
+                <div onClick={this.playSelectedTile} 
+                     onContextMenu={this.rotateSquare}
+                     onDragOver={this.handleDragOver.bind(this)}
+                     onDrop={this.handleDragDrop.bind(this)}>
                     <Tile tile={this.props.gameTile} />
                 </div>
             </div>

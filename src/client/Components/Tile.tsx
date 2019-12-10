@@ -43,7 +43,7 @@ export class Tile extends React.Component<ITileProps> {
         // TODO: It would be nice to not check for context but the render function might cause errors 
         //       since canvas doesn't get a context until it's first drawn
         if (this.getCanvasContext()) {
-            this.graphicEngine.DrawTile(this.props.tile.Type, this.props.tile.TileOrientation);
+            this.graphicEngine.DrawTile(this.props.tile);
         }
     }
 
