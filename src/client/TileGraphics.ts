@@ -186,7 +186,9 @@ export class TileGraphics {
     }
 
     private drawTicks(yStart: number, yEnd: number) {
-        for(let i = yStart; i<yEnd; i+=10) {
+        const tickSpacing = this.tileLength/7;
+        const edgePadding = tickSpacing/2;
+        for(let i = yStart+edgePadding; i<yEnd; i+=tickSpacing) {
             this.drawLine(this.tileLength*0.40, this.tileLength*0.60, i, i);
         }
     }
