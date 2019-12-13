@@ -37,6 +37,7 @@ export class TileGraphics {
             case TileType.SpecialThreeRoadOneRail: return this.drawSpecialThreeRoadOneRail();
             case TileType.SpecialAllRoad: return this.drawSpecialAllRoad();
             case TileType.SpecialRoadRailAdjacent: return this.drawSpecialRoadRailAdjacent();
+            case TileType.SpecialRoadRailAcross: return this.drawSpecialRoadRailAcross();
             case TileType.Empty:
             default: return this.clearCanvas();    
         }
