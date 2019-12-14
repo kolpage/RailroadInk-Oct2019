@@ -201,8 +201,10 @@ export class TileGraphics {
     }
 
     private drawDottedLine(segLength: number, xStart: number, xEnd: number, yStart: number, yEnd: number) {
-        this.tileContext.setLineDash([segLength]);
-        this.drawLine(xStart, xEnd, yStart, yEnd);
+        const segmentSpacing = this.tileLength/8;
+        const edgePadding = segmentSpacing/2;
+        this.tileContext.setLineDash([segmentSpacing]);
+        this.drawLine(xStart, xEnd, yStart+edgePadding, yEnd);
         this.tileContext.setLineDash([]);
     }
 
