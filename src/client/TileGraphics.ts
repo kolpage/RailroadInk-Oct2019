@@ -1,4 +1,5 @@
 import { TileType, Orientation } from "../common/Enums";
+import { IGameTile } from "./Models/GameTile";
 
 // TODO: Name these better
 const RoadXStartPercent = 0.35;
@@ -15,63 +16,30 @@ export class TileGraphics {
         this.tileOrientation = Orientation.up;
     }
 
-    public DrawTile(tile: TileType, orientation: Orientation) {
+    public DrawTile(tile: IGameTile) {
         this.clearCanvas(); // Clear out the current drawing
-        this.rotateTileToOrientation(orientation);
+        this.rotateTileToOrientation(tile.TileOrientation);
 
         // TODO: There has got to be a better way to program than this than using a gaint switch statement
-        switch (tile) {
-            case TileType.RoadStraight:
-                this.drawRoadStraight();
-                break;
-            case TileType.RailStraight:
-                this.drawRailStraight();
-                break;
-            case TileType.RailTurn:
-                this.drawRailTurn();
-                break;
-            case TileType.RoadTurn:
-                this.drawRoadTurn();
-                break;
-            case TileType.StationStraight:
-                this.drawStationStraight();
-                break;
-            case TileType.StationTurn:
-                this.drawStationTurn();
-                break;
-            case TileType.StationTurnMirror:
-                this.drawStationTurnMirror();
-                break;
-            case TileType.RoadThreeWay:
-                this.drawRoadThreeWay();
-                break;
-            case TileType.RailThreeWay:
-                this.drawRailThreeWay();
-                break;
-            case TileType.Overpass:
-                this.drawOverpass();
-                break;
-            case TileType.SpecialAllRail:
-                this.drawSpecialAllRail();
-                break;
-            case TileType.SpecialThreeRailOneRoad:
-                this.drawSpecialThreeRailOneRoad();
-                break;
-            case TileType.SpecialRoadRailAcross:
-                this.drawSpecialRoadRailAcross();
-                break;
-            case TileType.SpecialThreeRoadOneRail:
-                this.drawSpecialThreeRoadOneRail();
-                break;
-            case TileType.SpecialAllRoad:
-                this.drawSpecialAllRoad();
-                break;
-            case TileType.SpecialRoadRailAdjacent:
-                this.drawSpecialRoadRailAdjacent();
-                break;
+        switch (tile.Type) {
+            case TileType.RoadStraight: return this.drawRoadStraight();
+            case TileType.RailStraight: return this.drawRailStraight();
+            case TileType.RailTurn: return this.drawRailTurn();
+            case TileType.RoadTurn: return this.drawRoadTurn();
+            case TileType.StationStraight: return this.drawStationStraight();
+            case TileType.StationTurn: return this.drawStationTurn();
+            case TileType.StationTurnMirror: return this.drawStationTurnMirror();
+            case TileType.RoadThreeWay: return this.drawRoadThreeWay();
+            case TileType.RailThreeWay: return this.drawRailThreeWay();
+            case TileType.Overpass: return this.drawOverpass();
+            case TileType.SpecialAllRail: return this.drawSpecialAllRail();
+            case TileType.SpecialThreeRailOneRoad: return this.drawSpecialThreeRailOneRoad();
+            case TileType.SpecialThreeRoadOneRail: return this.drawSpecialThreeRoadOneRail();
+            case TileType.SpecialAllRoad: return this.drawSpecialAllRoad();
+            case TileType.SpecialRoadRailAdjacent: return this.drawSpecialRoadRailAdjacent();
+            case TileType.SpecialRoadRailAcross: return this.drawSpecialRoadRailAcross();
             case TileType.Empty:
-            default:
-                return this.clearCanvas();    
+            default: return this.clearCanvas();    
         }
     }
 
@@ -183,13 +151,26 @@ export class TileGraphics {
         this.rotateAndDraw(Orientation.down, this.drawRail.bind(this, 0, this.tileLength/2));
         this.rotateAndDraw(Orientation.left, this.drawRoad.bind(this, 0, this.tileLength/2));
         this.rotateAndDraw(Orientation.up, this.drawRoad.bind(this, 0, this.tileLength/2));
-
         this.drawStation();
+    }
+
+    private drawHalfLake() {
+        this.tileContext.fillStyle = 'blue';
+        this.tileContext.fillRect(0, 0, this.tileLength, this.tileLength);
+        //this.drawLine(0, this.tileLength, 0, this.tileLength);
+        this.drawWavyLine(0, this.tileLength, 0, this.tileLength);
     }
     // #endregion
     
     // #region Core drawing function
+
+    /**
+     * Rotates a drawing canvas to the given orientation and calls the draw function.
+     * Rotates the canvas back to what it was before this function call. 
+     * @param orientation  The orientation to rotate to the top position 
+    */
     private rotateAndDraw(orientation: Orientation, drawFunction: () => void) {
+        
         // TODO: This is probably a bad sign that state is getting saved and restored
         const originalOrientation = this.tileOrientation;
         const newOrientation = this.getDrawingOrientation(orientation);
@@ -205,14 +186,25 @@ export class TileGraphics {
     }
 
     private drawTicks(yStart: number, yEnd: number) {
-        for(let i = yStart; i<yEnd; i+=10) {
+        const tickSpacing = this.tileLength/7;
+        const edgePadding = tickSpacing/2;
+        for(let i = yStart+edgePadding; i<yEnd; i+=tickSpacing) {
             this.drawLine(this.tileLength*0.40, this.tileLength*0.60, i, i);
         }
     }
 
+    private drawWavyLine(xStart: number, xEnd: number, yStart: number, yEnd: number) {
+        this.tileContext.beginPath();
+        this.tileContext.moveTo(xStart, yStart);
+        this.tileContext.bezierCurveTo(20, 50, 50,20,xEnd, yEnd);
+        this.tileContext.stroke();
+    }
+
     private drawDottedLine(segLength: number, xStart: number, xEnd: number, yStart: number, yEnd: number) {
-        this.tileContext.setLineDash([segLength]);
-        this.drawLine(xStart, xEnd, yStart, yEnd);
+        const segmentSpacing = this.tileLength/8;
+        const edgePadding = segmentSpacing/2;
+        this.tileContext.setLineDash([segmentSpacing]);
+        this.drawLine(xStart, xEnd, yStart+edgePadding, yEnd);
         this.tileContext.setLineDash([]);
     }
 
@@ -262,4 +254,12 @@ export class TileGraphics {
         return drawOrientation;
     }
     // #endregion
+}
+
+class Stroke {
+    segLength: number;
+    xStart: number;
+    xEnd: number;
+    yStart: number;
+    yEnd: number;
 }

@@ -141,7 +141,6 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     private updateSelectedDice(dice: GameDice) {
         // TODO: Clean up this check
        if (!this.isSpecialDice(dice) || (this.isSpecialDice(dice) && this.canPlaySpecialDice())) {
-           console.log(dice.Tile.Type + " " + dice.Tile.TurnPlayed);
             this.setState({selectedDice: dice});
         }
     }
