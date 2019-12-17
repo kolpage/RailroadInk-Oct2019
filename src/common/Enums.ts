@@ -70,5 +70,6 @@ export enum TilePlacementResult{
 /** Reason a turn is invalid */
 export enum TurnInvalidReason{
     requiredDiceNotPlayed,
-    noActiveTurns
+    noActiveTurns,
+    tilesMustBeConnectedToExistingTiles
 }

@@ -25,10 +25,12 @@
 
 import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import { Test } from './test/Test';
-import { PositionValidatorTests, TestRunner } from './test/UnitTests';
+import { TestRunner } from './test/TestRunner';
 import { RollDiceEvent, AdvanceTurnEvent } from './common/Constants';
 import { StandardDicePool } from './game/DicePool';
 import { MoveDTO } from './common/DTO/MoveDTO';
+import { TileContinuityValidatorTests } from './test/TileContinuityValidatorTests';
+import { PositionValidatorTests } from './test/PositionValidatorTests';
 const windowStateKeeper = require('electron-window-state');
 
 function createWindowWithState() {
@@ -72,8 +74,9 @@ ipcMain.handle(AdvanceTurnEvent, (event, args) => {
   
 });
 
-app.on('ready', createWindowWithState);
+//app.on('ready', createWindowWithState);
 //var positionUnitTest = new TestRunner<PositionValidatorTests>(PositionValidatorTests);
+var tileContinuityValidatorTest = new TestRunner<TileContinuityValidatorTests>(TileContinuityValidatorTests);
 //Test.TileTest();
 //Test.StandardDicePoolTest_NoSeed();
 //Test.StandardDicePoolTest_WithSeed("Tony_was_here");

@@ -34,7 +34,7 @@ export class PositionValidator{
             return PositionValidator.ValidateEmptyEdge(otherEdge);
         }
 
-        //Case 4: One of the passed in edges is undefined - open
+        //Case 4: One of the passed in edges is undefined - depends on other tile
         if(edgeOne === undefined){
             return PositionValidator.ValidateUndefinedEdge(edgeTwo);
         }

@@ -1,5 +1,5 @@
 import { InvalidMoveResponseDTO } from "./InvalidMoveResponseDTO";
-import { TurnInvalidReason } from "../Enums";
+import { TurnInvalidReason, TileType } from "../Enums";
 
 /** Represents a response from the game engine to an attempt at making a move. */
 export class TurnResponseDTO{
@@ -10,7 +10,7 @@ export class TurnResponseDTO{
             && this.InvalidTurnReasons.length == 0;
     }
 
-    constructor(invalidMoves: InvalidMoveResponseDTO[] = [], invalidTurnReasons: TurnInvalidReason[] = []){
+    constructor(invalidMoves: InvalidMoveResponseDTO[] = [], invalidTurnReasons: TurnInvalidReason[] = [], nextTurnDice: TileType[] = []){
         this.InvalidMoves = invalidMoves;
         this.InvalidTurnReasons = invalidTurnReasons;
     }

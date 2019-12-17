@@ -125,6 +125,20 @@ export class BaseTurn{
         return isDieAvailable;
     }
 
+    private doesTileHaveToBeConnected(tileType: TileType): boolean{
+        return true;
+    }
+
+    public PlayedTilesFollowConnectionRules(): boolean{
+        for(const move of this.playedTiles){
+            const tile = move.GetTile();
+            if(!this.doesTileHaveToBeConnected(tile.GetTileType())){
+                continue;
+            }
+        }
+        return true;
+    }
+
     /** Gets all the dice rolled for this turn. */
     public GetRolledDice(): TileType[]{
         return this.diceToPlay.map(die => die.tileType);
