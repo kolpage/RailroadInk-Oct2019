@@ -161,16 +161,4 @@ export class TileContinuityValidatorTests{
 
         return Assert.shouldValidateTrue(result);
     }
-
-    public ConnectingTileToEmptySideOfExistingTile_ShouldValidateFalse(): boolean{
-        const game = new StandardGame();
-        const validator = new TileContinuityValidator(game.GetBoard());
-        const priorTile1 = game.ForceSetTile(TileType.RoadStraight, 1, Orientation.up, 0, 5);
-        const priorTile2 = game.ForceSetTile(TileType.RoadStraight, 1, Orientation.up, 1, 5);
-        const tileToValidate = game.ForceSetTile(TileType.RoadTurn, 2, Orientation.right, 1, 4);
-
-        const result = validator.Validate(tileToValidate);
-
-        return Assert.shouldValidateFalse(result);
-    }
 }

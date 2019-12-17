@@ -3,6 +3,7 @@ import { Move } from "./Move";
 import { PlayableBaseTile } from "./tiles";
 import { Board } from "./Board";
 import { SpecialTileTracker } from "../common/SpecialTileTracker";
+import { TileContinuityValidator } from "./TileVisitor";
 
 export interface IPlayableDice{
     tileType: TileType,
@@ -20,11 +21,13 @@ export class BaseTurn{
     private board: Board;
     private isTurnOver: boolean = false;
     private specialTileTracker: SpecialTileTracker;
+    private tileContinuityValidator: TileContinuityValidator;
 
     constructor(turnNumber: number, rolledDice: TileType[], specialTileTracker: SpecialTileTracker, board: Board){
         this.turnNumber = turnNumber;
         this.board = board;
         this.specialTileTracker = specialTileTracker;
+        this.tileContinuityValidator = new TileContinuityValidator(this.board);
         this.diceToPlay = [];
         this.playedTiles = [];
         for(const rolledDie of rolledDice){
@@ -125,15 +128,18 @@ export class BaseTurn{
         return isDieAvailable;
     }
 
-    private doesTileHaveToBeConnected(tileType: TileType): boolean{
+    protected doesTileHaveToBeConnected(tileType: TileType): boolean{
         return true;
     }
 
     public PlayedTilesFollowConnectionRules(): boolean{
         for(const move of this.playedTiles){
             const tile = move.GetTile();
-            if(!this.doesTileHaveToBeConnected(tile.GetTileType())){
-                continue;
+            if(this.doesTileHaveToBeConnected(tile.GetTileType())){
+                const isContinuous = this.tileContinuityValidator.Validate(tile);
+                if(!isContinuous){
+                    return false;
+                }
             }
         }
         return true;
