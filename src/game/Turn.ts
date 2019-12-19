@@ -162,6 +162,6 @@ export class BaseTurn{
 
     /** True if the player can end their turn. */
     public CanTurnBeDone(): boolean{
-        return this.GetRequiredDiceToPlay().length > 0;
+        return this.GetRequiredDiceToPlay().length === 0;
     }
 }

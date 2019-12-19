@@ -78,7 +78,7 @@ ipcMain.handle(AdvanceTurnEvent, (event, args) => {
 //app.on('ready', createWindowWithState);
 //var positionUnitTest = new TestRunner<PositionValidatorTests>(PositionValidatorTests);
 //var tileContinuityValidatorTest = new TestRunner<TileContinuityValidatorTests>(TileContinuityValidatorTests);
-//var standardGameTests = new TestRunner<StandardGameTests>(StandardGameTests);
+var standardGameTests = new TestRunner<StandardGameTests>(StandardGameTests);
 //Test.TileTest();
 //Test.StandardDicePoolTest_NoSeed();
 //Test.StandardDicePoolTest_WithSeed("Tony_was_here");
