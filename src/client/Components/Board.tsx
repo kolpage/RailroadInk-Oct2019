@@ -40,8 +40,8 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
             gameTurn: 0
         }
         this.bindFunctions();
-
-        this.rollDice();
+        
+        GetDiceRoll(this.updateRolledDice);
     }
 
     private bindFunctions() {
