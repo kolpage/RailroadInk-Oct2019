@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "electron-window-state": "^5.0.3",
+    "guid-typescript": "^1.0.9",
     "immutability-helper": "^3.0.1",
     "redux": "^4.0.4",
     "seedrandom": "^3.0.5"
