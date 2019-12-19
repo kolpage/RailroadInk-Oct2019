@@ -3,6 +3,7 @@ import { Move } from "./Move";
 import { PlayableBaseTile } from "./tiles";
 import { Board } from "./Board";
 import { SpecialTileTracker } from "../common/SpecialTileTracker";
+import { TileContinuityValidator } from "./TileVisitor";
 
 export interface IPlayableDice{
     tileType: TileType,
@@ -20,11 +21,13 @@ export class BaseTurn{
     private board: Board;
     private isTurnOver: boolean = false;
     private specialTileTracker: SpecialTileTracker;
+    private tileContinuityValidator: TileContinuityValidator;
 
     constructor(turnNumber: number, rolledDice: TileType[], specialTileTracker: SpecialTileTracker, board: Board){
         this.turnNumber = turnNumber;
         this.board = board;
         this.specialTileTracker = specialTileTracker;
+        this.tileContinuityValidator = new TileContinuityValidator(this.board);
         this.diceToPlay = [];
         this.playedTiles = [];
         for(const rolledDie of rolledDice){
@@ -125,6 +128,23 @@ export class BaseTurn{
         return isDieAvailable;
     }
 
+    protected doesTileHaveToBeConnected(tileType: TileType): boolean{
+        return true;
+    }
+
+    public PlayedTilesFollowConnectionRules(): boolean{
+        for(const move of this.playedTiles){
+            const tile = move.GetTile();
+            if(this.doesTileHaveToBeConnected(tile.GetTileType())){
+                const isContinuous = this.tileContinuityValidator.Validate(tile);
+                if(!isContinuous){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /** Gets all the dice rolled for this turn. */
     public GetRolledDice(): TileType[]{
         return this.diceToPlay.map(die => die.tileType);
@@ -142,6 +162,6 @@ export class BaseTurn{
 
     /** True if the player can end their turn. */
     public CanTurnBeDone(): boolean{
-        return this.GetRequiredDiceToPlay().length > 0;
+        return this.GetRequiredDiceToPlay().length === 0;
     }
 }

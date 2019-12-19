@@ -1,18 +1,34 @@
 import { Orientation, Edge, TileType } from "../common/Enums";
+import { Guid } from 'guid-typescript';
 
 /** The base class for every tile. */
 export class BaseTile{
     
+    private readonly tileId: string;
+    /** Turn number the tile was placed. Tiles placed during game setup have turn number 0 (Edges, volcanos). */
+    private turn: number;
     private topEdge: Edge;
     private rightEdge: Edge;
     private bottomEdge: Edge;
     private leftEdge: Edge;
 
-    constructor(edges: Edge[]){
+    constructor(edges: Edge[], turn: number){
+        this.tileId = Guid.raw();
+        this.turn = turn;
         this.topEdge = edges[0];
         this.rightEdge = edges[1];
         this.bottomEdge = edges[2];
         this.leftEdge = edges[3];
+    }
+
+    /** Gets the unique tile identifier */
+    public GetTileId(): string{
+        return this.tileId;
+    }
+
+    /** Gets the turn this tile was played. */
+    public GetTurn(): number{
+        return this.turn;
     }
 
     /** Gets the top edge of the tile. */
@@ -38,6 +54,8 @@ export class BaseTile{
     /** FOR DEBUG - prints out string representation of tile. */
     public ToString(): string{
         let output: string = "";
+        output += "Tile identifier: " + this.GetTileId() + '\n';
+        output += "Turn: " + this.GetTurn() + '\n';
         output += "Top Edge: " + Edge[this.GetTopEdge()] + '\n';
         output += "Right Edge: " + Edge[this.GetRightEdge()] + '\n';
         output += "Bottom Edge: " + Edge[this.GetBottomEdge()] + '\n';
@@ -57,25 +75,18 @@ export class BaseTile{
 /** Base class for tiles that can be played to the board. */
 export class PlayableBaseTile extends BaseTile{
     private orientation: Orientation;
-    private turn: number;
     private isStation: boolean;
 
     constructor(edges: Edge[], orientation: Orientation, turn: number, hasStation: boolean){
         TileHelpers.RotateEdgeArray(edges, orientation);
-        super(edges)
+        super(edges, turn)
         this.orientation = orientation;
-        this.turn = turn;
         this.isStation = hasStation;
     }
 
     /** Gets the orientation of the tile */
     public GetOrientation(): Orientation{
         return this.orientation;
-    }
-
-    /** Gets the turn this tile was played. */
-    public GetTurn(): number{
-        return this.turn;
     }
 
     /** Returns true if this is a station tile. All edges should be considered connected to the same network if a tile has a station. */
@@ -87,7 +98,6 @@ export class PlayableBaseTile extends BaseTile{
         let output: string = "";
         output += super.ToString();
         output += "Orientation: " + Orientation[this.GetOrientation()] + '\n';
-        output += "Turn: " + this.GetTurn() + '\n';
         output += "Is Station?: " + this.IsStation() + '\n';
         return output;
     }
@@ -95,7 +105,7 @@ export class PlayableBaseTile extends BaseTile{
 
 export class EdgeBaseTile extends BaseTile{
     constructor(edges: Edge[]){
-        super(edges);
+        super(edges, 0); //All edge tiles have turn number 0.
     }
 }
 
@@ -441,7 +451,7 @@ export class WallEdgeTile extends EdgeBaseTile{
     }
 }
 
-class TileHelpers{
+export class TileHelpers{
     /** Rotates the edge array to match the orientation specified. 
      * @param edges The array of edges to rotate. The format of the array is expected to be [<Up Edge>, <Right Edge>, <Bottom Edge>, <Left Edge>].
      *              Method assumes edges is given in the "up" orientation.
@@ -456,5 +466,13 @@ class TileHelpers{
         for(let i = 0; i < numberOfTimesToRotate; i++){
             edges.unshift(edges.pop());
         }
+    }
+
+    /**
+     * Returns true if the tile is an edge tile.
+     * @param tile The tile to check.
+     */
+    public static IsEdgeTile(tile: BaseTile): boolean{
+        return tile instanceof EdgeBaseTile;
     }
 }

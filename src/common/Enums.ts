@@ -14,16 +14,16 @@ export enum Orientation{
 
 /** The types of edges tiles can have. */
 export enum Edge{
-    empty,
+    empty, // blank edge of tile
     road,
-    exitRoad,
+    exitRoad, // road on the edge of board
     rail,
-    exitRail,
+    exitRail, // rail on the edge of board
     river,
     lake,
     meteor,
     lava,
-    any
+    any // Wall that is ok touching anything
 }
 
 /** The types of tiles that can be played */
@@ -54,8 +54,8 @@ export enum TileType{
 export enum EdgeMatchingStatus{
     valid, //Tile edges follow all rules and don't incur point penalties
     mismatch, //Tile edges follow all rules but will incur error points.
-    open, //Tile edges follow all rules but  incur error points if this way at end of game.
-    invalid, //Tile edges don't follow all rules. 
+    open, //Tile edges follow all rules but incur error points if this way at end of game.
+    invalid, //Tile edges don't follow all rules and are not allowed to be played. 
 }
 
 /** Reason a move is invalid */
@@ -70,5 +70,6 @@ export enum TilePlacementResult{
 /** Reason a turn is invalid */
 export enum TurnInvalidReason{
     requiredDiceNotPlayed,
-    noActiveTurns
+    noActiveTurns,
+    tilesMustBeConnectedToExistingTiles
 }

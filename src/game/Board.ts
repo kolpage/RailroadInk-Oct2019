@@ -3,11 +3,17 @@ import { Edge, TileType, Orientation, EdgeMatchingStatus, TilePlacementResult as
 import { TileFactory } from "./TileFactory";
 import { PositionValidator } from "../common/PositionValidator";
 
+export interface ITileLocation{
+    row: number,
+    column: number
+}
+
 /** Represents the game board the tiles are played on. Rows and columns are 0 indexed.
  *  Ex. Telling board to put something at Row 3 Column 6 is the 4th row down from the top and the last column. 
  */
 export class Board{
     private board: BaseTile[][];
+    private tileIndex: { [tileId: string]: ITileLocation};
     private playableBoardWidth: number;
     private playableBoardHeight: number;
     private get boardWidth(): number{
@@ -21,7 +27,8 @@ export class Board{
     constructor(playAreaWidth: number, playAreaHeight: number, tileFactory: TileFactory){
         this.playableBoardWidth = playAreaWidth;
         this.playableBoardHeight = playAreaHeight;
-        this.tileFactory = tileFactory
+        this.tileFactory = tileFactory;
+        this.tileIndex = {};
         this.initialize();
         this.setBoardEdges();
     }
@@ -73,7 +80,7 @@ export class Board{
         return true;
     }
 
-    /** Gets a playable tile from the board. Expects to be given  */
+    /** Gets a playable tile from the board. Expects to be given coordinates in playable coordinates */
     public GetTile(rowIndex: number, columnIndex: number): PlayableBaseTile | undefined{
         if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
             return undefined;
@@ -84,48 +91,125 @@ export class Board{
         return this.board[boardRowIndex][boardColumnIndex] as PlayableBaseTile;
     }
 
-    public GetTileAbove(rowIndex: number, columnIndex: number): BaseTile | undefined{
-        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
-            return undefined;
+    /** 
+     * Gets the tile above the specified tile. Can be done by tile or playable coordinates.
+     */
+    public GetTileAbove(tile: BaseTile): BaseTile | undefined;
+    public GetTileAbove(rowIndex: number, columnIndex: number): BaseTile | undefined;
+    public GetTileAbove(tileOrRowIndex: BaseTile | number, columnIndex?): BaseTile | undefined{
+        let boardRowIndex: number;
+        let boardColumnIndex: number;
+        if(tileOrRowIndex instanceof BaseTile){
+            const tileCoords = this.GetTileCoordinates(tileOrRowIndex);
+            if(tileCoords === undefined){
+                return undefined;
+            }
+            boardRowIndex = tileCoords.row;
+            boardColumnIndex = tileCoords.column;
         }
-
-        let boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
-        const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        else{
+            if(!this.validatePlayableBoardCoordinates(tileOrRowIndex, columnIndex)){
+                return undefined;
+            }
+    
+            boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
+            boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        }
+        
         boardRowIndex--;
         return this.board[boardRowIndex][boardColumnIndex];
     }
 
-    public GetTileBelow(rowIndex: number, columnIndex: number): BaseTile | undefined{
-        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
-            return undefined;
+    /** 
+     * Gets the tile below the specified tile. Can be done by tile or playable coordinates.
+     */
+    public GetTileBelow(tile: BaseTile): BaseTile | undefined;
+    public GetTileBelow(rowIndex: number, columnIndex: number): BaseTile | undefined;
+    public GetTileBelow(tileOrRowIndex: BaseTile | number, columnIndex?): BaseTile | undefined{
+        let boardRowIndex: number;
+        let boardColumnIndex: number;
+        if(tileOrRowIndex instanceof BaseTile){
+            const tileCoords = this.GetTileCoordinates(tileOrRowIndex);
+            if(tileCoords === undefined){
+                return undefined;
+            }
+            boardRowIndex = tileCoords.row;
+            boardColumnIndex = tileCoords.column;
         }
-
-        let boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
-        const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        else{
+            if(!this.validatePlayableBoardCoordinates(tileOrRowIndex, columnIndex)){
+                return undefined;
+            }
+    
+            boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
+            boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        }
+        
         boardRowIndex++;
         return this.board[boardRowIndex][boardColumnIndex];
     }
 
-    public GetTileLeft(rowIndex: number, columnIndex: number): BaseTile | undefined{
-        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
-            return undefined;
+    /** 
+     * Gets the tile left of the specified tile. Can be done by tile or playable coordinates.
+     */
+    public GetTileLeft(tile: BaseTile): BaseTile | undefined;
+    public GetTileLeft(rowIndex: number, columnIndex: number): BaseTile | undefined;
+    public GetTileLeft(tileOrRowIndex: BaseTile | number, columnIndex?): BaseTile | undefined{
+        let boardRowIndex: number;
+        let boardColumnIndex: number;
+        if(tileOrRowIndex instanceof BaseTile){
+            const tileCoords = this.GetTileCoordinates(tileOrRowIndex);
+            if(tileCoords === undefined){
+                return undefined;
+            }
+            boardRowIndex = tileCoords.row;
+            boardColumnIndex = tileCoords.column;
         }
-
-        const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
-        let boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        else{
+            if(!this.validatePlayableBoardCoordinates(tileOrRowIndex, columnIndex)){
+                return undefined;
+            }
+    
+            boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
+            boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        }
+        
         boardColumnIndex--;
         return this.board[boardRowIndex][boardColumnIndex];
     }
 
-    public GetTileRight(rowIndex: number, columnIndex: number): BaseTile | undefined{
-        if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
-            return undefined;
+    /** 
+     * Gets the tile right of the specified tile. Can be done by tile or playable coordinates.
+     */
+    public GetTileRight(tile: BaseTile): BaseTile | undefined;
+    public GetTileRight(rowIndex: number, columnIndex: number): BaseTile | undefined;
+    public GetTileRight(tileOrRowIndex: BaseTile | number, columnIndex?): BaseTile | undefined{
+        let boardRowIndex: number;
+        let boardColumnIndex: number;
+        if(tileOrRowIndex instanceof BaseTile){
+            const tileCoords = this.GetTileCoordinates(tileOrRowIndex);
+            if(tileCoords === undefined){
+                return undefined;
+            }
+            boardRowIndex = tileCoords.row;
+            boardColumnIndex = tileCoords.column;
         }
-
-        const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
-        let boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        else{
+            if(!this.validatePlayableBoardCoordinates(tileOrRowIndex, columnIndex)){
+                return undefined;
+            }
+    
+            boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
+            boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        }
+        
         boardColumnIndex++;
         return this.board[boardRowIndex][boardColumnIndex];
+    }
+
+    /** Gets the board (not playable) coordinates of the tile. */
+    public GetTileCoordinates(tile: BaseTile): ITileLocation | undefined{
+        return this.tileIndex[tile.GetTileId()];
     }
 
     /** Sets a tile on the board. Returns true if tile was sucessfully set, false otherwise. */
@@ -141,12 +225,23 @@ export class Board{
 
         const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
         const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
-        if(!allowOverwrite && this.board[boardRowIndex][boardColumnIndex] !== undefined){
-            return TilePlacementResult.alreadyTileAtLocation;
+        if(this.board[boardRowIndex][boardColumnIndex] !== undefined){
+            if(!allowOverwrite){
+                return TilePlacementResult.alreadyTileAtLocation;
+            }
+            this.removeTileAndUpdateIndex(boardRowIndex, boardColumnIndex);
         }
 
-        this.board[boardRowIndex][boardColumnIndex] = tile;
+        this.setTileAndUpdateIndex(boardRowIndex, boardColumnIndex, tile);
         return TilePlacementResult.valid;        
+    }
+
+    private setTileAndUpdateIndex(boardRowIndex: number, boardColumnIndex: number, tile: BaseTile){
+        this.board[boardRowIndex][boardColumnIndex] = tile;
+        this.tileIndex[tile.GetTileId()] = {
+            row: boardRowIndex,
+            column: boardColumnIndex
+        };
     }
 
     /** Removes the tile at the specified position. Returns the tile if there was a tile there, otherwise undefined. */
@@ -156,8 +251,17 @@ export class Board{
         }
         const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
         const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
-        const tile = this.board[boardRowIndex][boardColumnIndex];
-        this.board[boardRowIndex][boardColumnIndex] = undefined;
+        
+        return this.removeTileAndUpdateIndex(boardRowIndex, boardColumnIndex);
+    }
+
+    private removeTileAndUpdateIndex(boardRowIndex: number, columnIndex: number): BaseTile | undefined{
+        const tile = this.board[boardRowIndex][columnIndex];
+        if(tile === undefined){
+            return undefined;
+        }
+        this.board[boardRowIndex][columnIndex] = undefined;
+        delete this.tileIndex[tile.GetTileId()]; 
         return tile;
     }
 

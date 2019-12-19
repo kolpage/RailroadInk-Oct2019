@@ -33,3 +33,35 @@ export class StandardDicePool extends BaseDicePool{
         this.dice.push(new StationDie(this.randomNumberGenerator));
     }
 }
+
+/**
+ * Dice pool used for testing. Set roll results in 2D array of TileTypes. In the following example,
+ * the three inner arrays each represent the result of 1 roll. Every time Roll() is called, the next
+ * result array is returned. Will keep looping through them.
+ * ex. 
+ * [
+ *      [TileType.RailStraight, TileType.RoadStraight, TileType.RoadTurn, TileType.StationStraight],
+ *      [TileType.RailTurn, TileType.RailThreeWay, TileType.RoadStraight, TileType.Overpass],
+ *      [TileType.RailThreeWay, TileType.RoadThreeWay, TileType.RoadTurn, TileType.StationTurn]
+ * ]
+ */
+export class DebugDicePool extends BaseDicePool{
+
+    private rollResults: TileType[][];
+    private nextRollPointer: number = 0;
+
+    constructor(rollResults: TileType[][])
+    {
+        super("seed");
+        this.rollResults = rollResults;
+    }
+
+    public Roll(): TileType[]{
+        const currentRollPointer = this.nextRollPointer;
+        this.nextRollPointer += 1;
+        if(this.nextRollPointer === this.rollResults.length){
+            this.nextRollPointer = 0;
+        }
+        return this.rollResults[currentRollPointer];
+    }
+}
