@@ -1,5 +1,5 @@
-import { TileType, Orientation } from "../common/Enums";
-import { IGameTile } from "./Models/GameTile";
+import { TileType, Orientation } from "../../common/Enums";
+import { IGameTile } from "../Models/GameTile";
 
 // TODO: Name these better
 const RoadXStartPercent = 0.35;
@@ -116,7 +116,24 @@ export class TileGraphics {
     }
 
     private drawRailTurn() {
-        this.drawArc(this.tileLength*(1/2));
+        const radius = this.tileLength*(1/2);
+        this.drawArc(radius);
+        this.drawTurnTicks(radius);
+    }
+
+    private drawTurnTicks(radius) {
+        // TODO: Get rid of magic numbers
+        for(var i = 10; i < 90; i+=15) {
+            this.drawTurnTick(radius, i);
+        }
+    }
+
+    private drawTurnTick(radius, degree) {
+        // TODO: Get rid of magic numbers
+        const theta = Math.PI * degree / 180.0;
+        const startingPoint = this.getPointAtRadius(radius*Math.cos(theta), radius*Math.sin(theta), radius*0.8);
+        const endingPoint = this.getPointAtRadius(radius*Math.cos(theta), radius*Math.sin(theta), radius*1.2);
+        this.drawLine(startingPoint.x, endingPoint.x, startingPoint.y, endingPoint.y);
     }
 
     private drawRailThreeWay() {
@@ -163,7 +180,6 @@ export class TileGraphics {
     // #endregion
     
     // #region Core drawing function
-
     /**
      * Rotates a drawing canvas to the given orientation and calls the draw function.
      * Rotates the canvas back to what it was before this function call. 
@@ -254,6 +270,15 @@ export class TileGraphics {
         return drawOrientation;
     }
     // #endregion
+
+    private getPointAtRadius(x, y, radius) {
+        var innerXValue = Math.pow(radius,2)/(1+Math.pow((y/x),2));
+        var xValue = Math.sqrt(innerXValue);
+
+        var yValue = Math.sqrt(Math.pow(radius,2) - Math.pow(xValue,2));
+        const point: Point = {x: xValue, y: yValue};
+        return point;
+    }
 }
 
 class Stroke {
@@ -262,4 +287,9 @@ class Stroke {
     xEnd: number;
     yStart: number;
     yEnd: number;
+}
+
+type Point = {
+    x: number,
+    y: number
 }

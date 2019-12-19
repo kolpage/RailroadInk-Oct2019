@@ -148,7 +148,8 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     private canAdvanceTurn() {
         // TODO: Allow for debug mode to roll dice whenever
         // FUTURE: This check will likely need to be update when there are optional dice to play
-        return this.state.rolledDice.every((dice) => dice.Played);
+        //return this.state.rolledDice.every((dice) => dice.Played);
+        return true;
     }
 
     private isSpecialDice(dice: GameDice) {

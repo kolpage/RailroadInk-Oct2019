@@ -38,22 +38,20 @@ export class Square extends React.Component<ISquareProps> {
         return false;
     }
 
-    drawMirrorButton() {
-       if(this.isSquareActive() && this.props.gameTile.CanTileBeMirror())
-       {
-            return (
-                <div 
-                    onClick={this.mirrorSquare.bind(this)} 
-                    className='upperLeftButton'
-                >
-                    <figure>
-                        <img src={RefreshArrowIcon} className='rotateButton' alt="rotate" />
-                    </figure>
-                </div>
-            );
-       }
+    removeTile() {
+        this.props.clearSquare(this.props.sqaureColumn, this.props.squareRow);
+    }
 
-       return <div></div>;
+    rotateSquare() {
+        if (this.isSquareActive()) { 
+            this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
+        }
+    }
+
+    mirrorSquare() {
+        if (this.isSquareActive() && this.props.gameTile.CanTileBeMirror()) {
+            this.props.mirrorSquare(this.props.sqaureColumn, this.props.squareRow);
+        }
     }
 
     private canSqaureBeUpdted() {
@@ -72,6 +70,41 @@ export class Square extends React.Component<ISquareProps> {
         return this.props.gameTile.IsTileEmpty();
     }
 
+    private handleDragOver(e) {
+        e.preventDefault();
+    }
+
+    private handleDragDrop(e) {
+        e.preventDefault();
+        return this.playSelectedTile();
+    }
+
+    private addValidationCssClass() {
+        if (this.isSquareActive()) {
+            return 'validBoarder'
+        }
+
+        return '';
+    }
+
+    drawMirrorButton() {
+        if(this.isSquareActive() && this.props.gameTile.CanTileBeMirror())
+        {
+             return (
+                 <div 
+                     onClick={this.mirrorSquare.bind(this)} 
+                     className='upperLeftButton'
+                 >
+                     <figure>
+                         <img src={RefreshArrowIcon} className='rotateButton' alt="rotate" />
+                     </figure>
+                 </div>
+             );
+        }
+ 
+        return <div></div>;
+     }
+
     drawRemoveButton() {
         if(this.isSquareActive()) {
             return (
@@ -88,34 +121,9 @@ export class Square extends React.Component<ISquareProps> {
         return <div></div>;
     }
 
-    removeTile() {
-        this.props.clearSquare(this.props.sqaureColumn, this.props.squareRow);
-    }
-
-    rotateSquare() {
-        if (this.isSquareActive()) { 
-            this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
-        }
-    }
-
-    mirrorSquare() {
-        if (this.isSquareActive() && this.props.gameTile.CanTileBeMirror()) {
-            this.props.mirrorSquare(this.props.sqaureColumn, this.props.squareRow);
-        }
-    }
-
-    private handleDragOver(e) {
-        e.preventDefault();
-    }
-
-    private handleDragDrop(e) {
-        e.preventDefault();
-        return this.playSelectedTile();
-    }
-
     render() {
         return (
-            <div className='square'>
+            <div className={'square ' + this.addValidationCssClass()}>
                 {this.drawMirrorButton()}
                 {this.drawRemoveButton()}
                 <div className='turnNumber'>{this.props.gameTile.TurnPlayed}</div>
