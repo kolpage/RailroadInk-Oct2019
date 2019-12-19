@@ -6,7 +6,7 @@ import { Inventory } from './Inventory';
 import '../styles/board.scss';
 import '../styles/inventory.scss';
 import '../styles/tile.scss';
-import { RollDice, GetSpeicalDice, AdvanceTurn } from '../GameServices';
+import { GetDiceRoll, GetSpeicalDice, AdvanceTurn } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
 import { Grid } from './Grid';
 import { GameBoard } from '../Models/GameBoard';
@@ -39,12 +39,12 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
             gameBoard: this.props.gameBoard,
             gameTurn: 0
         }
-        this.bindFunction();
+        this.bindFunctions();
 
         this.rollDice();
     }
 
-    private bindFunction() {
+    private bindFunctions() {
         this.playSelectedDice = this.playSelectedDice.bind(this);
         this.updateMoveOnBoard = this.updateMoveOnBoard.bind(this);
         this.updateSelectedDice = this.updateSelectedDice.bind(this);
@@ -57,7 +57,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     private rollDice() {
         AdvanceTurn(this.state.playedTiles);
         // TODO: Dice for next turn should just be returned from the main process
-        RollDice(this.updateRolledDice);
+        GetDiceRoll(this.updateRolledDice);
     }
 
     private updateRolledDice(gameDice: GameDice[]) {

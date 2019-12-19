@@ -59,6 +59,10 @@ export class BaseGame {
         return new TurnResponseDTO(moveIssues, turnIssues, this.currentTurn.GetRolledDice());       
     }
 
+    public GetDiceRoll(){
+        return this.currentTurn.GetRolledDice();
+    }
+
     /**
      * Forces a tile to a specific location. Overwrites existing tiles. Maintains board index.
      * @param tileType The tile type to be set

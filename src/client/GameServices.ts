@@ -11,15 +11,15 @@ import { GameTile } from './Models/GameTile';
 import { GameBoard } from './Models/GameBoard';
 import { GameDice } from './Models/GameDice';
 import { ipcRenderer } from 'electron';
-import { RollDiceEvent, AdvanceTurnEvent } from'../common/Constants';
+import { GetDiceRollEvent, AdvanceTurnEvent } from'../common/Constants';
 
 export function GetBoard() {
     // TODO: Actally get board from sever
     return new GameBoard(7,7);
 }
 
-export function RollDice(callback: (gameDice: GameDice[]) => void) {
-    ipcRenderer.invoke(RollDiceEvent).then((result) => {
+export function GetDiceRoll(callback: (gameDice: GameDice[]) => void) {
+    ipcRenderer.invoke(GetDiceRollEvent).then((result) => {
         const dice = result.map(createDiceFromTileType);
         callback(dice);
     });
@@ -28,7 +28,7 @@ export function RollDice(callback: (gameDice: GameDice[]) => void) {
 export function AdvanceTurn(moves: TurnMoves) {
     const movesToSend: MoveDTO[] = PrepareMovesForDTO(moves);
     ipcRenderer.invoke(AdvanceTurnEvent, movesToSend).then((result) => {
-
+        console.log(result);
     });
 }
 

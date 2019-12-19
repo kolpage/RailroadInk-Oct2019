@@ -26,12 +26,13 @@
 import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import { Test } from './test/Test';
 import { TestRunner } from './test/TestRunner';
-import { RollDiceEvent, AdvanceTurnEvent } from './common/Constants';
+import { GetDiceRollEvent, AdvanceTurnEvent } from './common/Constants';
 import { StandardDicePool } from './game/DicePool';
 import { MoveDTO } from './common/DTO/MoveDTO';
 import { TileContinuityValidatorTests } from './test/TileContinuityValidatorTests';
 import { PositionValidatorTests } from './test/PositionValidatorTests';
 import { StandardGameTests } from './test/StandardGameTests';
+import { BaseGame } from './game/BaseGame';
 const windowStateKeeper = require('electron-window-state');
 
 function createWindowWithState() {
@@ -63,22 +64,22 @@ function createWindowWithState() {
   win.webContents.openDevTools(); // TODO: Remove this line when client dev is done
 }
 
+var game = new BaseGame(7, new StandardDicePool(""))
+
 // TODO: Move event handlers to own file
-ipcMain.handle(RollDiceEvent, (event, arg) => {
-  const dicePool = new StandardDicePool(Math.random().toString());
-  const rawDiceValues = dicePool.Roll();
-  return rawDiceValues;
+ipcMain.handle(GetDiceRollEvent, (event, arg) => {
+  return game.GetDiceRoll();
 });
 
 ipcMain.handle(AdvanceTurnEvent, (event, args) => {
   // TODO: Do something with the turn moves (i.e. args)
-  
+  return game.MakeMove(args);
 });
 
-//app.on('ready', createWindowWithState);
+app.on('ready', createWindowWithState);
 //var positionUnitTest = new TestRunner<PositionValidatorTests>(PositionValidatorTests);
 //var tileContinuityValidatorTest = new TestRunner<TileContinuityValidatorTests>(TileContinuityValidatorTests);
-var standardGameTests = new TestRunner<StandardGameTests>(StandardGameTests);
+//var standardGameTests = new TestRunner<StandardGameTests>(StandardGameTests);
 //Test.TileTest();
 //Test.StandardDicePoolTest_NoSeed();
 //Test.StandardDicePoolTest_WithSeed("Tony_was_here");

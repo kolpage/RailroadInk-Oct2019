@@ -1,2 +1,2 @@
-export const RollDiceEvent = "RollDice";
+export const GetDiceRollEvent = "DiceRoll";
 export const AdvanceTurnEvent = "AdvanceTurn";
