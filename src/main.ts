@@ -33,6 +33,7 @@ import { TileContinuityValidatorTests } from './test/TileContinuityValidatorTest
 import { PositionValidatorTests } from './test/PositionValidatorTests';
 import { StandardGameTests } from './test/StandardGameTests';
 import { BaseGame } from './game/BaseGame';
+import { GameManager } from './game/GameManager';
 const windowStateKeeper = require('electron-window-state');
 
 function createWindowWithState() {
@@ -63,19 +64,7 @@ function createWindowWithState() {
   win.loadFile('index.html');
   win.webContents.openDevTools(); // TODO: Remove this line when client dev is done
 }
-
-var game = new BaseGame(7, new StandardDicePool(""))
-
-// TODO: Move event handlers to own file
-ipcMain.handle(GetDiceRollEvent, (event, arg) => {
-  return game.GetDiceRoll();
-});
-
-ipcMain.handle(AdvanceTurnEvent, (event, args) => {
-  // TODO: Do something with the turn moves (i.e. args)
-  return game.MakeMove(args);
-});
-
+const gameManger = new GameManager();
 app.on('ready', createWindowWithState);
 //var positionUnitTest = new TestRunner<PositionValidatorTests>(PositionValidatorTests);
 //var tileContinuityValidatorTest = new TestRunner<TileContinuityValidatorTests>(TileContinuityValidatorTests);
