@@ -5,13 +5,17 @@ import { TurnInvalidReason, TileType } from "../Enums";
 export class TurnResponseDTO{
     public InvalidMoves: InvalidMoveResponseDTO[];
     public InvalidTurnReasons: TurnInvalidReason[];
+    public NextTurnDice: TileType[];
+    public TurnNumber: number;
     public get WasMoveSuccessful(): boolean{
         return this.InvalidMoves.length == 0 
             && this.InvalidTurnReasons.length == 0;
     }
 
-    constructor(invalidMoves: InvalidMoveResponseDTO[] = [], invalidTurnReasons: TurnInvalidReason[] = [], nextTurnDice: TileType[] = []){
+    constructor(turnNumber: number, invalidMoves: InvalidMoveResponseDTO[] = [], invalidTurnReasons: TurnInvalidReason[] = [], nextTurnDice: TileType[] = []){
+        this.TurnNumber = turnNumber;
         this.InvalidMoves = invalidMoves;
         this.InvalidTurnReasons = invalidTurnReasons;
+        this.NextTurnDice = nextTurnDice;
     }
 }

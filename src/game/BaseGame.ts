@@ -52,11 +52,11 @@ export class BaseGame {
 
         if(moveIssues.length > 0 || turnIssues.length > 0){
             this.currentTurn.UndoTurnChanges();
-            return new TurnResponseDTO(moveIssues, turnIssues);
+            return new TurnResponseDTO(this.GetTurnNumber(), moveIssues, turnIssues);
         }
         this.currentTurn.CommitTurn();
         this.beginNextTurn();
-        return new TurnResponseDTO(moveIssues, turnIssues, this.currentTurn.GetRolledDice());       
+        return new TurnResponseDTO(this.GetTurnNumber(), moveIssues, turnIssues, this.currentTurn.GetRolledDice());       
     }
 
     public GetDiceRoll(){
