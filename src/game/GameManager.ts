@@ -21,6 +21,8 @@ export class GameManager{
     }
 
     private handleAdvanceTurnEvent(event, args) {
+        console.log("sent moves:");
+        console.log(args);
         return this.activeGame.MakeMove(args);
     }
 }

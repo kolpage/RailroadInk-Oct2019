@@ -80,12 +80,13 @@ export class TileGraphics {
 
     private drawRoadThreeWay() {
         // TODO: Next two lines are also used in straight road...maybe share logic
-        this.drawLine(this.tileLength*RoadXStartPercent, this.tileLength*RoadXStartPercent, 0, this.tileLength);
-        this.drawDottedLine(10, this.tileLength/2, this.tileLength/2, 0, this.tileLength);
+        this.rotateAndDraw(Orientation.left, this.drawLine.bind(this, this.tileLength*RoadXStartPercent, this.tileLength*RoadXStartPercent, 0, this.tileLength));
+        this.rotateAndDraw(Orientation.left, this.drawDottedLine.bind(this, 10, this.tileLength/2, this.tileLength/2, 0, this.tileLength));
 
+        this.rotateAndDraw(Orientation.up, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
         this.rotateAndDraw(Orientation.right, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
-        this.rotateAndDraw(Orientation.down, this.drawArc.bind(this, this.tileLength*RoadXStartPercent));
-        this.rotateAndDraw(Orientation.right, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength/2));
+        this.rotateAndDraw(Orientation.up, this.drawDottedLine.bind(this, 10, this.tileLength*(1/2), this.tileLength*(1/2), 0, this.tileLength/2));
+        //this.rotate(270);
     }  
 
     private drawOverpass() {
@@ -138,8 +139,11 @@ export class TileGraphics {
 
     private drawRailThreeWay() {
         // TODO: Clean up how the ticks are drawn
-        this.drawRailStraight();
+        this.rotateAndDraw(Orientation.right, this.drawRailStraight.bind(this));
+        //this.drawRailStraight();
         this.rotateAndDraw(Orientation.right, this.drawRail.bind(this,0,this.tileLength/2));
+        this.rotateAndDraw(Orientation.up, this.drawRail.bind(this,0,this.tileLength/2));
+        //this.rotate(270);
     }
 
     private drawSpecialAllRail() {

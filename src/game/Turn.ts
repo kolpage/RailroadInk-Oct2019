@@ -105,7 +105,22 @@ export class BaseTurn{
 
         this.board.SetTile(playedTile, rowIndex, columnIndex, false);
         this.playedTiles.push(new Move(playedTile, rowIndex, columnIndex));
-        const die = this.diceToPlay.find(die => die.tileType === tileType && !die.played);
+        this.markTileAsPlayed(tileType);
+        return TilePlacementResult.valid;
+    }
+
+    /**
+     * TODO: Mark added this function so that the hot fix he did is isolated. Feel free to get rid of this or change it. 
+     * Give a tile type, marks the corresponding die in the dice pool as played . 
+     * @param tile The type of the tile to make as played
+     */
+    private markTileAsPlayed(tile: TileType){
+        // TODO: Hot fix. Clean this up however you see fit.
+        if(tile === TileType.StationTurnMirror){
+            tile = TileType.StationTurn;
+        }
+        
+        const die = this.diceToPlay.find(die => die.tileType === tile && !die.played);
         if(die){
             die.played = true;
         }
@@ -113,7 +128,6 @@ export class BaseTurn{
             //If it can't find the die in the dice to play array, it must be a special tile.
             this.playedSpecialTile = true;
         }
-        return TilePlacementResult.valid;
     }
 
     /**
@@ -121,6 +135,11 @@ export class BaseTurn{
      * @param tile The tile to see if available.
      */
     private isTileAvailable(tile: TileType): boolean{
+        // TODO: Hot fix. Clean this up however you see fit.
+        if(tile === TileType.StationTurnMirror){
+            tile = TileType.StationTurn;
+        }
+
         let isDieAvailable = this.diceToPlay.some(die => die.tileType === tile && !die.played);
         if(!isDieAvailable){
             isDieAvailable = !this.playedSpecialTile && this.specialTileTracker.CanPlayTile(tile);

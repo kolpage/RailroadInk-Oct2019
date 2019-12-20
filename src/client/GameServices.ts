@@ -28,6 +28,7 @@ export function GetDiceRoll(callback: (gameDice: GameDice[]) => void) {
 export function AdvanceTurn(moves: TurnMoves) {
     const movesToSend: MoveDTO[] = PrepareMovesForDTO(moves);
     ipcRenderer.invoke(AdvanceTurnEvent, movesToSend).then((result) => {
+        console.log("Advance turn result:");
         console.log(result);
     });
 }
