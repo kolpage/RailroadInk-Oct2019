@@ -13,6 +13,7 @@ import { GameDice } from './Models/GameDice';
 import { ipcRenderer } from 'electron';
 import { GetDiceRollEvent, AdvanceTurnEvent, StartGameEvent } from'../common/Constants';
 import { TurnResponseDTO } from '../common/DTO/TurnResponseDTO';
+import { InvalidMoveResponseDTO } from '../common/DTO/InvalidMoveResponseDTO';
 
 
 
@@ -24,12 +25,30 @@ function createDiceFromTileType(tileType: TileType){
 function createTurnFromResponseDTO(turnResponseDTO: TurnResponseDTO){
     var startingTurn = new GameTurn();
     startingTurn.TurnNumber = turnResponseDTO.TurnNumber;
-    startingTurn.RolledDice=  turnResponseDTO.NextTurnDice.map(createDiceFromTileType);
+    startingTurn.RolledDice = turnResponseDTO.NextTurnDice.map(createDiceFromTileType);
+    startingTurn.RolledDice.forEach( dice => {
+        dice.SetGameTurn(turnResponseDTO.TurnNumber);
+    });
     return startingTurn;
 }
 
 function PrepareMovesForDTO(moves: TurnMoves){
     return moves.GetMoves().map( move => TranslateMoveToDTO(move));
+}
+
+function createMoveFromInvalidMoveDTO(invalidMoveDTO: InvalidMoveResponseDTO){
+    const gameTile = new GameTile(invalidMoveDTO.Move.Tile, invalidMoveDTO.Move.Orientation);
+    return new Move(gameTile, invalidMoveDTO.Move.ColumnIndex, invalidMoveDTO.Move.RowIndex, invalidMoveDTO.InvalidReason);
+}
+
+function createMovesFromTurnResponseDTO(turnResponseDTO: TurnResponseDTO){
+    return turnResponseDTO.InvalidMoves.map(createMoveFromInvalidMoveDTO);
+}
+
+// TODO: This function shouldn't exist. The check already lives on TurnResponseDTO but for some reason its not getting send...
+function wasMoveSuccessful(turnResultDTO: TurnResponseDTO): boolean{
+    return turnResultDTO.InvalidMoves.length == 0 
+        && turnResultDTO.InvalidTurnReasons.length == 0;
 }
 
 // TODO: Not sure if this will actully be given from the server
@@ -49,6 +68,7 @@ export function TranslateMoveToDTO(move: Move){
 
 export function StartGame(callback: (gameTurn: GameTurn) => void){
     ipcRenderer.invoke(StartGameEvent).then((result) => {
+        console.log(result);
         callback(createTurnFromResponseDTO(result));
     });
 }
@@ -60,11 +80,19 @@ export function GetDiceRoll(callback: (gameDice: GameDice[]) => void){
     });
 }
 
-export function AdvanceTurn(moves: TurnMoves){
+export function AdvanceTurn(moves: TurnMoves, successCallback: (gameTurn: GameTurn) => void, errorCallback: (badMoves: Move[]) => void){
     const movesToSend: MoveDTO[] = PrepareMovesForDTO(moves);
-    ipcRenderer.invoke(AdvanceTurnEvent, movesToSend).then((result) => {
+    ipcRenderer.invoke(AdvanceTurnEvent, movesToSend).then((result: TurnResponseDTO) => {
         console.log("Advance turn result:");
         console.log(result);
+
+        if(wasMoveSuccessful(result)){
+            successCallback(createTurnFromResponseDTO(result))
+        }else{
+            
+            errorCallback(createMovesFromTurnResponseDTO(result));
+        }
+        
     });
 }
 

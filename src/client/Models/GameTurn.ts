@@ -4,6 +4,7 @@ import { GameBoard } from "./GameBoard";
 
 // import update from 'react-addons-update';
 import update from 'immutability-helper';
+import { TilePlacementResult } from "../../common/Enums";
 
 //<summary>Represents a turn in the game</summary>
 export class GameTurn {
@@ -42,11 +43,14 @@ export class Move {
     TilePlayed: IGameTile;
     RowPosition: number;
     ColumnPosition: number;
+    // TODO: Move this into tile
+    Status: TilePlacementResult;
 
-    constructor(tilePlayed: IGameTile, tileColumnPosition: number, tileRowPosition: number) {
+    constructor(tilePlayed: IGameTile, tileColumnPosition: number, tileRowPosition: number, status: TilePlacementResult = TilePlacementResult.valid) {
         this.TilePlayed = tilePlayed;
         this.ColumnPosition = tileColumnPosition;
         this.RowPosition = tileRowPosition;
+        this.Status = status;
     }
 
     public IsMoveAtSamePosition(move: Move) {
@@ -55,5 +59,9 @@ export class Move {
 
     public PlayDice(gameDice: GameDice) {
         this.TilePlayed.TransferTile(gameDice.Tile);
+    }
+
+    public IsValid(){
+        return this.Status === TilePlacementResult.valid;
     }
 }

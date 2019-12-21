@@ -55,6 +55,8 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         this.updateRolledDice = this.updateRolledDice.bind(this);
         this.canAdvanceTurn = this.canAdvanceTurn.bind(this);
         this.initalizeBoard = this.initalizeBoard.bind(this);
+        this.setupNextTurn = this.setupNextTurn.bind(this);
+        this.showInvalidMoves = this.showInvalidMoves.bind(this);
     }
 
     initalizeBoard(startingTurn: GameTurn){
@@ -62,18 +64,25 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
     
     private advanceTurn(){
-        AdvanceTurn(this.state.playedTiles);
+        AdvanceTurn(this.state.playedTiles, this.setupNextTurn, this.showInvalidMoves);
 
         // TODO: Get game turn from server and not manually set it here
-        const nextGameTurn = this.state.gameTurn+1;
-        this.setState({gameTurn: nextGameTurn, playedTiles: new TurnMoves()});
+        //const nextGameTurn = this.state.gameTurn+1;
+        
 
         // TODO: Dice for next turn should just be returned from the main process
-        GetDiceRoll(this.updateRolledDice);
+        //GetDiceRoll(this.updateRolledDice);
     }
 
-    private showErrors(){
+    setupNextTurn(nextTurn: GameTurn){
+        this.setState({gameTurn: nextTurn.TurnNumber, playedTiles: new TurnMoves()});
+        this.updateRolledDice(nextTurn.RolledDice);
+        console.log("setupNextTurn called")
+        console.log(nextTurn);
+    }
 
+    showInvalidMoves(moves: Move[]){
+        console.log("showInvalidMoves called");
     }
 
     private updateRolledDice(gameDice: GameDice[]){
