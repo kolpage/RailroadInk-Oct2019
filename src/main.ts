@@ -33,7 +33,7 @@ import { TileContinuityValidatorTests } from './test/TileContinuityValidatorTest
 import { PositionValidatorTests } from './test/PositionValidatorTests';
 import { StandardGameTests } from './test/StandardGameTests';
 import { BaseGame } from './game/BaseGame';
-import { GameManager } from './game/GameManager';
+import { GameManager } from './game/GameServices';
 const windowStateKeeper = require('electron-window-state');
 
 function createWindowWithState() {

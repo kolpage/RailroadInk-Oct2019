@@ -6,11 +6,11 @@ import { Inventory } from './Inventory';
 import '../styles/board.scss';
 import '../styles/inventory.scss';
 import '../styles/tile.scss';
-import { GetDiceRoll, GetSpeicalDice, AdvanceTurn } from '../GameServices';
+import { GetDiceRoll, GetSpeicalDice, AdvanceTurn, StartGame } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
 import { Grid } from './Grid';
 import { GameBoard } from '../Models/GameBoard';
-import { TurnMoves, Move } from '../Models/GameTurn';
+import { TurnMoves, Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
 
 
@@ -41,10 +41,12 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         }
         this.bindFunctions();
 
-        GetDiceRoll(this.updateRolledDice);
+        StartGame(this.initalizeBoard);
+        //GetDiceRoll(this.updateRolledDice);
     }
 
     private bindFunctions() {
+        // TODO: This is definietly a code smell...
         this.playSelectedDice = this.playSelectedDice.bind(this);
         this.updateMoveOnBoard = this.updateMoveOnBoard.bind(this);
         this.updateSelectedDice = this.updateSelectedDice.bind(this);
@@ -52,6 +54,11 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.advanceTurn = this.advanceTurn.bind(this);
         this.updateRolledDice = this.updateRolledDice.bind(this);
         this.canAdvanceTurn = this.canAdvanceTurn.bind(this);
+        this.initalizeBoard = this.initalizeBoard.bind(this);
+    }
+
+    initalizeBoard(startingTurn: GameTurn){
+        this.setState({rolledDice: startingTurn.RolledDice, gameTurn: startingTurn.TurnNumber});
     }
     
     private advanceTurn() {
