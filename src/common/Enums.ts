@@ -64,7 +64,8 @@ export enum TilePlacementResult{
     violatesGameRules,
     invalidCoordinates,
     alreadyTileAtLocation,
-    tileNotAvailable
+    tileNotAvailable,
+    tileNotConnected
 }
 
 /** Reason a turn is invalid */

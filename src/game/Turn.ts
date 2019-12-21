@@ -1,6 +1,6 @@
 import { TileType, TilePlacementResult } from "../common/Enums";
 import { Move } from "./Move";
-import { PlayableBaseTile } from "./tiles";
+import { PlayableBaseTile, BaseTile } from "./tiles";
 import { Board } from "./Board";
 import { SpecialTileTracker } from "../common/SpecialTileTracker";
 import { TileContinuityValidator } from "./TileVisitor";
@@ -151,17 +151,19 @@ export class BaseTurn{
         return true;
     }
 
-    public PlayedTilesFollowConnectionRules(): boolean{
-        for(const move of this.playedTiles){
+    public GetDisconnectedTiles(): number[]{
+        const invalidMoveIndices: number[] = [];
+        for(let moveIndex = 0; moveIndex < this.playedTiles.length; moveIndex++){
+            const move = this.playedTiles[moveIndex];
             const tile = move.GetTile();
             if(this.doesTileHaveToBeConnected(tile.GetTileType())){
                 const isContinuous = this.tileContinuityValidator.Validate(tile);
                 if(!isContinuous){
-                    return false;
+                    invalidMoveIndices.push(moveIndex);
                 }
             }
         }
-        return true;
+        return invalidMoveIndices;
     }
 
     /** Gets all the dice rolled for this turn. */

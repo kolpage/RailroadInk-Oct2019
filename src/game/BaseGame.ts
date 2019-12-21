@@ -9,6 +9,7 @@ import { InvalidMoveResponseDTO } from "../common/DTO/InvalidMoveResponseDTO";
 import { SpecialTileTracker } from "../common/SpecialTileTracker";
 import { BaseScoreCalculator } from "./BaseScoreCalculator";
 import { BaseTile } from "./tiles";
+import { Move } from "./Move";
 
 export class BaseGame {
     private boardWidth: number = 7;
@@ -91,8 +92,15 @@ export class BaseGame {
             }
 
             //Verify all tiles placed are connected to existing board elements
-            if(!this.currentTurn.PlayedTilesFollowConnectionRules()){
-                turnIssues.push(TurnInvalidReason.tilesMustBeConnectedToExistingTiles)
+            const disconnectedTiles: number[] = this.currentTurn.GetDisconnectedTiles();
+            if(disconnectedTiles.length > 0){
+                turnIssues.push(TurnInvalidReason.tilesMustBeConnectedToExistingTiles);
+                for(let moveIndex of disconnectedTiles) {
+                    const move: MoveDTO = moves[moveIndex];
+                    moveIssues.push(
+                        new InvalidMoveResponseDTO(moveIndex, move, TilePlacementResult.tileNotConnected)
+                    );
+                 }
             }
 
             //Verify all required tiles have been played.
