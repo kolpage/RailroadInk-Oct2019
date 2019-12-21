@@ -253,16 +253,16 @@ export class StandardGameTests{
             ]
         );
                 
-        if(move1.InvalidMoves.length === 0
-            && move1.InvalidTurnReasons.length === 1
+        if(move1.InvalidTurnReasons.length === 1
             && move1.InvalidTurnReasons[0] === TurnInvalidReason.tilesMustBeConnectedToExistingTiles
+            && move1.InvalidMoves.length > 0
         ){
             return true;
         }
         return false;
     }
 
-    public InvalidGame_TilesNotConnected_AFterSubsequentPlay(){
+    public InvalidGame_TilesNotConnected_AfterSubsequentPlay(){
         const game = StandardGameTestHelper.CreateTestGame();
         const move1 = game.MakeMove(
             [
@@ -285,9 +285,9 @@ export class StandardGameTests{
             ]
         );
         
-        if(move2.InvalidMoves.length === 0
-            && move2.InvalidTurnReasons.length === 1
+        if(move2.InvalidTurnReasons.length === 1
             && move2.InvalidTurnReasons[0] === TurnInvalidReason.tilesMustBeConnectedToExistingTiles
+            && move2.InvalidMoves.length > 0
         ){
             return true;
         }
@@ -306,8 +306,7 @@ export class StandardGameTests{
                 new MoveDTO(TileType.SpecialRoadRailAdjacent, Orientation.left, 2, 6)
             ]
         );
-        if(move1.InvalidTurnReasons.length === 0
-            && move1.InvalidMoves.length === 1
+        if(move1.InvalidMoves.length === 1
         ){
             const invalidMoveResponse = move1.InvalidMoves[0];
             if(invalidMoveResponse.InvalidReason === TilePlacementResult.tileNotAvailable
@@ -332,8 +331,7 @@ export class StandardGameTests{
                 new MoveDTO(TileType.SpecialRoadRailAdjacent, Orientation.left, 2, 6)
             ]
         );
-        if(move1.InvalidTurnReasons.length === 0
-            && move1.InvalidMoves.length === 1
+        if(move1.InvalidMoves.length === 1
         ){
             const invalidMoveResponse = move1.InvalidMoves[0];
             if(invalidMoveResponse.InvalidReason === TilePlacementResult.tileNotAvailable
@@ -371,8 +369,7 @@ export class StandardGameTests{
             ]
         );
         
-        if(move2.InvalidTurnReasons.length === 0
-            && move2.InvalidMoves.length === 1
+        if(move2.InvalidMoves.length === 3//1 Tile already played, 2 continuity
         ){
             const invalidMoveResponse = move2.InvalidMoves[0];
             if(invalidMoveResponse.InvalidReason === TilePlacementResult.tileNotAvailable

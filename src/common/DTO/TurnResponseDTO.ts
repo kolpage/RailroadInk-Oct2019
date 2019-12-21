@@ -7,15 +7,13 @@ export class TurnResponseDTO{
     public InvalidTurnReasons: TurnInvalidReason[];
     public NextTurnDice: TileType[];
     public TurnNumber: number;
-    public get WasMoveSuccessful(): boolean{
-        return this.InvalidMoves.length == 0 
-            && this.InvalidTurnReasons.length == 0;
-    }
+    public WasMoveSuccessful: boolean;
 
     constructor(turnNumber: number, invalidMoves: InvalidMoveResponseDTO[] = [], invalidTurnReasons: TurnInvalidReason[] = [], nextTurnDice: TileType[] = []){
         this.TurnNumber = turnNumber;
         this.InvalidMoves = invalidMoves;
         this.InvalidTurnReasons = invalidTurnReasons;
         this.NextTurnDice = nextTurnDice;
+        this.WasMoveSuccessful = this.InvalidMoves.length === 0 && this.InvalidTurnReasons.length == 0;
     }
 }
