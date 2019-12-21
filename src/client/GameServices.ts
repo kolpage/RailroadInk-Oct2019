@@ -45,12 +45,6 @@ function createMovesFromTurnResponseDTO(turnResponseDTO: TurnResponseDTO){
     return turnResponseDTO.InvalidMoves.map(createMoveFromInvalidMoveDTO);
 }
 
-// TODO: This function shouldn't exist. The check already lives on TurnResponseDTO but for some reason its not getting send...
-function wasMoveSuccessful(turnResultDTO: TurnResponseDTO): boolean{
-    return turnResultDTO.InvalidMoves.length == 0 
-        && turnResultDTO.InvalidTurnReasons.length == 0;
-}
-
 // TODO: Not sure if this will actully be given from the server
 export function GetSpeicalDice(){
     const specialDiceTypes = [TileType.SpecialAllRail, TileType.SpecialThreeRailOneRoad, TileType.SpecialRoadRailAcross, TileType.SpecialThreeRoadOneRail, TileType.SpecialAllRoad, TileType.SpecialRoadRailAdjacent];
@@ -83,10 +77,11 @@ export function GetDiceRoll(callback: (gameDice: GameDice[]) => void){
 export function AdvanceTurn(moves: TurnMoves, successCallback: (gameTurn: GameTurn) => void, errorCallback: (badMoves: Move[]) => void){
     const movesToSend: MoveDTO[] = PrepareMovesForDTO(moves);
     ipcRenderer.invoke(AdvanceTurnEvent, movesToSend).then((result: TurnResponseDTO) => {
-        console.log("Advance turn result:");
-        console.log(result);
+        // TODO: Remove debug code
+        //console.log("Advance turn result:");
+        //console.log(result);
 
-        if(wasMoveSuccessful(result)){
+        if(result.WasMoveSuccessful){
             successCallback(createTurnFromResponseDTO(result))
         }else{
             

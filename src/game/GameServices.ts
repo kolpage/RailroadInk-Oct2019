@@ -8,7 +8,6 @@ export class GameServices{
     private activeGame: BaseGame;
     
     constructor(){
-        //this.activeGame = new BaseGame(7, new StandardDicePool(""));
         this.initalizeStartupEventHandlers();
     }
 
@@ -22,7 +21,7 @@ export class GameServices{
     }
 
     private handleStartGameEvent(event, args){
-        this.activeGame = new BaseGame(7, new StandardDicePool(""));
+        this.activeGame = new BaseGame(7, new StandardDicePool());
         this.initalizeGameEventHandlers();
         return new TurnResponseDTO(this.activeGame.GetTurnNumber(), [], [], this.activeGame.GetDiceRoll());
     }
@@ -32,8 +31,8 @@ export class GameServices{
     }
 
     private handleAdvanceTurnEvent(event, args){
-        console.log("sent moves:");
-        console.log(args);
+        //console.log("sent moves:");
+        //console.log(args);
         return this.activeGame.MakeMove(args);
     }
 }
