@@ -33,7 +33,7 @@ import { TileContinuityValidatorTests } from './test/TileContinuityValidatorTest
 import { PositionValidatorTests } from './test/PositionValidatorTests';
 import { StandardGameTests } from './test/StandardGameTests';
 import { BaseGame } from './game/BaseGame';
-import { GameManager } from './game/GameServices';
+import { GameServices } from './game/GameServices';
 const windowStateKeeper = require('electron-window-state');
 
 function createWindowWithState() {
@@ -64,7 +64,7 @@ function createWindowWithState() {
   win.loadFile('index.html');
   win.webContents.openDevTools(); // TODO: Remove this line when client dev is done
 }
-const gameManger = new GameManager();
+const gameServics = new GameServices();
 app.on('ready', createWindowWithState);
 //var positionUnitTest = new TestRunner<PositionValidatorTests>(PositionValidatorTests);
 //var tileContinuityValidatorTest = new TestRunner<TileContinuityValidatorTests>(TileContinuityValidatorTests);

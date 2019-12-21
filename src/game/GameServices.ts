@@ -4,7 +4,7 @@ import { BaseGame } from "./BaseGame";
 import { StandardDicePool } from "./DicePool";
 import { TurnResponseDTO } from "../common/DTO/TurnResponseDTO";
 
-export class GameManager{
+export class GameServices{
     private activeGame: BaseGame;
     
     constructor(){

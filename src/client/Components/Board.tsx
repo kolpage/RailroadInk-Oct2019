@@ -14,12 +14,12 @@ import { TurnMoves, Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
 
 
-interface IBoardProps {
+interface IBoardProps{
     gameBoard: GameBoard;
 }
 
 // TODO: Elevate this state (it should come from the server anyways)
-interface IBoardState {
+interface IBoardState{
     selectedDice: GameDice;
     rolledDice: GameDice[];
     playedTiles: TurnMoves;
@@ -27,10 +27,10 @@ interface IBoardState {
     gameTurn: number;
 }
 
-export class Board extends React.Component<IBoardProps, IBoardState> {
+export class Board extends React.Component<IBoardProps, IBoardState>{
     private specialDice = GetSpeicalDice();
     
-    constructor(props: IBoardProps) {
+    constructor(props: IBoardProps){
         super(props);
         this.state = {
             selectedDice: new GameDice(), 
@@ -45,7 +45,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         //GetDiceRoll(this.updateRolledDice);
     }
 
-    private bindFunctions() {
+    private bindFunctions(){
         // TODO: This is definietly a code smell...
         this.playSelectedDice = this.playSelectedDice.bind(this);
         this.updateMoveOnBoard = this.updateMoveOnBoard.bind(this);
@@ -61,7 +61,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.setState({rolledDice: startingTurn.RolledDice, gameTurn: startingTurn.TurnNumber});
     }
     
-    private advanceTurn() {
+    private advanceTurn(){
         AdvanceTurn(this.state.playedTiles);
 
         // TODO: Get game turn from server and not manually set it here
@@ -72,15 +72,19 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         GetDiceRoll(this.updateRolledDice);
     }
 
-    private updateRolledDice(gameDice: GameDice[]) {
+    private showErrors(){
+
+    }
+
+    private updateRolledDice(gameDice: GameDice[]){
         gameDice.forEach(dice => {
             dice.SetGameTurn(this.state.gameTurn);
         });
         this.setState({rolledDice: gameDice});
     }
 
-    private playSelectedDice(move: Move) {
-        if (!this.state.selectedDice.IsEmpty()) {
+    private playSelectedDice(move: Move){
+        if (!this.state.selectedDice.IsEmpty()){
             // TODO: Don't have board update the move. Not sure how to handle this since I don't want to pass the currently selected 
             //       dice to the grid since it doesn't really need to know that. 
             move.PlayDice(this.state.selectedDice);
@@ -101,7 +105,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         }  
     }
 
-    private updateMoveOnBoard(move: Move) {
+    private updateMoveOnBoard(move: Move){
         let updatedBoard = this.state.gameBoard;
         updatedBoard.MakeMove(move);
 
@@ -111,7 +115,7 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.setState({gameBoard: updatedBoard, playedTiles: updatedPlayedTiles});
     }
 
-    private removeMoveFromBoard(move: Move) {
+    private removeMoveFromBoard(move: Move){
         let updatedBoard = this.state.gameBoard;
         updatedBoard.RemoveMove(move);
 
@@ -123,20 +127,20 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
         this.resetDice(move);
     }
 
-    private resetDice(move: Move) {
+    private resetDice(move: Move){
         let found = false;
 
-        this.state.rolledDice.every(dice => {
-            if (dice.Tile.AreTilesEquivalent(move.TilePlayed) && dice.Played) {
+        this.state.rolledDice.every(dice =>{
+            if (dice.Tile.AreTilesEquivalent(move.TilePlayed) && dice.Played){
                 dice.Played = false;
                 found = true;
                 return false;
             }
             return true;
         });
-        if (!found) {
-            this.specialDice.every(dice => {
-                if (dice.Tile.AreTilesEquivalent(move.TilePlayed) && dice.Played) {
+        if (!found){
+            this.specialDice.every(dice =>{
+                if (dice.Tile.AreTilesEquivalent(move.TilePlayed) && dice.Played){
                     dice.Played = false;
                     found = true;
                     return false;
@@ -147,38 +151,38 @@ export class Board extends React.Component<IBoardProps, IBoardState> {
     }
 
     // TODO: Moves these check somewhere else (models if possible)
-    private updateSelectedDice(dice: GameDice) {
+    private updateSelectedDice(dice: GameDice){
         // TODO: Clean up this check
        if (!this.isSpecialDice(dice) || (this.isSpecialDice(dice) && this.canPlaySpecialDice())) {
             this.setState({selectedDice: dice});
         }
     }
 
-    private canAdvanceTurn() {
+    private canAdvanceTurn(){
         // TODO: Allow for debug mode to roll dice whenever
         // FUTURE: This check will likely need to be update when there are optional dice to play
-        //return this.state.rolledDice.every((dice) => dice.Played);
-        return true;
+        return this.state.rolledDice.every((dice) => dice.Played);
+        //return true;
     }
 
-    private isSpecialDice(dice: GameDice) {
+    private isSpecialDice(dice: GameDice){
         return this.isSpecialTile(dice.Tile);
     }
 
-    private isSpecialTile(tile: IGameTile) {
+    private isSpecialTile(tile: IGameTile){
         return this.specialDice.some((specialDice) => tile.AreTilesEquivalent(specialDice.Tile));
     }
 
-    private canPlaySpecialDice() {
+    private canPlaySpecialDice(){
         return this.specialDice.every((specialDice) => (specialDice.Tile.TurnPlayed < this.state.gameTurn) || !specialDice.Played);
     }
 
-    private updateSpecialDiceForMove(move: Move) {
+    private updateSpecialDiceForMove(move: Move){
         let specialDiceToUpdate = this.specialDice.find((dice) => dice.Tile.AreTilesEquivalent(move.TilePlayed));
         specialDiceToUpdate.SetGameTurn(this.state.gameTurn); // TODO: Don't hide state change
     }
 
-    render() {
+    render(){
         // TODO: Refactor out to more components
         return (
             <div className='boardContainer'>
