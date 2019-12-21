@@ -9,16 +9,19 @@
     bottom: 0;
     right: 0;
     position: absolute;
+    user-select: none;
 }
 
 .upperLeftButton {
     position: absolute;
+    user-select: none;
 }
 
 .turnNumber {
     top:0px;
     right:0px;
     position: absolute;
+    user-select: none;
 }
  
 figure{

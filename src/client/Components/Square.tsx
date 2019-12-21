@@ -108,7 +108,7 @@ export class Square extends React.Component<ISquareProps> {
     drawRemoveButton() {
         if(this.isSquareActive()) {
             return (
-                <div 
+                <div
                     onClick={this.removeTile.bind(this)} 
                     className='lowerRightButton'
                 >
