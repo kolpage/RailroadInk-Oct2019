@@ -31,6 +31,7 @@ export class GameServices{
     }
 
     private handleAdvanceTurnEvent(event, args){
+        // TODO: Remove debug code
         //console.log("sent moves:");
         //console.log(args);
         return this.activeGame.MakeMove(args);

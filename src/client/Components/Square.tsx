@@ -2,6 +2,7 @@ import * as React from 'react';
 import '../styles/square.scss';
 import { Tile } from './Tile';
 import { IGameTile } from '../Models/GameTile';
+import { GameTurn } from '../Models/GameTurn';
 
 const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
 const RemoveIcon = require("../Assests/RemoveCrop.png")
@@ -9,7 +10,8 @@ const RemoveIcon = require("../Assests/RemoveCrop.png")
 interface ISquareProps {
     // TODO: Use Move instead of IGameTile & rc
     gameTile: IGameTile;
-    currentGameTurn: number; // TODO: Pass in this infomration in a better way
+    currentGameTurn: GameTurn;
+    //isSquareValid: boolean;
     playSquare: (squareColumn: number, squareRow: number) => void;
     rotateSquare: (squareColumn: number, squareRow: number) => void;
     clearSquare: (squareColumn: number, squareRow: number) => void;
@@ -54,8 +56,15 @@ export class Square extends React.Component<ISquareProps> {
         }
     }
 
+    isSquareInvalid(){
+        return this.props.currentGameTurn.InvalidMoves.some(invalidMove => {
+            return invalidMove.ColumnPosition === this.props.sqaureColumn 
+                    && invalidMove.RowPosition === this.props.squareRow; 
+        });
+    }
+
     private canSqaureBeUpdted() {
-        return (this.props.gameTile.TurnPlayed == null || this.props.gameTile.TurnPlayed == this.props.currentGameTurn);
+        return (this.props.gameTile.TurnPlayed == null || this.props.gameTile.TurnPlayed == this.props.currentGameTurn.TurnNumber);
     }
 
     private isSquarePlayable() {
@@ -80,8 +89,8 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     private addValidationCssClass() {
-        if (this.isSquareActive()) {
-            return 'validBoarder'
+        if (this.isSquareInvalid()) {
+            return 'invalidBoarder'
         }
 
         return '';
@@ -108,7 +117,7 @@ export class Square extends React.Component<ISquareProps> {
     drawRemoveButton() {
         if(this.isSquareActive()) {
             return (
-                <div 
+                <div
                     onClick={this.removeTile.bind(this)} 
                     className='lowerRightButton'
                 >

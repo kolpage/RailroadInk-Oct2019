@@ -24,7 +24,7 @@ interface IBoardState{
     rolledDice: GameDice[];
     playedTiles: TurnMoves;
     gameBoard: GameBoard;
-    gameTurn: number;
+    gameTurn: GameTurn;
 }
 
 export class Board extends React.Component<IBoardProps, IBoardState>{
@@ -37,7 +37,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
             rolledDice: [],
             playedTiles: new TurnMoves(),
             gameBoard: this.props.gameBoard,
-            gameTurn: 1
+            gameTurn: new GameTurn()
         }
         this.bindFunctions();
 
@@ -60,34 +60,28 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
 
     initalizeBoard(startingTurn: GameTurn){
-        this.setState({rolledDice: startingTurn.RolledDice, gameTurn: startingTurn.TurnNumber});
+        this.setState({rolledDice: startingTurn.RolledDice, gameTurn: startingTurn});
     }
     
     private advanceTurn(){
         AdvanceTurn(this.state.playedTiles, this.setupNextTurn, this.showInvalidMoves);
-
-        // TODO: Get game turn from server and not manually set it here
-        //const nextGameTurn = this.state.gameTurn+1;
-        
-
-        // TODO: Dice for next turn should just be returned from the main process
-        //GetDiceRoll(this.updateRolledDice);
     }
 
     setupNextTurn(nextTurn: GameTurn){
-        this.setState({gameTurn: nextTurn.TurnNumber, playedTiles: new TurnMoves()});
+        this.setState({gameTurn: nextTurn, playedTiles: new TurnMoves()});
         this.updateRolledDice(nextTurn.RolledDice);
-        console.log("setupNextTurn called")
-        console.log(nextTurn);
     }
 
     showInvalidMoves(moves: Move[]){
-        console.log("showInvalidMoves called");
+        // TODO: This logic shouldn't live here. It should probably be moved to a model or a servive. 
+        const currentTurn = this.state.gameTurn;
+        currentTurn.InvalidMoves = moves;
+        this.setState({gameTurn: currentTurn});
     }
 
     private updateRolledDice(gameDice: GameDice[]){
         gameDice.forEach(dice => {
-            dice.SetGameTurn(this.state.gameTurn);
+            dice.SetGameTurn(this.state.gameTurn.TurnNumber);
         });
         this.setState({rolledDice: gameDice});
     }
@@ -106,7 +100,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
             // TODO: Handle tracking the turn special dice were played better
             if (this.isSpecialTile(move.TilePlayed)) {
-                move.TilePlayed.TurnPlayed = this.state.gameTurn;
+                move.TilePlayed.TurnPlayed = this.state.gameTurn.TurnNumber;
                 this.updateSpecialDiceForMove(move);
             }
 
@@ -131,7 +125,13 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         let updatedPlayedTiles = this.state.playedTiles;
         updatedPlayedTiles.RemoveMove(move);
 
-        this.setState({gameBoard: updatedBoard, playedTiles: updatedPlayedTiles});
+        let currentTurn = this.state.gameTurn;
+        let invalidMoveIndex = currentTurn.InvalidMoves.findIndex(invalidMove => invalidMove.IsMoveAtSamePosition(move));
+        if(invalidMoveIndex > -1){
+            currentTurn.InvalidMoves.splice(invalidMoveIndex, 1);
+        }
+
+        this.setState({gameBoard: updatedBoard, gameTurn: currentTurn, playedTiles: updatedPlayedTiles});
 
         this.resetDice(move);
     }
@@ -183,12 +183,12 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
 
     private canPlaySpecialDice(){
-        return this.specialDice.every((specialDice) => (specialDice.Tile.TurnPlayed < this.state.gameTurn) || !specialDice.Played);
+        return this.specialDice.every((specialDice) => (specialDice.Tile.TurnPlayed < this.state.gameTurn.TurnNumber) || !specialDice.Played);
     }
 
     private updateSpecialDiceForMove(move: Move){
         let specialDiceToUpdate = this.specialDice.find((dice) => dice.Tile.AreTilesEquivalent(move.TilePlayed));
-        specialDiceToUpdate.SetGameTurn(this.state.gameTurn); // TODO: Don't hide state change
+        specialDiceToUpdate.SetGameTurn(this.state.gameTurn.TurnNumber); // TODO: Don't hide state change
     }
 
     render(){

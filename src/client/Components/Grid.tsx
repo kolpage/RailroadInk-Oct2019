@@ -3,13 +3,13 @@ import { Square } from './Square';
 import { TileType, Orientation } from '../../common/Enums';
 import { ExitTile, ExitTileSide } from './Tile';
 import { GameBoard } from '../Models/GameBoard';
-import { Move } from '../Models/GameTurn';
+import { Move, GameTurn } from '../Models/GameTurn';
 import { GameTile } from '../Models/GameTile';
 
 
 interface IGridProps {
     gameBoard: GameBoard;
-    gameTurn: number; // TODO: Use GameTurn object
+    gameTurn: GameTurn; // TODO: Use GameTurn object
 
     addMoveToBoard: (move: Move) => void;
     updateMoveOnBoard: (move: Move) => void;
