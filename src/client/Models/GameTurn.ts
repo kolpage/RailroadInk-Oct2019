@@ -9,9 +9,10 @@ import { TilePlacementResult } from "../../common/Enums";
 //<summary>Represents a turn in the game</summary>
 export class GameTurn {
     TurnNumber: number;
-    RolledDice: GameDice[];
+    RolledDice: GameDice[] = [];
     SelectedDice: GameDice;
     Board: GameBoard;
+    InvalidMoves: Move[] = [];
 }
 
 export class TurnMoves {
