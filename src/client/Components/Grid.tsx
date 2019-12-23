@@ -56,31 +56,6 @@ export class Grid extends React.Component<IGridProps> {
         this.props.updateMoveOnBoard(move);
     }
 
-    private buildPlayAreaGrid() {
-        let board = [];
-
-        for (var currentRow = 0; currentRow < this.props.gameBoard.numberOrRows; currentRow++) {
-            board.push(this.createRow(currentRow, this.props.gameBoard.numberOfColumns));
-        }
-
-        return board;
-    }
-
-    private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
-        let row = [];
-        for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
-            const tile = this.props.gameBoard.GetTile(currentColumn, rowPosition);
-            const cellKey = `${currentColumn}${rowPosition}`
-            // TODO: Reduce the amount of parameters Square takes
-            row.push(<Square gameTile={tile} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
-        }
-        return (
-            <div className='row' key={"gameBoardRow" + rowPosition}>
-                {row}
-            </div>
-        );
-    }
-
     render() {
         return (
             <div className='row'>
@@ -95,6 +70,31 @@ export class Grid extends React.Component<IGridProps> {
         );
     }
 
+    private buildPlayAreaGrid() {
+        let board = [];
+
+        for (var currentRow = 0; currentRow < this.props.gameBoard.numberOrRows; currentRow++) {
+            board.push(this.createRow(currentRow, this.props.gameBoard.numberOfColumns));
+        }
+
+        return board;
+    }
+
+    private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
+        let row = [];
+        for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
+            //const tile = this.props.gameBoard.GetTile(currentColumn, rowPosition);
+            const move = this.props.gameBoard.GetMove(currentColumn, rowPosition);
+            const cellKey = `${currentColumn}${rowPosition}`
+            // TODO: Reduce the amount of parameters Square takes
+            row.push(<Square move={move} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+        }
+        return (
+            <div className='row' key={"gameBoardRow" + rowPosition}>
+                {row}
+            </div>
+        );
+    }
 }
 
 // TODO: This should probably be in its own file (though it doesn't seem to have much reuse outside of how Grid is using it)

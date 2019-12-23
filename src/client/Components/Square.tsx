@@ -2,16 +2,16 @@ import * as React from 'react';
 import '../styles/square.scss';
 import { Tile } from './Tile';
 import { IGameTile } from '../Models/GameTile';
-import { GameTurn } from '../Models/GameTurn';
+import { GameTurn, Move } from '../Models/GameTurn';
 
 const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
 const RemoveIcon = require("../Assests/RemoveCrop.png")
 
 interface ISquareProps {
     // TODO: Use Move instead of IGameTile & rc
-    gameTile: IGameTile;
+    //gameTile: IGameTile;
+    move: Move;
     currentGameTurn: GameTurn;
-    //isSquareValid: boolean;
     playSquare: (squareColumn: number, squareRow: number) => void;
     rotateSquare: (squareColumn: number, squareRow: number) => void;
     clearSquare: (squareColumn: number, squareRow: number) => void;
@@ -51,7 +51,7 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     mirrorSquare() {
-        if (this.isSquareActive() && this.props.gameTile.CanTileBeMirror()) {
+        if (this.isSquareActive() && this.props.move.TilePlayed.CanTileBeMirror()) {
             this.props.mirrorSquare(this.props.sqaureColumn, this.props.squareRow);
         }
     }
@@ -64,11 +64,11 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     private canSqaureBeUpdted() {
-        return (this.props.gameTile.TurnPlayed == null || this.props.gameTile.TurnPlayed == this.props.currentGameTurn.TurnNumber);
+        return (this.props.move.TilePlayed.TurnPlayed == null || this.props.move.TilePlayed.TurnPlayed == this.props.currentGameTurn.TurnNumber);
     }
 
     private isSquarePlayable() {
-        return this.props.gameTile.IsTileEmpty() && this.canSqaureBeUpdted();
+        return this.props.move.TilePlayed.IsTileEmpty() && this.canSqaureBeUpdted();
     }
 
     private isSquareActive() {
@@ -76,7 +76,7 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     private isSquareEmpty() {
-        return this.props.gameTile.IsTileEmpty();
+        return this.props.move.TilePlayed.IsTileEmpty();
     }
 
     private handleDragOver(e) {
@@ -97,9 +97,8 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     drawMirrorButton() {
-        if(this.isSquareActive() && this.props.gameTile.CanTileBeMirror())
-        {
-             return (
+        if(this.isSquareActive() && this.props.move.TilePlayed.CanTileBeMirror()){
+             return(
                  <div 
                      onClick={this.mirrorSquare.bind(this)} 
                      className='upperLeftButton'
@@ -114,8 +113,8 @@ export class Square extends React.Component<ISquareProps> {
         return <div></div>;
      }
 
-    drawRemoveButton() {
-        if(this.isSquareActive()) {
+    drawRemoveButton(){
+        if(this.isSquareActive()){
             return (
                 <div
                     onClick={this.removeTile.bind(this)} 
@@ -130,17 +129,21 @@ export class Square extends React.Component<ISquareProps> {
         return <div></div>;
     }
 
-    render() {
-        return (
-            <div className={'square ' + this.addValidationCssClass()}>
+    addErrorTooltip(){
+        return "";
+    }
+
+    render(){
+        return(
+            <div className={'square ' + this.addValidationCssClass()} title={this.addErrorTooltip()}>
                 {this.drawMirrorButton()}
                 {this.drawRemoveButton()}
-                <div className='turnNumber'>{this.props.gameTile.TurnPlayed}</div>
+                <div className='turnNumber'>{this.props.move.TilePlayed.TurnPlayed}</div>
                 <div onClick={this.playSelectedTile} 
                      onContextMenu={this.rotateSquare}
                      onDragOver={this.handleDragOver.bind(this)}
                      onDrop={this.handleDragDrop.bind(this)}>
-                    <Tile tile={this.props.gameTile} />
+                    <Tile tile={this.props.move.TilePlayed} />
                 </div>
             </div>
         );
