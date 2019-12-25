@@ -30,29 +30,21 @@ export class Grid extends React.Component<IGridProps> {
         this.mirrorSquareTile = this.mirrorSquareTile.bind(this);
     }
 
-    private playSelectedTile(squareColumn: number, squareRow: number) {
-        const tileToUpdate = this.props.gameBoard.GetTile(squareColumn, squareRow);
-        const move = new Move(tileToUpdate, squareColumn, squareRow);
+    private playSelectedTile(move: Move) {
         this.props.addMoveToBoard(move); 
     }
 
-    private rotateSquareTile(squareColumn: number, squareRow: number) {
-        let tileToRotate = this.props.gameBoard.GetTile(squareColumn, squareRow);
-        tileToRotate.RotateTile();
-        const move = new Move(tileToRotate, squareColumn, squareRow);
+    private rotateSquareTile(move: Move) {
+        move.TilePlayed.RotateTile();
         this.props.updateMoveOnBoard(move);
     }
 
-    private clearSquareTile(squareColumn: number, squareRow: number) {
-        let tileToClear = this.props.gameBoard.GetTile(squareColumn, squareRow);
-        const move = new Move(tileToClear, squareColumn, squareRow);
+    private clearSquareTile(move: Move) {
         this.props.clearMoveOnBoard(move);
     }
 
-    private mirrorSquareTile(squareColumn: number, squareRow: number) {
-        let tileToMirror = this.props.gameBoard.GetTile(squareColumn, squareRow);
-        tileToMirror.MirrorTile();
-        const move = new Move(tileToMirror, squareColumn, squareRow);
+    private mirrorSquareTile(move: Move) {
+        move.TilePlayed.MirrorTile();
         this.props.updateMoveOnBoard(move);
     }
 
@@ -89,7 +81,7 @@ export class Grid extends React.Component<IGridProps> {
             }
             const cellKey = `${currentColumn}${rowPosition}`
             // TODO: Reduce the amount of parameters Square takes
-            row.push(<Square move={move} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentTurnNumber={this.props.gameTurn.TurnNumber} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+            row.push(<Square move={move} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentTurnNumber={this.props.gameTurn.TurnNumber} key={cellKey} />);
         }
         return (
             <div className='row' key={"gameBoardRow" + rowPosition}>

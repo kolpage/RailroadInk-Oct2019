@@ -10,14 +10,11 @@ const RemoveIcon = require("../Assests/RemoveCrop.png")
 interface ISquareProps {
     move: Move;
     currentTurnNumber: number;
-    playSquare: (squareColumn: number, squareRow: number) => void;
-    rotateSquare: (squareColumn: number, squareRow: number) => void;
-    clearSquare: (squareColumn: number, squareRow: number) => void;
-    mirrorSquare: (squareColumn: number, squareRow: number) => void;
 
-    // TODO: Use Move instead 
-    sqaureColumn: number;
-    squareRow: number;
+    playSquare: (move: Move) => void;
+    rotateSquare: (move: Move) => void;
+    clearSquare: (move: Move) => void;
+    mirrorSquare: (move: Move) => void;
 }
 
 export class Square extends React.Component<ISquareProps> {
@@ -33,25 +30,25 @@ export class Square extends React.Component<ISquareProps> {
 
     playSelectedTile() {
         if(this.isSquarePlayable()) {
-            this.props.playSquare(this.props.sqaureColumn, this.props.squareRow);
+            this.props.playSquare(this.props.move);
             return true;
         }
         return false;
     }
 
     removeTile() {
-        this.props.clearSquare(this.props.sqaureColumn, this.props.squareRow);
+        this.props.clearSquare(this.props.move);
     }
 
     rotateSquare() {
         if (this.isSquareActive()) { 
-            this.props.rotateSquare(this.props.sqaureColumn, this.props.squareRow);
+            this.props.rotateSquare(this.props.move);
         }
     }
 
     mirrorSquare() {
         if (this.isSquareActive() && this.props.move.TilePlayed.CanTileBeMirror()) {
-            this.props.mirrorSquare(this.props.sqaureColumn, this.props.squareRow);
+            this.props.mirrorSquare(this.props.move);
         }
     }
 
