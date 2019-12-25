@@ -8,10 +8,8 @@ const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
 const RemoveIcon = require("../Assests/RemoveCrop.png")
 
 interface ISquareProps {
-    
-    //gameTile: IGameTile;
     move: Move;
-    currentGameTurn: GameTurn;
+    currentTurnNumber: number;
     playSquare: (squareColumn: number, squareRow: number) => void;
     rotateSquare: (squareColumn: number, squareRow: number) => void;
     clearSquare: (squareColumn: number, squareRow: number) => void;
@@ -58,12 +56,11 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     isSquareInvalid(){
-        //return this.props.currentGameTurn.InvalidMoves.ContainsMoveAtPosition(this.props.sqaureColumn, this.props.squareRow);
         return !this.props.move.IsValid();
     }
 
     private canSqaureBeUpdted() {
-        return (this.props.move.TilePlayed.TurnPlayed == null || this.props.move.TilePlayed.TurnPlayed == this.props.currentGameTurn.TurnNumber);
+        return (this.props.move.TilePlayed.TurnPlayed == null || this.props.move.TilePlayed.TurnPlayed == this.props.currentTurnNumber);
     }
 
     private isSquarePlayable() {
@@ -129,10 +126,6 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     addErrorTooltip(){
-        // if(this.props.currentGameTurn.InvalidMoves.ContainsMoveAtPosition(this.props.sqaureColumn, this.props.squareRow)){
-        //     const invalidMove = this.props.currentGameTurn.InvalidMoves.GetMoveAtPosition(this.props.sqaureColumn, this.props.squareRow);
-        //     return TilePlacementResult[invalidMove.Status];
-        // }
         if(!this.props.move.IsValid()){
             return TilePlacementResult[this.props.move.Status];
         }

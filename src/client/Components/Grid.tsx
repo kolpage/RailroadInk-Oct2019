@@ -89,7 +89,7 @@ export class Grid extends React.Component<IGridProps> {
             }
             const cellKey = `${currentColumn}${rowPosition}`
             // TODO: Reduce the amount of parameters Square takes
-            row.push(<Square move={move} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
+            row.push(<Square move={move} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentTurnNumber={this.props.gameTurn.TurnNumber} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);
         }
         return (
             <div className='row' key={"gameBoardRow" + rowPosition}>
