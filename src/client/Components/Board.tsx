@@ -6,7 +6,7 @@ import { Inventory } from './Inventory';
 import '../styles/board.scss';
 import '../styles/inventory.scss';
 import '../styles/tile.scss';
-import { GetDiceRoll, GetSpeicalDice, AdvanceTurn, StartGame } from '../GameServices';
+import { GetSpeicalDice, AdvanceTurn, StartGame } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
 import { Grid } from './Grid';
 import { GameBoard } from '../Models/GameBoard';
@@ -22,7 +22,6 @@ interface IBoardProps{
 interface IBoardState{
     selectedDice: GameDice;
     rolledDice: GameDice[];
-    playedTiles: TurnMoves;
     gameBoard: GameBoard;
     gameTurn: GameTurn;
 }
@@ -35,14 +34,12 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         this.state = {
             selectedDice: new GameDice(), 
             rolledDice: [],
-            playedTiles: new TurnMoves(),
             gameBoard: this.props.gameBoard,
             gameTurn: new GameTurn()
         }
         this.bindFunctions();
 
         StartGame(this.initalizeBoard);
-        //GetDiceRoll(this.updateRolledDice);
     }
 
     private bindFunctions(){
@@ -64,18 +61,20 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
     
     private advanceTurn(){
-        AdvanceTurn(this.state.playedTiles, this.setupNextTurn, this.showInvalidMoves);
+        AdvanceTurn(this.state.gameTurn.Moves, this.setupNextTurn, this.showInvalidMoves);
     }
 
     setupNextTurn(nextTurn: GameTurn){
-        this.setState({gameTurn: nextTurn, playedTiles: new TurnMoves()});
+        //this.setState({gameTurn: nextTurn, playedTiles: new TurnMoves()});
+        this.setState({gameTurn: nextTurn});
         this.updateRolledDice(nextTurn.RolledDice);
     }
 
     showInvalidMoves(moves: Move[]){
         // TODO: This logic shouldn't live here. It should probably be moved to a model or a servive. 
         const currentTurn = this.state.gameTurn;
-        currentTurn.InvalidMoves = moves;
+        moves.forEach(invalidMove => currentTurn.Moves.UpdateMove(invalidMove));
+        //currentTurn.InvalidMoves.AddMoves(moves);
         this.setState({gameTurn: currentTurn});
     }
 
@@ -94,8 +93,8 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
             let updatedBoard = this.state.gameBoard;
             updatedBoard.MakeMove(move);
 
-            let updatedPlayedTiles = this.state.playedTiles
-            updatedPlayedTiles.AddMove(move);
+            let currentTurn = this.state.gameTurn;
+            currentTurn.Moves.AddMove(move);
             this.state.selectedDice.MarkAsPlayed();
 
             // TODO: Handle tracking the turn special dice were played better
@@ -104,7 +103,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
                 this.updateSpecialDiceForMove(move);
             }
 
-            this.setState({gameBoard: updatedBoard, playedTiles: updatedPlayedTiles, selectedDice: new GameDice()});   
+            this.setState({gameBoard: updatedBoard, gameTurn: currentTurn, selectedDice: new GameDice()});   
         }  
     }
 
@@ -112,26 +111,21 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         let updatedBoard = this.state.gameBoard;
         updatedBoard.MakeMove(move);
 
-        let updatedPlayedTiles = this.state.playedTiles;
-        updatedPlayedTiles.UpdateMove(move);
+        let currentTurn = this.state.gameTurn;
+        currentTurn.Moves.UpdateMove(move);
 
-        this.setState({gameBoard: updatedBoard, playedTiles: updatedPlayedTiles});
+        this.setState({gameBoard: updatedBoard, gameTurn: currentTurn});
     }
 
     private removeMoveFromBoard(move: Move){
         let updatedBoard = this.state.gameBoard;
         updatedBoard.RemoveMove(move);
 
-        let updatedPlayedTiles = this.state.playedTiles;
-        updatedPlayedTiles.RemoveMove(move);
-
         let currentTurn = this.state.gameTurn;
-        let invalidMoveIndex = currentTurn.InvalidMoves.findIndex(invalidMove => invalidMove.IsMoveAtSamePosition(move));
-        if(invalidMoveIndex > -1){
-            currentTurn.InvalidMoves.splice(invalidMoveIndex, 1);
-        }
+        currentTurn.Moves.RemoveMove(move);
+        //currentTurn.InvalidMoves.RemoveMove(move);
 
-        this.setState({gameBoard: updatedBoard, gameTurn: currentTurn, playedTiles: updatedPlayedTiles});
+        this.setState({gameBoard: updatedBoard, gameTurn: currentTurn});
 
         this.resetDice(move);
     }

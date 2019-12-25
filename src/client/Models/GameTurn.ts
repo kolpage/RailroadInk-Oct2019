@@ -12,7 +12,8 @@ export class GameTurn {
     RolledDice: GameDice[] = [];
     SelectedDice: GameDice;
     Board: GameBoard;
-    InvalidMoves: Move[] = [];
+    //InvalidMoves: TurnMoves = new TurnMoves();
+    Moves: TurnMoves = new TurnMoves();
 }
 
 export class TurnMoves {
@@ -22,8 +23,21 @@ export class TurnMoves {
         return this.moves;
     }
 
+    public GetMoveAtPosition(column: number, row: number){
+        // TODO: Don't return undefinded if there is no move
+        return this.moves.find(move => move.ColumnPosition === column && move.RowPosition === row);
+    }
+
+    public ContainsMoveAtPosition(column: number, row: number){
+        return this.GetMoveAtPosition(column, row) !== undefined;
+    }
+
     public AddMove(move: Move) {
         this.moves.push(move);
+    }
+
+    public AddMoves(moves: Move[]){
+        moves.forEach(this.AddMove.bind(this));
     }
 
     public RemoveMove(moveToRemove: Move) {
@@ -33,7 +47,7 @@ export class TurnMoves {
             }
         });
     }
-
+    
     public UpdateMove(updatedMove: Move) {
         this.RemoveMove(updatedMove);
         this.AddMove(updatedMove);
@@ -51,6 +65,10 @@ export class Move {
         this.TilePlayed = tilePlayed;
         this.ColumnPosition = tileColumnPosition;
         this.RowPosition = tileRowPosition;
+        this.Status = status;
+    }
+
+    public SetMoveStatus(status: TilePlacementResult){
         this.Status = status;
     }
 

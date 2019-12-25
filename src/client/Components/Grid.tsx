@@ -9,7 +9,7 @@ import { GameTile } from '../Models/GameTile';
 
 interface IGridProps {
     gameBoard: GameBoard;
-    gameTurn: GameTurn; // TODO: Use GameTurn object
+    gameTurn: GameTurn;
 
     addMoveToBoard: (move: Move) => void;
     updateMoveOnBoard: (move: Move) => void;
@@ -83,8 +83,10 @@ export class Grid extends React.Component<IGridProps> {
     private createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
         let row = [];
         for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
-            //const tile = this.props.gameBoard.GetTile(currentColumn, rowPosition);
-            const move = this.props.gameBoard.GetMove(currentColumn, rowPosition);
+            let move = this.props.gameTurn.Moves.GetMoveAtPosition(currentColumn, rowPosition);
+            if(move == undefined){
+                move = this.props.gameBoard.GetMove(currentColumn, rowPosition);
+            }
             const cellKey = `${currentColumn}${rowPosition}`
             // TODO: Reduce the amount of parameters Square takes
             row.push(<Square move={move} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentGameTurn={this.props.gameTurn} sqaureColumn={currentColumn} squareRow={rowPosition} key={cellKey} />);

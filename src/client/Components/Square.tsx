@@ -1,14 +1,14 @@
 import * as React from 'react';
 import '../styles/square.scss';
 import { Tile } from './Tile';
-import { IGameTile } from '../Models/GameTile';
 import { GameTurn, Move } from '../Models/GameTurn';
+import { TilePlacementResult } from '../../common/Enums';
 
 const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
 const RemoveIcon = require("../Assests/RemoveCrop.png")
 
 interface ISquareProps {
-    // TODO: Use Move instead of IGameTile & rc
+    
     //gameTile: IGameTile;
     move: Move;
     currentGameTurn: GameTurn;
@@ -17,6 +17,7 @@ interface ISquareProps {
     clearSquare: (squareColumn: number, squareRow: number) => void;
     mirrorSquare: (squareColumn: number, squareRow: number) => void;
 
+    // TODO: Use Move instead 
     sqaureColumn: number;
     squareRow: number;
 }
@@ -57,10 +58,8 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     isSquareInvalid(){
-        return this.props.currentGameTurn.InvalidMoves.some(invalidMove => {
-            return invalidMove.ColumnPosition === this.props.sqaureColumn 
-                    && invalidMove.RowPosition === this.props.squareRow; 
-        });
+        //return this.props.currentGameTurn.InvalidMoves.ContainsMoveAtPosition(this.props.sqaureColumn, this.props.squareRow);
+        return !this.props.move.IsValid();
     }
 
     private canSqaureBeUpdted() {
@@ -130,6 +129,14 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     addErrorTooltip(){
+        // if(this.props.currentGameTurn.InvalidMoves.ContainsMoveAtPosition(this.props.sqaureColumn, this.props.squareRow)){
+        //     const invalidMove = this.props.currentGameTurn.InvalidMoves.GetMoveAtPosition(this.props.sqaureColumn, this.props.squareRow);
+        //     return TilePlacementResult[invalidMove.Status];
+        // }
+        if(!this.props.move.IsValid()){
+            return TilePlacementResult[this.props.move.Status];
+        }
+
         return "";
     }
 

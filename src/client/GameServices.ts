@@ -36,13 +36,14 @@ function PrepareMovesForDTO(moves: TurnMoves){
     return moves.GetMoves().map( move => TranslateMoveToDTO(move));
 }
 
-function createMoveFromInvalidMoveDTO(invalidMoveDTO: InvalidMoveResponseDTO){
-    const gameTile = new GameTile(invalidMoveDTO.Move.Tile, invalidMoveDTO.Move.Orientation);
+function createMoveFromInvalidMoveDTO(invalidMoveDTO: InvalidMoveResponseDTO, turnNumber: number){
+    const gameTile = new GameTile(invalidMoveDTO.Move.Tile, invalidMoveDTO.Move.Orientation, turnNumber);
+    //console.log(invalidMoveDTO.InvalidReason);
     return new Move(gameTile, invalidMoveDTO.Move.ColumnIndex, invalidMoveDTO.Move.RowIndex, invalidMoveDTO.InvalidReason);
 }
 
 function createMovesFromTurnResponseDTO(turnResponseDTO: TurnResponseDTO){
-    return turnResponseDTO.InvalidMoves.map(createMoveFromInvalidMoveDTO);
+    return turnResponseDTO.InvalidMoves.map(invalidMove => createMoveFromInvalidMoveDTO(invalidMove, turnResponseDTO.TurnNumber));
 }
 
 // TODO: Not sure if this will actully be given from the server
@@ -84,7 +85,6 @@ export function AdvanceTurn(moves: TurnMoves, successCallback: (gameTurn: GameTu
         if(result.WasMoveSuccessful){
             successCallback(createTurnFromResponseDTO(result))
         }else{
-            
             errorCallback(createMovesFromTurnResponseDTO(result));
         }
         
