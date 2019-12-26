@@ -123,7 +123,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
         let currentTurn = this.state.gameTurn;
         currentTurn.Moves.RemoveMove(move);
-        //currentTurn.InvalidMoves.RemoveMove(move);
 
         this.setState({gameBoard: updatedBoard, gameTurn: currentTurn});
 
@@ -153,7 +152,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         }
     }
 
-    // TODO: Moves these check somewhere else (models if possible)
+    // TODO: Move these check somewhere else (models if possible)
     private updateSelectedDice(dice: GameDice){
         // TODO: Clean up this check
        if (!this.isSpecialDice(dice) || (this.isSpecialDice(dice) && this.canPlaySpecialDice())) {

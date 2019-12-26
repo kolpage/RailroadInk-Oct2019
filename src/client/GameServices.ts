@@ -1,6 +1,3 @@
-// TODO: This is just a tempory 'class' for hooking up front end and back end code
-//       The functionality in here should be moved to proper ajax calls using APIs exposed from the backend
-
 // import update from 'react-addons-update';
 import update from 'immutability-helper';
 
@@ -14,8 +11,6 @@ import { ipcRenderer } from 'electron';
 import { GetDiceRollEvent, AdvanceTurnEvent, StartGameEvent } from'../common/Constants';
 import { TurnResponseDTO } from '../common/DTO/TurnResponseDTO';
 import { InvalidMoveResponseDTO } from '../common/DTO/InvalidMoveResponseDTO';
-
-
 
 function createDiceFromTileType(tileType: TileType){
     const gameTile = new GameTile(tileType);

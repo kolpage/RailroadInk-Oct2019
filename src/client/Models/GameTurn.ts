@@ -11,8 +11,6 @@ export class GameTurn {
     TurnNumber: number;
     RolledDice: GameDice[] = [];
     SelectedDice: GameDice;
-    Board: GameBoard;
-    //InvalidMoves: TurnMoves = new TurnMoves();
     Moves: TurnMoves = new TurnMoves();
 }
 
@@ -47,7 +45,7 @@ export class TurnMoves {
             }
         });
     }
-    
+
     public UpdateMove(updatedMove: Move) {
         this.RemoveMove(updatedMove);
         this.AddMove(updatedMove);
