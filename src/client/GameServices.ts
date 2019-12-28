@@ -1,6 +1,3 @@
-// TODO: This is just a tempory 'class' for hooking up front end and back end code
-//       The functionality in here should be moved to proper ajax calls using APIs exposed from the backend
-
 // import update from 'react-addons-update';
 import update from 'immutability-helper';
 
@@ -14,8 +11,6 @@ import { ipcRenderer } from 'electron';
 import { GetDiceRollEvent, AdvanceTurnEvent, StartGameEvent } from'../common/Constants';
 import { TurnResponseDTO } from '../common/DTO/TurnResponseDTO';
 import { InvalidMoveResponseDTO } from '../common/DTO/InvalidMoveResponseDTO';
-
-
 
 function createDiceFromTileType(tileType: TileType){
     const gameTile = new GameTile(tileType);
@@ -36,13 +31,14 @@ function PrepareMovesForDTO(moves: TurnMoves){
     return moves.GetMoves().map( move => TranslateMoveToDTO(move));
 }
 
-function createMoveFromInvalidMoveDTO(invalidMoveDTO: InvalidMoveResponseDTO){
-    const gameTile = new GameTile(invalidMoveDTO.Move.Tile, invalidMoveDTO.Move.Orientation);
+function createMoveFromInvalidMoveDTO(invalidMoveDTO: InvalidMoveResponseDTO, turnNumber: number){
+    const gameTile = new GameTile(invalidMoveDTO.Move.Tile, invalidMoveDTO.Move.Orientation, turnNumber);
+    //console.log(invalidMoveDTO.InvalidReason);
     return new Move(gameTile, invalidMoveDTO.Move.ColumnIndex, invalidMoveDTO.Move.RowIndex, invalidMoveDTO.InvalidReason);
 }
 
 function createMovesFromTurnResponseDTO(turnResponseDTO: TurnResponseDTO){
-    return turnResponseDTO.InvalidMoves.map(createMoveFromInvalidMoveDTO);
+    return turnResponseDTO.InvalidMoves.map(invalidMove => createMoveFromInvalidMoveDTO(invalidMove, turnResponseDTO.TurnNumber));
 }
 
 // TODO: Not sure if this will actully be given from the server
@@ -84,7 +80,6 @@ export function AdvanceTurn(moves: TurnMoves, successCallback: (gameTurn: GameTu
         if(result.WasMoveSuccessful){
             successCallback(createTurnFromResponseDTO(result))
         }else{
-            
             errorCallback(createMovesFromTurnResponseDTO(result));
         }
         

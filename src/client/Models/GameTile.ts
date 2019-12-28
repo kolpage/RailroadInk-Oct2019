@@ -5,7 +5,7 @@ export interface IGameTile {
     TileOrientation: Orientation;
     TurnPlayed?: number; // TODO: Currently using null to indicate the tile hasn't been played...maybe not needed
 
-    // TODO: Something not right about this interace - it has too many function on defined. Either need to break
+    // TODO: Something not right about this interface - it has too many function defined on it. Either need to break
     //       this apart into multiple interface or use compotions (maybe?)
     TransferTile: (updatedTile: IGameTile) => void;
     RotateTile: () => void;

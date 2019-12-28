@@ -15,6 +15,10 @@ export class GameBoard {
         this.createEmptyBoard();
     }
 
+    public GetMove(col: number, row: number){
+        return new Move(this.GetTile(col, row), col, row);
+    }
+
     public MakeMove(move: Move) {
         this.playTile(move.TilePlayed, move.ColumnPosition, move.RowPosition);
     }
