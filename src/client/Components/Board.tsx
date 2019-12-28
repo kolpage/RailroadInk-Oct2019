@@ -10,7 +10,7 @@ import { GetSpeicalDice, AdvanceTurn, StartGame } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
 import { Grid } from './Grid';
 import { GameBoard } from '../Models/GameBoard';
-import { TurnMoves, Move, GameTurn } from '../Models/GameTurn';
+import { Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
 
 
@@ -65,7 +65,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
 
     setupNextTurn(nextTurn: GameTurn){
-        //this.setState({gameTurn: nextTurn, playedTiles: new TurnMoves()});
         this.setState({gameTurn: nextTurn});
         this.updateRolledDice(nextTurn.RolledDice);
     }
@@ -74,7 +73,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         // TODO: This logic shouldn't live here. It should probably be moved to a model or a servive. 
         const currentTurn = this.state.gameTurn;
         moves.forEach(invalidMove => currentTurn.Moves.UpdateMove(invalidMove));
-        //currentTurn.InvalidMoves.AddMoves(moves);
         this.setState({gameTurn: currentTurn});
     }
 
@@ -164,7 +162,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         // TODO: Allow for debug mode to roll dice whenever
         // FUTURE: This check will likely need to be update when there are optional dice to play
         return this.state.rolledDice.every((dice) => dice.Played);
-        //return true;
     }
 
     private isSpecialDice(dice: GameDice){

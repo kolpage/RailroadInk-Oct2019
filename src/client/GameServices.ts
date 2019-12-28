@@ -33,7 +33,6 @@ function PrepareMovesForDTO(moves: TurnMoves){
 
 function createMoveFromInvalidMoveDTO(invalidMoveDTO: InvalidMoveResponseDTO, turnNumber: number){
     const gameTile = new GameTile(invalidMoveDTO.Move.Tile, invalidMoveDTO.Move.Orientation, turnNumber);
-    //console.log(invalidMoveDTO.InvalidReason);
     return new Move(gameTile, invalidMoveDTO.Move.ColumnIndex, invalidMoveDTO.Move.RowIndex, invalidMoveDTO.InvalidReason);
 }
 

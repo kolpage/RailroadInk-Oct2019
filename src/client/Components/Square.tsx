@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '../styles/square.scss';
 import { Tile } from './Tile';
-import { GameTurn, Move } from '../Models/GameTurn';
+import { Move } from '../Models/GameTurn';
 import { TilePlacementResult } from '../../common/Enums';
 
 const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
@@ -72,14 +72,36 @@ export class Square extends React.Component<ISquareProps> {
         return this.props.move.TilePlayed.IsTileEmpty();
     }
 
+    //#region Drag & drop handlers
     private handleDragOver(e) {
         e.preventDefault();
     }
 
     private handleDragDrop(e) {
         e.preventDefault();
-        return this.playSelectedTile();
+        var data = e.dataTransfer.getData("text/move");
+        if(data){
+            var move = JSON.parse(data);
+            console.log(data);
+        }
+        else{
+            return this.playSelectedTile();
+        } 
     }
+
+    private handleDragStart(e) {
+        const move = JSON.stringify(this.props.move);
+        e.dataTransfer.setData("text/move", move);
+    }
+
+    private handleDragEnd(e) {
+        if (e.dataTransfer.dropEffect === 'none') {
+            return;
+        }
+
+        return this.removeTile();
+    }
+    //#endregion
 
     private addValidationCssClass() {
         if (this.isSquareInvalid()) {
@@ -138,8 +160,11 @@ export class Square extends React.Component<ISquareProps> {
                 <div className='turnNumber'>{this.props.move.TilePlayed.TurnPlayed}</div>
                 <div onClick={this.playSelectedTile} 
                      onContextMenu={this.rotateSquare}
+                     draggable={this.isSquareActive()}
+                     onDragStart={this.handleDragStart.bind(this)}
                      onDragOver={this.handleDragOver.bind(this)}
-                     onDrop={this.handleDragDrop.bind(this)}>
+                     onDrop={this.handleDragDrop.bind(this)}
+                     onDragEnd={this.handleDragEnd.bind(this)}>
                     <Tile tile={this.props.move.TilePlayed} />
                 </div>
             </div>
