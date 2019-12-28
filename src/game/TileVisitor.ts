@@ -1,6 +1,7 @@
 import { BaseTile, TileHelpers, EdgeBaseTile, WallEdgeTile } from "./tiles";
-import { Edge } from "../common/Enums";
+import { Edge, EdgeMatchingStatus } from "../common/Enums";
 import { Board } from "./Board";
+import { PositionValidator } from "../common/PositionValidator";
 
 export interface IVisitInfo{
     tile: BaseTile,
@@ -93,7 +94,9 @@ export class TileContinuityValidator extends TileVisitor{
         if(tile instanceof WallEdgeTile){
             return false;
         }
-        return (tile !== undefined && tile.GetTurn() < currentTurnNumber);
+        return (tile !== undefined
+             && tile.GetTurn() < currentTurnNumber
+        );
     }
 
     /** Adds tiles to visit list that are connected on edges that count for continuity. */
@@ -108,27 +111,36 @@ export class TileContinuityValidator extends TileVisitor{
         //Add top tile
         const topEdge = currentTile.GetTopEdge();
         const aboveTile = this.board.GetTileAbove(currentTile);
-        this.addTileToVisitList(topEdge, aboveTile);
+        if(aboveTile !== undefined){
+            this.addTileToVisitList(topEdge, aboveTile.GetBottomEdge(), aboveTile);
+        }
 
         //Add right tile
         const rightEdge = currentTile.GetRightEdge();
         const rightTile = this.board.GetTileRight(currentTile);
-        this.addTileToVisitList(rightEdge, rightTile);
+        if(rightTile !== undefined){
+            this.addTileToVisitList(rightEdge, rightTile.GetLeftEdge(), rightTile);
+        }
 
         //Add bottom tile
         const bottomEdge = currentTile.GetBottomEdge();
         const belowTile = this.board.GetTileBelow(currentTile);
-        this.addTileToVisitList(bottomEdge, belowTile);
+        if(belowTile !== undefined){
+            this.addTileToVisitList(bottomEdge, belowTile.GetTopEdge(), belowTile);
+        }
 
         //Add left tile
         const leftEdge = currentTile.GetLeftEdge();
         const leftTile = this.board.GetTileLeft(currentTile);
-        this.addTileToVisitList(leftEdge, leftTile);
+        if(leftTile !== undefined){
+            this.addTileToVisitList(leftEdge, leftTile.GetRightEdge(), leftTile);
+        }
     }
 
-    private addTileToVisitList(currentTileEdge: Edge, neighborTile?: BaseTile): void{
+    private addTileToVisitList(currentTileEdge: Edge, neighborEdge: Edge, neighborTile?: BaseTile): void{
         if(this.doesTileEdgeCountForContinuity(currentTileEdge) 
         && neighborTile !== undefined
+        && PositionValidator.ValidateEdges(currentTileEdge, neighborEdge) === EdgeMatchingStatus.valid
         && this.visitList.indexOf(neighborTile) === -1
         && this.GetVisitInfoForTile(neighborTile.GetTileId()) === undefined
         ){

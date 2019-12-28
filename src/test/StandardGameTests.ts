@@ -3,6 +3,7 @@ import { BaseGame } from "../game/BaseGame";
 import { MoveDTO } from "../common/DTO/MoveDTO";
 import { TurnResponseDTO } from "../common/DTO/TurnResponseDTO";
 import { TileType, Orientation, TurnInvalidReason, TilePlacementResult } from "../common/Enums";
+import { StandardGame } from "../game/StandardGame";
 
 class StandardGameTestHelper{
     private static setupDebugDicePool(): DebugDicePool{
@@ -380,5 +381,24 @@ export class StandardGameTests{
             }
         }
         return false;
+    }
+
+    /**
+     * There is a bug - GitHub Issue# 20 - where tiles that don't pass validation are allowed to be played. 
+     * This test will help determine if the bug is in the front or back end.
+     */
+    public TestScenario_InvalidTilePlacement_CurveTileMisalignWithStraightRoad(): boolean{
+        const dicePool = new DebugDicePool([
+            [TileType.RoadStraight, TileType.RoadTurn, TileType.RailStraight, TileType.RailTurn]
+        ]);
+        const game = new BaseGame(7, dicePool, 7, 7);
+        const move1 = game.MakeMove([
+            new MoveDTO(TileType.RoadTurn, Orientation.up, 0, 1),
+            new MoveDTO(TileType.RoadStraight, Orientation.up, 1, 1),
+            new MoveDTO(TileType.RailTurn, Orientation.right, 5, 6),
+            new MoveDTO(TileType.RailStraight, Orientation.right, 5, 5)
+        ]);
+
+        return !move1.WasMoveSuccessful;
     }
 }
