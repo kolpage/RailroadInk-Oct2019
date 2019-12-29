@@ -1,8 +1,11 @@
 import { TileType, Orientation } from "../../common/Enums";
 
-export interface IGameTile {
+export interface ITile{
     Type: TileType;
     TileOrientation: Orientation;
+}
+
+export interface IGameTile extends ITile{    
     TurnPlayed?: number; // TODO: Currently using null to indicate the tile hasn't been played...maybe not needed
 
     // TODO: Something not right about this interface - it has too many function defined on it. Either need to break

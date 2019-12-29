@@ -14,6 +14,7 @@ interface IGridProps {
     addMoveToBoard: (move: Move) => void;
     updateMoveOnBoard: (move: Move) => void;
     clearMoveOnBoard: (move: Move) => void;
+    transferMove: (srcMove: Move, destMove: Move) => void;
 }
 
 // TODO: Find a better name. This component represents the play area where you draw roads and rails. 
@@ -81,7 +82,7 @@ export class Grid extends React.Component<IGridProps> {
             }
             const cellKey = `${currentColumn}${rowPosition}`
             // TODO: Reduce the amount of parameters Square takes
-            row.push(<Square move={move} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} currentTurnNumber={this.props.gameTurn.TurnNumber} key={cellKey} />);
+            row.push(<Square move={move} playSquare={this.playSelectedTile} rotateSquare={this.rotateSquareTile} clearSquare={this.clearSquareTile} mirrorSquare={this.mirrorSquareTile} transferMove={this.props.transferMove} currentTurnNumber={this.props.gameTurn.TurnNumber} key={cellKey} />);
         }
         return (
             <div className='row' key={"gameBoardRow" + rowPosition}>

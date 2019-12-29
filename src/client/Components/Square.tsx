@@ -1,7 +1,7 @@
 import * as React from 'react';
 import '../styles/square.scss';
 import { Tile } from './Tile';
-import { Move } from '../Models/GameTurn';
+import { Move, CreateMoveFromJSON } from '../Models/GameTurn';
 import { TilePlacementResult } from '../../common/Enums';
 
 const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
@@ -15,6 +15,7 @@ interface ISquareProps {
     rotateSquare: (move: Move) => void;
     clearSquare: (move: Move) => void;
     mirrorSquare: (move: Move) => void;
+    transferMove: (srcMove: Move, destMove: Move) => void;
 }
 
 export class Square extends React.Component<ISquareProps> {
@@ -29,8 +30,12 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     playSelectedTile() {
-        if(this.isSquarePlayable()) {
+        if(this.canSqaureBeUpdted()) {
+            if(!this.isSquareEmpty){
+                this.removeTile();
+            }
             this.props.playSquare(this.props.move);
+
             return true;
         }
         return false;
@@ -57,11 +62,11 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     private canSqaureBeUpdted() {
-        return (this.props.move.TilePlayed.TurnPlayed == null || this.props.move.TilePlayed.TurnPlayed == this.props.currentTurnNumber);
+        return ((this.props.move.TilePlayed.TurnPlayed == null) || (this.props.move.TilePlayed.TurnPlayed == this.props.currentTurnNumber));
     }
 
     private isSquarePlayable() {
-        return this.props.move.TilePlayed.IsTileEmpty() && this.canSqaureBeUpdted();
+        return this.isSquareEmpty() && this.canSqaureBeUpdted();
     }
 
     private isSquareActive() {
@@ -74,15 +79,17 @@ export class Square extends React.Component<ISquareProps> {
 
     //#region Drag & drop handlers
     private handleDragOver(e) {
-        e.preventDefault();
+        if(this.canSqaureBeUpdted()){
+            e.preventDefault(); // Preventing default event in dragOver event signifies that the element will accept drop events
+        }
     }
 
     private handleDragDrop(e) {
         e.preventDefault();
         var data = e.dataTransfer.getData("text/move");
         if(data){
-            var move = JSON.parse(data);
-            console.log(data);
+            const sourceMove = CreateMoveFromJSON(JSON.parse(data));
+            this.props.transferMove(sourceMove, this.props.move);
         }
         else{
             return this.playSelectedTile();
@@ -95,11 +102,9 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     private handleDragEnd(e) {
-        if (e.dataTransfer.dropEffect === 'none') {
-            return;
+        if (e.dataTransfer.dropEffect !== 'none') {
+            //this.removeTile();
         }
-
-        return this.removeTile();
     }
     //#endregion
 

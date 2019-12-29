@@ -1,6 +1,5 @@
 import { GameDice } from "./GameDice";
-import { IGameTile } from "./GameTile";
-import { GameBoard } from "./GameBoard";
+import { IGameTile, GameTile } from "./GameTile";
 
 // import update from 'react-addons-update';
 import update from 'immutability-helper';
@@ -50,6 +49,10 @@ export class TurnMoves {
         this.RemoveMove(updatedMove);
         this.AddMove(updatedMove);
     }
+
+    public ClearInvalidMoves(){
+        this.moves.forEach(move => move.ClearMoveStatus());
+    }
 }
 
 export class Move {
@@ -64,6 +67,10 @@ export class Move {
         this.ColumnPosition = tileColumnPosition;
         this.RowPosition = tileRowPosition;
         this.Status = status;
+    }
+
+    public ClearMoveStatus(){
+        this.SetMoveStatus(TilePlacementResult.valid);
     }
 
     public SetMoveStatus(status: TilePlacementResult){
@@ -81,4 +88,11 @@ export class Move {
     public IsValid(){
         return this.Status === TilePlacementResult.valid;
     }
+}
+
+export function CreateMoveFromJSON(moveJSON: any): Move{
+    // TODO: This is an unsafe conversion. More null checking should be done
+    const tilePlayedJSON = moveJSON.TilePlayed;
+    const moveTile = new GameTile(tilePlayedJSON.Type, tilePlayedJSON.TileOrientation, tilePlayedJSON.TurnPlayed);
+    return new Move(moveTile, moveJSON.ColumnPosition, moveJSON.RowPosition);
 }

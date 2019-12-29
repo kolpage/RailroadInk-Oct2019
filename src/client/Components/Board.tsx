@@ -72,6 +72,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     showInvalidMoves(moves: Move[]){
         // TODO: This logic shouldn't live here. It should probably be moved to a model or a servive. 
         const currentTurn = this.state.gameTurn;
+        currentTurn.Moves.ClearInvalidMoves();
         moves.forEach(invalidMove => currentTurn.Moves.UpdateMove(invalidMove));
         this.setState({gameTurn: currentTurn});
     }
@@ -85,13 +86,18 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
     private playSelectedDice(move: Move){
         if (!this.state.selectedDice.IsEmpty()){
-            // TODO: Don't have board update the move. Not sure how to handle this since I don't want to pass the currently selected 
-            //       dice to the grid since it doesn't really need to know that. 
-            move.PlayDice(this.state.selectedDice);
-            let updatedBoard = this.state.gameBoard;
-            updatedBoard.MakeMove(move);
-
             let currentTurn = this.state.gameTurn;
+            let updatedBoard = this.state.gameBoard;
+
+            if(!move.TilePlayed.IsTileEmpty()){
+                // If there is already a move in the square, clear it out
+                updatedBoard.RemoveMove(move);
+                currentTurn.Moves.RemoveMove(move);
+                this.resetDice(move);
+            }
+
+            move.PlayDice(this.state.selectedDice);
+            updatedBoard.MakeMove(move);
             currentTurn.Moves.AddMove(move);
             this.state.selectedDice.MarkAsPlayed();
 
@@ -103,6 +109,26 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
             this.setState({gameBoard: updatedBoard, gameTurn: currentTurn, selectedDice: new GameDice()});   
         }  
+    }
+
+    private transferMove(sourceMove: Move, destinationMove: Move){
+        //this.removeMoveFromBoard(sourceMove);
+        let updatedBoard = this.state.gameBoard;
+        let currentTurn = this.state.gameTurn;
+
+        updatedBoard.RemoveMove(sourceMove);
+        currentTurn.Moves.RemoveMove(sourceMove);
+        currentTurn.Moves.RemoveMove(destinationMove);
+        this.resetDice(destinationMove);
+        
+        destinationMove.TilePlayed = sourceMove.TilePlayed;
+        destinationMove.ClearMoveStatus();
+
+        updatedBoard.MakeMove(destinationMove);
+        currentTurn.Moves.UpdateMove(destinationMove);
+
+        this.setState({gameBoard: updatedBoard, gameTurn: currentTurn});
+        //this.updateMoveOnBoard(destinationMove);
     }
 
     private updateMoveOnBoard(move: Move){
@@ -148,6 +174,10 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
                 return true;
             });
         }
+
+        // TODO: Resting the dice seems to work without this line but it shouldn't...
+        //if(found) {this.setState({rolledDice: this.state.rolledDice});}
+        
     }
 
     // TODO: Move these check somewhere else (models if possible)
@@ -191,7 +221,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
                     <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
                     <button onClick={this.advanceTurn} disabled={!this.canAdvanceTurn()} className='rollButton'>Roll Dice</button>
                 </div>
-                <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} addMoveToBoard={this.playSelectedDice} updateMoveOnBoard={this.updateMoveOnBoard} clearMoveOnBoard={this.removeMoveFromBoard}/>
+                <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} addMoveToBoard={this.playSelectedDice} updateMoveOnBoard={this.updateMoveOnBoard} clearMoveOnBoard={this.removeMoveFromBoard} transferMove={this.transferMove.bind(this)}/>
                 </div>
             </div>
         );
