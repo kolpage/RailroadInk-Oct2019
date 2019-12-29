@@ -135,16 +135,26 @@ export class BaseTurn{
      * @param tile The tile to see if available.
      */
     private isTileAvailable(tile: TileType): boolean{
-        // TODO: Hot fix. Clean this up however you see fit.
-        if(tile === TileType.StationTurnMirror){
-            tile = TileType.StationTurn;
-        }
+        tile = this.convertMirroredTile(tile);
 
         let isDieAvailable = this.diceToPlay.some(die => die.tileType === tile && !die.played);
         if(!isDieAvailable){
             isDieAvailable = !this.playedSpecialTile && this.specialTileTracker.CanPlayTile(tile);
         }
         return isDieAvailable;
+    }
+
+    /**
+     * Any tile can be mirrored. If we are given a mirrored version of the original tile, set it back to the original for tracking purposes.
+     * @param tile The tile to check if it is mirrored.
+     */
+    private convertMirroredTile(tile: TileType): TileType{
+        switch(tile){
+            case TileType.StationTurnMirror:
+                return TileType.StationTurn;
+            default:
+                return tile;
+        }
     }
 
     protected doesTileHaveToBeConnected(tileType: TileType): boolean{

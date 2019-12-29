@@ -4,6 +4,7 @@ import { MoveDTO } from "../common/DTO/MoveDTO";
 import { TurnResponseDTO } from "../common/DTO/TurnResponseDTO";
 import { TileType, Orientation, TurnInvalidReason, TilePlacementResult } from "../common/Enums";
 import { StandardGame } from "../game/StandardGame";
+import { BaseScoreCalculator } from "../game/BaseScoreCalculator";
 
 class StandardGameTestHelper{
     private static setupDebugDicePool(): DebugDicePool{
@@ -37,6 +38,7 @@ export class StandardGameTests{
      */
     public ValidFullGame_ShouldScore49_NoValidationErrorsShouldOccur(){
         const game = StandardGameTestHelper.CreateTestGame();
+        const board = game.GetBoard();
         const move1 = game.MakeMove(
             [
                 new MoveDTO(TileType.RoadStraight, Orientation.up, 0, 5),
@@ -118,7 +120,13 @@ export class StandardGameTests{
             return false;
         }
 
-        //Score here
+        const scorer = new BaseScoreCalculator(board);
+        const score = scorer.GetScore();
+        if(score !== undefined){
+            if(score.CenterSquareScore !== 6){
+                return false;
+            }
+        }
 
         return true;
     }

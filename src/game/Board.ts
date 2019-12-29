@@ -33,6 +33,20 @@ export class Board{
         this.setBoardEdges();
     }
 
+    /**
+     * Returns the playable board width.
+     */
+    public GetPlayableBoardWidth(): number{
+        return this.playableBoardWidth;
+    }
+
+    /**
+     * Returns the playable board height.
+     */
+    public GetPlayableBoardHeight(): number{
+        return this.playableBoardHeight;
+    }
+
     /** 
      * Returns true if a tile placed in the specified position and orientation
      * follows all game tile placement rules. False if it violates a rule.
