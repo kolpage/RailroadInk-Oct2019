@@ -172,7 +172,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
         // TODO: Resting the dice seems to work without this line but it shouldn't...
         //if(found) {this.setState({rolledDice: this.state.rolledDice});}
-        
     }
 
     // TODO: Move these check somewhere else (models if possible)
@@ -185,8 +184,8 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
     private canAdvanceTurn(){
         // TODO: Allow for debug mode to roll dice whenever
-        // FUTURE: This check will likely need to be update when there are optional dice to play
-        return this.state.rolledDice.every((dice) => dice.Played);
+        // FUTURE: This check will need to be update when there are optional dice to play or a different number of moves 
+        return this.state.rolledDice.every((dice) => dice.Played) && this.state.gameTurn.TurnNumber < 7;
     }
 
     private isSpecialDice(dice: GameDice){
