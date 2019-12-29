@@ -1,11 +1,8 @@
-// import update from 'react-addons-update';
 import update from 'immutability-helper';
 
 import * as React from 'react';
 import { Inventory } from './Inventory';
 import '../styles/board.scss';
-import '../styles/inventory.scss';
-import '../styles/tile.scss';
 import { GetSpeicalDice, AdvanceTurn, StartGame } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
 import { Grid } from './Grid';
@@ -112,7 +109,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
 
     private transferMove(sourceMove: Move, destinationMove: Move){
-        //this.removeMoveFromBoard(sourceMove);
         let updatedBoard = this.state.gameBoard;
         let currentTurn = this.state.gameTurn;
 
@@ -128,7 +124,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         currentTurn.Moves.UpdateMove(destinationMove);
 
         this.setState({gameBoard: updatedBoard, gameTurn: currentTurn});
-        //this.updateMoveOnBoard(destinationMove);
     }
 
     private updateMoveOnBoard(move: Move){
