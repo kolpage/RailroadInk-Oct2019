@@ -1,5 +1,8 @@
 import { Board } from "./Board";
 import { ScoreDTO } from "../common/DTO/ScoreDTO";
+import { PlayableBaseTile } from "./tiles";
+import { EdgeMatchingStatus } from "../common/Enums";
+import { PositionValidator } from "../common/PositionValidator";
 
 export class BaseScoreCalculator{
     
@@ -10,7 +13,7 @@ export class BaseScoreCalculator{
     private longestRoadScore: number = 0;
     private centerScore: number = 0;
     private errorScore: number = 0;
-    private expansionScore: number = 0; 
+    private expansionScore: number = 0;
 
     constructor(board: Board){
         this.board = board;
@@ -77,6 +80,58 @@ export class BaseScoreCalculator{
      * Does not deduct points for lakes or meteors since they don't have connection requirements.
      */
     private scoreErrorPoints(): void{
+        const boardWidth = this.board.GetPlayableBoardWidth();
+        const boardHeight = this.board.GetPlayableBoardHeight();
+        for(var i = 0; i < boardWidth; i++){
+            for(var j = 0; j < boardHeight; j++){
+                const tile = this.board.GetTile(i, j);
+                if(tile !== undefined){
+                    this.checkTileForErrors(tile);
+                }
+            }
+        }
+    }
 
+    private checkTileForErrors(tile: PlayableBaseTile):void {
+        let matchingStatus: EdgeMatchingStatus;
+        //Check up
+        const aboveTile = this.board.GetTileAbove(tile);
+        const aboveTileEdge = aboveTile && aboveTile.GetBottomEdge();
+        matchingStatus = PositionValidator.ValidateEdges(tile.GetTopEdge(), aboveTileEdge);
+        this.tallyErrorPoints(matchingStatus);
+        
+        //Check right
+        const rightTile = this.board.GetTileRight(tile);
+        const rightTileEdge = rightTile && rightTile.GetLeftEdge();
+        matchingStatus = PositionValidator.ValidateEdges(tile.GetRightEdge(), rightTileEdge);
+        this.tallyErrorPoints(matchingStatus);
+        
+        //Check Down
+        const belowTile = this.board.GetTileBelow(tile);
+        const belowTileEdge = belowTile && belowTile.GetTopEdge();
+        matchingStatus = PositionValidator.ValidateEdges(tile.GetBottomEdge(), belowTileEdge);
+        this.tallyErrorPoints(matchingStatus);
+        
+        //Check Left
+        const leftTile = this.board.GetTileLeft(tile);
+        const leftTileEdge = leftTile && leftTile.GetRightEdge();
+        matchingStatus = PositionValidator.ValidateEdges(tile.GetLeftEdge(), leftTileEdge);
+        this.tallyErrorPoints(matchingStatus);
+        
+    }
+
+    /**
+     * Tallies error points for a given edge matching status. Tallies -1 point for an open 
+     * since there is only 1 tile so the error point will only be counted once. Tallies -0.5 points 
+     * for a mismatch since the mismatch will be counted twice.
+     * @param matchingStatus The matching status points are being tallied for.
+     */
+    private tallyErrorPoints(matchingStatus: EdgeMatchingStatus): void{
+        if(matchingStatus === EdgeMatchingStatus.open){
+            this.errorScore--;
+        }
+        else if(matchingStatus === EdgeMatchingStatus.mismatch){
+            this.errorScore -= 0.5;
+        }
     }
 }

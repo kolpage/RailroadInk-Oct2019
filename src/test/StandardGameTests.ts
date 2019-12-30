@@ -126,6 +126,10 @@ export class StandardGameTests{
             if(score.CenterSquareScore !== 6){
                 return false;
             }
+            if(score.ErrorScore !== -3){
+                console.log("Error score calculated to be: " + score.ErrorScore);
+                return false;
+            }
         }
 
         return true;
@@ -408,5 +412,59 @@ export class StandardGameTests{
         ]);
 
         return !move1.WasMoveSuccessful;
+    }
+
+    public StandardGame_ErrorScoring_ShouldScoreNeg1DueToOpenConnection(): boolean{
+        const dicePool = new DebugDicePool([
+            [TileType.RoadStraight, TileType.RoadTurn, TileType.RoadStraight, TileType.StationStraight]
+        ]);
+        const game = new BaseGame(7, dicePool, 7, 7);
+        const move1 = game.MakeMove([
+            new MoveDTO(TileType.RoadTurn, Orientation.up, 0, 1),
+            new MoveDTO(TileType.RoadStraight, Orientation.right, 0, 0),
+            new MoveDTO(TileType.RoadStraight, Orientation.right, 3, 6),
+            new MoveDTO(TileType.StationStraight, Orientation.left, 3, 5)
+        ]);
+
+        const scorer = new BaseScoreCalculator(game.GetBoard());
+        if(scorer.GetScore().ErrorScore === -1){
+            return true;
+        }
+    }
+
+    public StandardGame_ErrorScoring_ShouldScoreNeg1DueToMismatchedConnection(): boolean{
+        const dicePool = new DebugDicePool([
+            [TileType.RailTurn, TileType.RailStraight, TileType.RoadStraight, TileType.RoadTurn]
+        ]);
+        const game = new BaseGame(7, dicePool, 7, 7);
+        const move1 = game.MakeMove([
+            new MoveDTO(TileType.RoadTurn, Orientation.up, 0, 1),
+            new MoveDTO(TileType.RoadStraight, Orientation.right, 0, 0),
+            new MoveDTO(TileType.RailTurn, Orientation.up, 0, 3),
+            new MoveDTO(TileType.RailStraight, Orientation.right, 0, 2)
+        ]);
+
+        const scorer = new BaseScoreCalculator(game.GetBoard());
+        if(scorer.GetScore().ErrorScore === -1){
+            return true;
+        }
+    }
+
+    public StandardGame_ErrorScoring_ShouldScoreNeg2DueToOpenAndMismatchedConnection(): boolean{
+        const dicePool = new DebugDicePool([
+            [TileType.RailTurn, TileType.RailStraight, TileType.RoadThreeWay, TileType.RoadThreeWay]
+        ]);
+        const game = new BaseGame(7, dicePool, 7, 7);
+        const move1 = game.MakeMove([
+            new MoveDTO(TileType.RoadThreeWay, Orientation.left, 0, 1),
+            new MoveDTO(TileType.RoadThreeWay, Orientation.up, 0, 0),
+            new MoveDTO(TileType.RailTurn, Orientation.up, 0, 3),
+            new MoveDTO(TileType.RailStraight, Orientation.right, 0, 2)
+        ]);
+
+        const scorer = new BaseScoreCalculator(game.GetBoard());
+        if(scorer.GetScore().ErrorScore === -2){
+            return true;
+        }
     }
 }
