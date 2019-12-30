@@ -1,11 +1,8 @@
-// import update from 'react-addons-update';
 import update from 'immutability-helper';
 
 import * as React from 'react';
 import { Inventory } from './Inventory';
 import '../styles/board.scss';
-import '../styles/inventory.scss';
-import '../styles/tile.scss';
 import { GetSpeicalDice, AdvanceTurn, StartGame } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
 import { Grid } from './Grid';
@@ -112,7 +109,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
 
     private transferMove(sourceMove: Move, destinationMove: Move){
-        //this.removeMoveFromBoard(sourceMove);
         let updatedBoard = this.state.gameBoard;
         let currentTurn = this.state.gameTurn;
 
@@ -128,7 +124,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         currentTurn.Moves.UpdateMove(destinationMove);
 
         this.setState({gameBoard: updatedBoard, gameTurn: currentTurn});
-        //this.updateMoveOnBoard(destinationMove);
     }
 
     private updateMoveOnBoard(move: Move){
@@ -177,7 +172,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
         // TODO: Resting the dice seems to work without this line but it shouldn't...
         //if(found) {this.setState({rolledDice: this.state.rolledDice});}
-        
     }
 
     // TODO: Move these check somewhere else (models if possible)
@@ -190,8 +184,8 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
     private canAdvanceTurn(){
         // TODO: Allow for debug mode to roll dice whenever
-        // FUTURE: This check will likely need to be update when there are optional dice to play
-        return this.state.rolledDice.every((dice) => dice.Played);
+        // FUTURE: This check will need to be update when there are optional dice to play or a different number of moves 
+        return this.state.rolledDice.every((dice) => dice.Played) && this.state.gameTurn.TurnNumber < 7;
     }
 
     private isSpecialDice(dice: GameDice){

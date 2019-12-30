@@ -89,7 +89,10 @@ export class Square extends React.Component<ISquareProps> {
         var data = e.dataTransfer.getData("text/move");
         if(data){
             const sourceMove = CreateMoveFromJSON(JSON.parse(data));
-            this.props.transferMove(sourceMove, this.props.move);
+            if(!sourceMove.IsMoveAtSamePosition(this.props.move)){
+                this.props.transferMove(sourceMove, this.props.move);
+            }
+            
         }
         else{
             return this.playSelectedTile();

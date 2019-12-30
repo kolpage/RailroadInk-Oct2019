@@ -1,7 +1,6 @@
 import { GameDice } from "./GameDice";
 import { IGameTile, GameTile } from "./GameTile";
 
-// import update from 'react-addons-update';
 import update from 'immutability-helper';
 import { TilePlacementResult } from "../../common/Enums";
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import '../styles/square.scss';
+import '../styles/tile.scss';
 import { TileGraphics } from '../Graphics/TileGraphics';
 import { IGameTile } from '../Models/GameTile';
 
