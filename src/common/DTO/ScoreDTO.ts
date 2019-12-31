@@ -8,14 +8,7 @@ export class ScoreDTO{
     public CenterSquareScore: number;
     public ErrorScore: number;
     public ExpansionScore: number;
-    public get TotalScore(): number{
-        return this.ExitScore
-            + this.LongestRailScore
-            + this.LongestRoadScore
-            + this.CenterSquareScore
-            + this.ErrorScore
-            + this.ExpansionScore;
-    }
+    public TotalScore: number;
 
     constructor(exitScore: number, longestRailScore: number, longestRoadScore: number, centerSquareScore: number, errorScore: number, expansionScore: number = 0){
         this.ExitScore = exitScore;
@@ -24,5 +17,11 @@ export class ScoreDTO{
         this.CenterSquareScore = centerSquareScore;
         this.ErrorScore = errorScore;
         this.ExpansionScore = expansionScore;
+        this.TotalScore = this.ExitScore
+        + this.LongestRailScore
+        + this.LongestRoadScore
+        + this.CenterSquareScore
+        + this.ErrorScore
+        + this.ExpansionScore;
     }
 }
