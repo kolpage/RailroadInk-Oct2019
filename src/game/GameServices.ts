@@ -23,7 +23,7 @@ export class GameServices{
     private handleStartGameEvent(event, args){
         this.activeGame = new BaseGame(7, new StandardDicePool());
         this.initalizeGameEventHandlers();
-        return new TurnResponseDTO(this.activeGame.GetTurnNumber(), [], [], this.activeGame.GetDiceRoll());
+        return new TurnResponseDTO(this.activeGame.GetNumberOfTurns(), this.activeGame.GetTurnNumber(), [], [], this.activeGame.GetDiceRoll());
     }
 
     private handleDiceRollEvent(event, args){
