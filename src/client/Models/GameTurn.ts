@@ -3,6 +3,7 @@ import { IGameTile, GameTile } from "./GameTile";
 
 import update from 'immutability-helper';
 import { TilePlacementResult } from "../../common/Enums";
+import { ScoreDTO } from "../../common/DTO/ScoreDTO";
 
 //<summary>Represents a turn in the game</summary>
 export class GameTurn {
@@ -10,6 +11,9 @@ export class GameTurn {
     RolledDice: GameDice[] = [];
     SelectedDice: GameDice;
     Moves: TurnMoves = new TurnMoves();
+    TotalTurns: number;
+    IsGameOver: boolean;
+    Score: ScoreDTO;
 }
 
 export class TurnMoves {

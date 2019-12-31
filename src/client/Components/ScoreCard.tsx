@@ -10,34 +10,36 @@ interface IScoreCardProps{
 export default function ScoreCard(props: IScoreCardProps){
     return(
         <table>
+            <tbody>
             <tr>
-                <td>{"Exit"}</td>
-                <td>{props.score.ExitScore}</td>
+                <td className="scoreName">{"Exit"}</td>
+                <td className="scoreValue">{props.score.ExitScore}</td>
             </tr>
             <tr>
-                <td>{"Longest Road"}</td>
-                <td>{props.score.LongestRoadScore}</td>
+                <td className="scoreName">{"Longest Road"}</td>
+                <td className="scoreValue">{props.score.LongestRoadScore}</td>
             </tr>
             <tr>
-                <td>{"Longest Rail"}</td>
-                <td>{props.score.LongestRailScore}</td>
+                <td className="scoreName">{"Longest Rail"}</td>
+                <td className="scoreValue">{props.score.LongestRailScore}</td>
             </tr>
             <tr>
-                <td>{"Center Squares"}</td>
-                <td>{props.score.CenterSquareScore}</td>
+                <td className="scoreName">{"Center Squares"}</td>
+                <td className="scoreValue">{props.score.CenterSquareScore}</td>
             </tr>
             <tr>
-                <td>{"Errors"}</td>
-                <td>{props.score.ErrorScore}</td>
+                <td className="scoreName">{"Errors"}</td>
+                <td className="scoreValue">{props.score.ErrorScore}</td>
             </tr>
             <tr>
-                <td>{"Expansion"}</td>
-                <td>{props.score.ExpansionScore}</td>
+                <td className="scoreName">{"Expansion"}</td>
+                <td className="scoreValue">{props.score.ExpansionScore}</td>
             </tr>
             <tr>
-                <td>{"Total"}</td>
-                <td>{props.score.TotalScore}</td>
+                <td className="scoreName">{"Total"}</td>
+                <td className="scoreValue">{props.score.TotalScore}</td>
             </tr>
+            </tbody>
         </table>
     );
 }

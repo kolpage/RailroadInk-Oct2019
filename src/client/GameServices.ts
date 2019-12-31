@@ -20,6 +20,7 @@ function createDiceFromTileType(tileType: TileType){
 function createTurnFromResponseDTO(turnResponseDTO: TurnResponseDTO){
     var gameTurn = new GameTurn();
     gameTurn.TotalTurns = turnResponseDTO.NumberOfTurns;
+    console.log("Game Turn: " + turnResponseDTO.TurnNumber + " IsGameOver: " + turnResponseDTO.IsGameOver)
     gameTurn.IsGameOver = turnResponseDTO.IsGameOver;
     gameTurn.Score = turnResponseDTO.FinalScore;
     gameTurn.TurnNumber = turnResponseDTO.TurnNumber;
