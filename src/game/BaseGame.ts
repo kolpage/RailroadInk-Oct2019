@@ -42,6 +42,13 @@ export class BaseGame {
     }
 
     /**
+     * Gives the total number of turns in the game.
+     */
+    public GetNumberOfTurns(): number{
+        return this.numberOfTurns;
+    }
+
+    /**
      * Makes the given moves on the board for a turn.
      * @param moves List of moves to be made.
      */
@@ -53,11 +60,15 @@ export class BaseGame {
 
         if(moveIssues.length > 0 || turnIssues.length > 0){
             this.currentTurn.UndoTurnChanges();
-            return new TurnResponseDTO(this.GetTurnNumber(), moveIssues, turnIssues);
+            return new TurnResponseDTO(this.numberOfTurns, this.GetTurnNumber(), moveIssues, turnIssues);
         }
         this.currentTurn.CommitTurn();
+
+        if(this.IsGameOver){
+            return new TurnResponseDTO(this.numberOfTurns, this.GetTurnNumber(), [], [], [], true);
+        }
         this.beginNextTurn();
-        return new TurnResponseDTO(this.GetTurnNumber(), moveIssues, turnIssues, this.currentTurn.GetRolledDice());       
+        return new TurnResponseDTO(this.numberOfTurns, this.GetTurnNumber(), moveIssues, turnIssues, this.currentTurn.GetRolledDice());       
     }
 
     public GetDiceRoll(){
