@@ -9,6 +9,8 @@ import { Grid } from './Grid';
 import { GameBoard } from '../Models/GameBoard';
 import { Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
+import ScoreCard from './ScoreCard';
+import { ScoreDTO } from '../../common/DTO/ScoreDTO';
 
 
 interface IBoardProps{
@@ -63,7 +65,9 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
 
     setupNextTurn(nextTurn: GameTurn){
         this.setState({gameTurn: nextTurn});
-        this.updateRolledDice(nextTurn.RolledDice);
+        if(!nextTurn.IsGameOver){
+            this.updateRolledDice(nextTurn.RolledDice);
+        }
     }
 
     showInvalidMoves(moves: Move[]){
@@ -205,17 +209,29 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         specialDiceToUpdate.SetGameTurn(this.state.gameTurn.TurnNumber); // TODO: Don't hide state change
     }
 
+    private showSidebar(){
+        if(this.state.gameTurn.IsGameOver){
+            return <ScoreCard score={this.state.gameTurn.Score}/>
+        }else{
+            return(
+                <React.Fragment>
+                    <Inventory dice={this.specialDice} onDiceSelected={this.updateSelectedDice} />
+                    <div className='column'>
+                        <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
+                        <button onClick={this.advanceTurn} disabled={!this.canAdvanceTurn()} className='rollButton'>Roll Dice</button>
+                    </div>
+                </React.Fragment>
+            )
+        }
+    }
+
     render(){
         // TODO: Refactor out to more components
         return (
             <div className='boardContainer'>
                 <div className='row'>
-                <Inventory dice={this.specialDice} onDiceSelected={this.updateSelectedDice} />
-                <div className='column'>
-                    <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
-                    <button onClick={this.advanceTurn} disabled={!this.canAdvanceTurn()} className='rollButton'>Roll Dice</button>
-                </div>
-                <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} addMoveToBoard={this.playSelectedDice} updateMoveOnBoard={this.updateMoveOnBoard} clearMoveOnBoard={this.removeMoveFromBoard} transferMove={this.transferMove.bind(this)}/>
+                    {this.showSidebar()}
+                    <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} addMoveToBoard={this.playSelectedDice} updateMoveOnBoard={this.updateMoveOnBoard} clearMoveOnBoard={this.removeMoveFromBoard} transferMove={this.transferMove.bind(this)}/>
                 </div>
             </div>
         );

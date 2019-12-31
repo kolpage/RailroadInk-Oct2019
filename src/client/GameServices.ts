@@ -18,13 +18,16 @@ function createDiceFromTileType(tileType: TileType){
 }  
 
 function createTurnFromResponseDTO(turnResponseDTO: TurnResponseDTO){
-    var startingTurn = new GameTurn();
-    startingTurn.TurnNumber = turnResponseDTO.TurnNumber;
-    startingTurn.RolledDice = turnResponseDTO.NextTurnDice.map(createDiceFromTileType);
-    startingTurn.RolledDice.forEach( dice => {
+    var gameTurn = new GameTurn();
+    gameTurn.TotalTurns = turnResponseDTO.NumberOfTurns;
+    gameTurn.IsGameOver = turnResponseDTO.IsGameOver;
+    gameTurn.Score = turnResponseDTO.FinalScore;
+    gameTurn.TurnNumber = turnResponseDTO.TurnNumber;
+    gameTurn.RolledDice = turnResponseDTO.NextTurnDice.map(createDiceFromTileType);
+    gameTurn.RolledDice.forEach( dice => {
         dice.SetGameTurn(turnResponseDTO.TurnNumber);
     });
-    return startingTurn;
+    return gameTurn;
 }
 
 function PrepareMovesForDTO(moves: TurnMoves){
