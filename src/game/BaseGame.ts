@@ -10,6 +10,7 @@ import { SpecialTileTracker } from "../common/SpecialTileTracker";
 import { BaseScoreCalculator } from "./BaseScoreCalculator";
 import { BaseTile } from "./tiles";
 import { Move } from "./Move";
+import { ScoreDTO } from "../common/DTO/ScoreDTO";
 
 export class BaseGame {
     private boardWidth: number = 7;
@@ -65,7 +66,8 @@ export class BaseGame {
         this.currentTurn.CommitTurn();
 
         if(this.IsGameOver){
-            return new TurnResponseDTO(this.numberOfTurns, this.GetTurnNumber(), [], [], [], true);
+            this.scoreCalc = new BaseScoreCalculator(this.board);
+            return new TurnResponseDTO(this.numberOfTurns, this.GetTurnNumber(), [], [], [], true, this.scoreCalc.GetScore());
         }
         this.beginNextTurn();
         return new TurnResponseDTO(this.numberOfTurns, this.GetTurnNumber(), moveIssues, turnIssues, this.currentTurn.GetRolledDice());       
