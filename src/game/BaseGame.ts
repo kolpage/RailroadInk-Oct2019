@@ -65,7 +65,7 @@ export class BaseGame {
         }
         this.currentTurn.CommitTurn();
 
-        if(this.IsGameOver){
+        if(this.IsGameOver()){
             this.scoreCalc = new BaseScoreCalculator(this.board);
             return new TurnResponseDTO(this.numberOfTurns, this.GetTurnNumber(), [], [], [], true, this.scoreCalc.GetScore());
         }

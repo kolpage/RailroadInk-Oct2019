@@ -20,7 +20,6 @@ function createDiceFromTileType(tileType: TileType){
 function createTurnFromResponseDTO(turnResponseDTO: TurnResponseDTO){
     var gameTurn = new GameTurn();
     gameTurn.TotalTurns = turnResponseDTO.NumberOfTurns;
-    console.log("Game Turn: " + turnResponseDTO.TurnNumber + " IsGameOver: " + turnResponseDTO.IsGameOver)
     gameTurn.IsGameOver = turnResponseDTO.IsGameOver;
     gameTurn.Score = turnResponseDTO.FinalScore;
     gameTurn.TurnNumber = turnResponseDTO.TurnNumber;
@@ -61,7 +60,6 @@ export function TranslateMoveToDTO(move: Move){
 
 export function StartGame(callback: (gameTurn: GameTurn) => void){
     ipcRenderer.invoke(StartGameEvent).then((result) => {
-        console.log(result);
         callback(createTurnFromResponseDTO(result));
     });
 }
@@ -76,16 +74,11 @@ export function GetDiceRoll(callback: (gameDice: GameDice[]) => void){
 export function AdvanceTurn(moves: TurnMoves, successCallback: (gameTurn: GameTurn) => void, errorCallback: (badMoves: Move[]) => void){
     const movesToSend: MoveDTO[] = PrepareMovesForDTO(moves);
     ipcRenderer.invoke(AdvanceTurnEvent, movesToSend).then((result: TurnResponseDTO) => {
-        // TODO: Remove debug code
-        //console.log("Advance turn result:");
-        //console.log(result);
-
         if(result.WasMoveSuccessful){
             successCallback(createTurnFromResponseDTO(result))
         }else{
             errorCallback(createMovesFromTurnResponseDTO(result));
-        }
-        
+        } 
     });
 }
 
