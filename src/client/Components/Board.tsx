@@ -230,7 +230,14 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
             <div className='boardContainer'>
                 <div className='row'>
                     {this.showSidebar()}
-                    <Grid gameBoard={this.state.gameBoard} gameTurn={this.state.gameTurn} addMoveToBoard={this.playSelectedDice} updateMoveOnBoard={this.updateMoveOnBoard} clearMoveOnBoard={this.removeMoveFromBoard} transferMove={this.transferMove.bind(this)}/>
+                    <Grid 
+                        gameBoard={this.state.gameBoard} 
+                        gameTurn={this.state.gameTurn} 
+                        addMoveToBoard={this.playSelectedDice} 
+                        updateMoveOnBoard={this.updateMoveOnBoard} 
+                        clearMoveOnBoard={this.removeMoveFromBoard} 
+                        transferMove={this.transferMove.bind(this)}
+                    />
                 </div>
             </div>
         );
