@@ -7,14 +7,16 @@ import { GetBoard } from './GameServices';
 
 function Index(){
     const [gameStarted, setGameStarted] = React.useState(false);
+    const [gameSeed, setGameSeed] = React.useState(null);
 
-    function startGame(){
+    function startGame(seed:string){
+        setGameSeed(seed);
         setGameStarted(true);
     }
 
     function showScreen(){
         if(gameStarted){
-            return <Board key="board" gameBoard={GetBoard()} />;
+            return <Board key="board" gameBoard={GetBoard()} seed={gameSeed} />;
         }else{
             return <StartMenu startGame={startGame}/>
         }

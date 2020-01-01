@@ -58,8 +58,8 @@ export function TranslateMoveToDTO(move: Move){
     return new MoveDTO(move.TilePlayed.Type, move.TilePlayed.TileOrientation, move.RowPosition, move.ColumnPosition);
 }
 
-export function StartGame(callback: (gameTurn: GameTurn) => void){
-    ipcRenderer.invoke(StartGameEvent).then((result) => {
+export function StartGame(gameSeed: string, callback: (gameTurn: GameTurn) => void){
+    ipcRenderer.invoke(StartGameEvent, gameSeed).then((result) => {
         callback(createTurnFromResponseDTO(result));
     });
 }

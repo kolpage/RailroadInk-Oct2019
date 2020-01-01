@@ -14,6 +14,7 @@ import ScoreCard from './ScoreCard';
 
 interface IBoardProps{
     gameBoard: GameBoard;
+    seed: string;
 }
 
 // TODO: Elevate this state (it should come from the server anyways)
@@ -37,7 +38,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         }
         this.bindFunctions();
 
-        StartGame(this.initalizeBoard);
+        StartGame(this.props.seed, this.initalizeBoard);
     }
 
     private bindFunctions(){

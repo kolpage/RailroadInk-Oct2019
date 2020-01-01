@@ -21,7 +21,8 @@ export class GameServices{
     }
 
     private handleStartGameEvent(event, args){
-        this.activeGame = new BaseGame(7, new StandardDicePool());
+        const seed = !!args.trim() ? args : null;
+        this.activeGame = new BaseGame(7, new StandardDicePool(seed));
         this.initalizeGameEventHandlers();
         return new TurnResponseDTO(this.activeGame.GetNumberOfTurns(), this.activeGame.GetTurnNumber(), [], [], this.activeGame.GetDiceRoll());
     }
@@ -31,9 +32,6 @@ export class GameServices{
     }
 
     private handleAdvanceTurnEvent(event, args){
-        // TODO: Remove debug code
-        //console.log("sent moves:");
-        //console.log(args);
         return this.activeGame.MakeMove(args);
     }
 }
