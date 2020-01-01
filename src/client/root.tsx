@@ -5,7 +5,7 @@ import { Board } from './Components/Board';
 import StartMenu from './Components/StartMenu';
 import { GetBoard } from './GameServices';
 
-function Index(){
+function PlayArea(){
     const [gameStarted, setGameStarted] = React.useState(false);
     const [gameSeed, setGameSeed] = React.useState(null);
 
@@ -25,4 +25,4 @@ function Index(){
     return <div>{showScreen()}</div>;
 }
 
-ReactDOM.render(<Index />, document.getElementById('app'));
+ReactDOM.render(<PlayArea />, document.getElementById('app'));
