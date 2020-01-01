@@ -9,7 +9,12 @@ interface IScoreCardProps{
 // Future: Create a sepereate model from ScoreDTO 
 export default function ScoreCard(props: IScoreCardProps){
     return(
-        <table>
+        <table className="scoreTable">
+            <thead>
+                <tr>
+                    <th colSpan={2}>Final Score!</th>
+                </tr>
+            </thead>
             <tbody>
             <tr>
                 <td className="scoreName">{"Exit"}</td>
