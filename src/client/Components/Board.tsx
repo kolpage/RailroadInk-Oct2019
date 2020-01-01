@@ -1,7 +1,7 @@
 import update from 'immutability-helper';
 
 import * as React from 'react';
-import { Inventory } from './Inventory';
+import DiceContainer from './DiceContainer';
 import '../styles/board.scss';
 import { GetSpeicalDice, AdvanceTurn, StartGame } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
@@ -10,7 +10,6 @@ import { GameBoard } from '../Models/GameBoard';
 import { Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
 import ScoreCard from './ScoreCard';
-import { ScoreDTO } from '../../common/DTO/ScoreDTO';
 
 
 interface IBoardProps{
@@ -215,9 +214,9 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         }else{
             return(
                 <React.Fragment>
-                    <Inventory dice={this.specialDice} onDiceSelected={this.updateSelectedDice} />
+                    <DiceContainer dice={this.specialDice} onDiceSelected={this.updateSelectedDice} />
                     <div className='column'>
-                        <Inventory dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
+                        <DiceContainer dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
                         <button onClick={this.advanceTurn} disabled={!this.canAdvanceTurn()} className='rollButton'>Roll Dice</button>
                     </div>
                 </React.Fragment>
