@@ -5,7 +5,7 @@ import DiceContainer from './DiceContainer';
 import '../styles/board.scss';
 import { GetSpeicalDice, AdvanceTurn, StartGame } from '../GameServices';
 import { GameDice } from '../Models/GameDice';
-import { Grid } from './Grid';
+import Grid from './Grid';
 import { GameBoard } from '../Models/GameBoard';
 import { Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';

@@ -8,15 +8,15 @@ interface IDiceProps {
     onDiceSelected: (dice:GameDice) => void;
 }
 
-export class Dice extends React.Component<IDiceProps> {
-    diceSelected() {
-        if (!this.props.dice.Played) {
-            this.props.onDiceSelected(this.props.dice);
+export default function Dice(props: IDiceProps){
+    function diceSelected() {
+        if (!props.dice.Played) {
+            props.onDiceSelected(props.dice);
         }
     }
 
-    getStatusClass() {
-        if(this.props.dice.Played) {
+    function getStatusClass() {
+        if(props.dice.Played) {
             return 'disabled';
         }
         else {
@@ -24,32 +24,30 @@ export class Dice extends React.Component<IDiceProps> {
         }
     }
 
-    private isDraggable() {
-        return !this.props.dice.Played;
+    function isDraggable() {
+        return !props.dice.Played;
     }
 
-    private handleDragStart(e) {
-        this.diceSelected();
+    function handleDragStart(e) {
+        diceSelected();
     }
 
-    private handleDragEnd(e) {
+    function handleDragEnd(e) {
         if (e.dataTransfer.dropEffect === 'none') {
 
         }
     }
     
-    render() {
-        return (
-            <div 
-                className={'dice ' + this.getStatusClass()}
-                onClick={this.diceSelected.bind(this)}
-                draggable={this.isDraggable()}
-                onDragStart={this.handleDragStart.bind(this)}
-                onDragEnd={this.handleDragEnd.bind(this)}
-            >
-                <Tile tile={this.props.dice.Tile} />
-            </div>
-        );
-    }
+    return (
+        <div 
+            className={'dice ' + getStatusClass()}
+            onClick={diceSelected}
+            draggable={isDraggable()}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+        >
+            <Tile tile={props.dice.Tile} />
+        </div>
+    );
 }
 
