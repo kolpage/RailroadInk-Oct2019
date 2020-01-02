@@ -17,10 +17,10 @@ export default function StartMenu(props: IStartMenuPros){
     }
     
     return(
-        <div>
-            <div>Welcome to RailRoad Inc!</div>
+        <div className="centerBox">
+            <div className="welcomeMessage">Welcome to RailRoad Inc!</div>
             <button onClick={startGameClicked}>Start Game</button>
-            <div>
+            <div className="startButton">
                 <span>Seed: </span>
                 <input onChange={handleSeedChange}/>
             </div>
