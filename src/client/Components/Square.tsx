@@ -10,6 +10,7 @@ const RemoveIcon = require("../Assests/RemoveCrop.png")
 interface ISquareProps {
     move: Move;
     currentTurnNumber: number;
+    addtionalStyles: string;
 
     playSquare: (move: Move) => void;
     rotateSquare: (move: Move) => void;
@@ -162,7 +163,7 @@ export class Square extends React.Component<ISquareProps> {
 
     render(){
         return(
-            <div className={'square ' + this.addValidationCssClass()} title={this.addErrorTooltip()}>
+            <div className={'square ' + this.props.addtionalStyles + ' ' + this.addValidationCssClass()} title={this.addErrorTooltip()}>
                 {this.drawMirrorButton()}
                 {this.drawRemoveButton()}
                 <div className='turnNumber'>{this.props.move.TilePlayed.TurnPlayed}</div>

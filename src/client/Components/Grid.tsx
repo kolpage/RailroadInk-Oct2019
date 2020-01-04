@@ -46,6 +46,30 @@ export default function Grid(props:IGridProps){
         return board;
     }
 
+    function getInnerSquareBoardStyles(row: number, column: number){
+        let styles = [];
+        let totalColumns = props.gameBoard.numberOfColumns;
+        let totalRows = props.gameBoard.numberOrRows;
+
+        if(row === 2 && column > 1 && column < totalColumns-2){
+            styles.push("innerTop");
+        }
+
+        if(row === totalRows-3 && column > 1 && column < totalColumns-2){
+            styles.push("innerBottom");
+        }
+
+        if(column === 2 && row > 1 && row < totalRows-2){
+            styles.push("innerLeft");
+        }
+
+        if(column === totalColumns-3 && row > 1 && row < totalRows-2){
+            styles.push("innerRight");
+        }
+
+        return styles.join(' ');
+    } 
+
     function createRow(rowPosition: number, numberOfCells: number): React.ReactElement {
         let row = [];
         for (var currentColumn = 0; currentColumn < numberOfCells; currentColumn++) {
@@ -63,6 +87,7 @@ export default function Grid(props:IGridProps){
                         mirrorSquare={mirrorSquareTile} 
                         transferMove={props.transferMove} 
                         currentTurnNumber={props.gameTurn.TurnNumber} 
+                        addtionalStyles={getInnerSquareBoardStyles(rowPosition, currentColumn)}
                         key={cellKey} 
                     />);
         }
