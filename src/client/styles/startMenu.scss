@@ -1,0 +1,48 @@
+.centerBox{
+    position: absolute;
+    top: 20%;
+    left: 30%;
+}
+
+.welcomeMessage{
+    margin-top: 50px;
+    padding: 20px 0;
+    font-size: 40px;
+}
+
+.startButton{
+    margin-left: 40%;
+    margin-top: 10px;
+}
+
+.seedOption{
+    padding: 10px 120px;
+}
+
+.trainImg{
+    animation-duration: 10s;
+    animation-name: slidein;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    width: 100px;
+}
+
+.carImg{
+    animation-duration: 10s;
+    animation-name: slidein;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-delay: 5s;
+    width: 100px;
+}
+
+@keyframes slidein{
+    from {
+        margin-left: 100%;
+    }
+    
+    to {
+        margin-left: -20%; // TODO: Hacky...just figure out how to make the animation not stop so it runs off the screen
+    }
+}
+
