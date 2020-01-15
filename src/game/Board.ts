@@ -128,15 +128,14 @@ export class Board{
             boardColumnIndex = tileCoords.column;
         }
         else{
-            if(!this.validatePlayableBoardCoordinates(tileOrRowIndex, columnIndex)){
-                return undefined;
-            }
-    
             boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
             boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
         }
         
         boardRowIndex--;
+        if(!this.validateBoardCoordinates(boardRowIndex, boardColumnIndex)){
+            return undefined;
+        }
         return this.board[boardRowIndex][boardColumnIndex];
     }
 
@@ -157,15 +156,14 @@ export class Board{
             boardColumnIndex = tileCoords.column;
         }
         else{
-            if(!this.validatePlayableBoardCoordinates(tileOrRowIndex, columnIndex)){
-                return undefined;
-            }
-    
             boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
             boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
         }
         
         boardRowIndex++;
+        if(!this.validateBoardCoordinates(boardRowIndex, boardColumnIndex)){
+            return undefined;
+        }
         return this.board[boardRowIndex][boardColumnIndex];
     }
 
@@ -186,15 +184,14 @@ export class Board{
             boardColumnIndex = tileCoords.column;
         }
         else{
-            if(!this.validatePlayableBoardCoordinates(tileOrRowIndex, columnIndex)){
-                return undefined;
-            }
-    
             boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
             boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
         }
         
         boardColumnIndex--;
+        if(!this.validateBoardCoordinates(boardRowIndex, boardColumnIndex)){
+            return undefined;
+        }
         return this.board[boardRowIndex][boardColumnIndex];
     }
 
@@ -215,15 +212,14 @@ export class Board{
             boardColumnIndex = tileCoords.column;
         }
         else{
-            if(!this.validatePlayableBoardCoordinates(tileOrRowIndex, columnIndex)){
-                return undefined;
-            }
-    
             boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
             boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
         }
         
         boardColumnIndex++;
+        if(!this.validateBoardCoordinates(boardRowIndex, boardColumnIndex)){
+            return undefined;
+        }
         return this.board[boardRowIndex][boardColumnIndex];
     }
 
@@ -309,6 +305,13 @@ export class Board{
         return output;
     }
 
+    private validateBoardCoordinates(rowIndex: number, columnIndex: number): boolean{
+        return (rowIndex >= 0 
+            && rowIndex < this.boardWidth
+            && columnIndex >= 0 
+            && columnIndex < this.boardHeight)
+    }
+
     private validatePlayableBoardCoordinates(rowIndex: number, columnIndex: number): boolean{
         return (rowIndex >= 0 
             && rowIndex < this.playableBoardHeight
@@ -340,6 +343,10 @@ export class Board{
                 this.exits.push(tile);
             }
             this.board[rowIndexOfEdge][boardIndex] = tile;
+            this.tileIndex[tile.GetTileId()] = {
+                row: rowIndexOfEdge,
+                column: boardIndex
+            };
         }
     }
 
@@ -353,7 +360,14 @@ export class Board{
         for(let i = 0; i < this.playableBoardWidth; i++){
             const boardIndex = this.convertGameCoordToBoardCoords(i);
             const tile = edgeTileSequenceGenerator.GetNextTile();
+            if(this.isExitTile(tile)){
+                this.exits.push(tile);
+            }
             this.board[boardIndex][columnIndexOfEdge] = tile;
+            this.tileIndex[tile.GetTileId()] = {
+                row: boardIndex,
+                column: columnIndexOfEdge
+            };
         }
     }
 

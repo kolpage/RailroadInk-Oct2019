@@ -123,6 +123,9 @@ export class StandardGameTests{
         const scorer = new BaseScoreCalculator(board);
         const score = scorer.GetScore();
         if(score !== undefined){
+            if(score.ExitScore !== 32){
+                return false;
+            }
             if(score.CenterSquareScore !== 6){
                 return false;
             }

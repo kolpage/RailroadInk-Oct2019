@@ -121,11 +121,10 @@ export class ExitNetworkLabeler extends TileVisitor{
     protected addTilesToVisitList(): void{
         const currentTile = this.GetCurrentTile();
         const hailingEdge = this.GetHailingEdge();
-        if(currentTile === undefined)
-        {
+        if(currentTile === undefined){
             return;
         }
-        const isStation = (currentTile instanceof PlayableBaseTile && currentTile.IsStation())
+        const isStation = (currentTile instanceof PlayableBaseTile && currentTile.IsStation());
 
         //Add top tile
         const topEdge = currentTile.GetTopEdge();
@@ -135,7 +134,7 @@ export class ExitNetworkLabeler extends TileVisitor{
                 if(aboveTile !== undefined 
                     && PositionValidator.ValidateEdges(topEdge, aboveTile.GetBottomEdge()) === EdgeMatchingStatus.valid
                 ){
-                    this.visitList.push({tile: aboveTile, hailingEdge: topEdge});
+                    this.addTileToVisitList(aboveTile, topEdge, aboveTile.GetBottomEdge());
                 }
             }
         }
@@ -148,7 +147,7 @@ export class ExitNetworkLabeler extends TileVisitor{
                 if(rightTile !== undefined
                     && PositionValidator.ValidateEdges(rightEdge, rightTile.GetLeftEdge()) === EdgeMatchingStatus.valid
                 ){
-                    this.visitList.push({tile: rightTile, hailingEdge: rightEdge});
+                    this.addTileToVisitList(rightTile, rightEdge, rightTile.GetLeftEdge());
                 }
             }
         }
@@ -161,7 +160,7 @@ export class ExitNetworkLabeler extends TileVisitor{
                 if(belowTile !== undefined
                     && PositionValidator.ValidateEdges(bottomEdge, belowTile.GetTopEdge()) === EdgeMatchingStatus.valid
                 ){
-                    this.visitList.push({tile: belowTile, hailingEdge: bottomEdge});
+                    this.addTileToVisitList(belowTile, bottomEdge, belowTile.GetTopEdge());
                 }
             }
         }
@@ -174,7 +173,7 @@ export class ExitNetworkLabeler extends TileVisitor{
                 if(leftTile !== undefined
                     && PositionValidator.ValidateEdges(leftEdge, leftTile.GetRightEdge()) === EdgeMatchingStatus.valid
                 ){
-                    this.visitList.push({tile: leftTile, hailingEdge: leftEdge});
+                    this.addTileToVisitList(leftTile, leftEdge, leftTile.GetRightEdge());
                 }
             }
         }
@@ -274,7 +273,9 @@ export class ExitNetworkLabeler extends TileVisitor{
     private isTraversibleEdgeType(edge: Edge): boolean{
         switch(edge){
             case Edge.road:
+            case Edge.exitRoad:
             case Edge.rail:
+            case Edge.exitRail:
                 return true;
             default:
                 return false;
