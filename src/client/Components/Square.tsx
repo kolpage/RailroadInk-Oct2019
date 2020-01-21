@@ -11,6 +11,7 @@ interface ISquareProps {
     move: Move;
     currentTurnNumber: number;
     addtionalStyles: string;
+    isGameOver: boolean;
 
     playSquare: (move: Move) => void;
     rotateSquare: (move: Move) => void;
@@ -63,11 +64,7 @@ export class Square extends React.Component<ISquareProps> {
     }
 
     private canSqaureBeUpdted() {
-        return ((this.props.move.TilePlayed.TurnPlayed == null) || (this.props.move.TilePlayed.TurnPlayed == this.props.currentTurnNumber));
-    }
-
-    private isSquarePlayable() {
-        return this.isSquareEmpty() && this.canSqaureBeUpdted();
+        return ((this.props.move.TilePlayed.TurnPlayed == null) || (this.props.move.TilePlayed.TurnPlayed == this.props.currentTurnNumber)) && !this.props.isGameOver;
     }
 
     private isSquareActive() {

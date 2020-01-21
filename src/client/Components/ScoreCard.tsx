@@ -12,7 +12,7 @@ export default function ScoreCard(props: IScoreCardProps){
         <table className="scoreTable">
             <thead>
                 <tr>
-                    <th colSpan={2}>Final Score!</th>
+                    <th colSpan={2}>Final Score</th>
                 </tr>
             </thead>
             <tbody>

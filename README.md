@@ -55,6 +55,3 @@ tasks.json
 
 Credits:
 Remove by Arfan Khan Kamol from the Noun Project (icon)
-Train by sofi from the Noun Project (icon)
-Train by Lluisa Iborra from the Noun Project (icon)
-Car by Stock Image Folio from the Noun Project (icon)

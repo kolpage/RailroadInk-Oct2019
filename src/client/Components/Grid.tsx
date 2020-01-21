@@ -87,6 +87,7 @@ export default function Grid(props:IGridProps){
                         mirrorSquare={mirrorSquareTile} 
                         transferMove={props.transferMove} 
                         currentTurnNumber={props.gameTurn.TurnNumber} 
+                        isGameOver={props.gameTurn.IsGameOver}
                         addtionalStyles={getInnerSquareBoardStyles(rowPosition, currentColumn)}
                         key={cellKey} 
                     />);
