@@ -3,6 +3,7 @@ import { ScoreDTO } from "../common/DTO/ScoreDTO";
 import { PlayableBaseTile } from "./tiles";
 import { EdgeMatchingStatus } from "../common/Enums";
 import { PositionValidator } from "../common/PositionValidator";
+import { ExitNetworkLabeler } from "./TileVisitor";
 
 export class BaseScoreCalculator{
     
@@ -42,7 +43,28 @@ export class BaseScoreCalculator{
      * ((# of Exits in network) - 1) * 4
      */
     private scoreExitPoints(): void{
+        this.exitScore = 0;
+        const exitDictionary = {};
+        const exitNetworkLabeler = new ExitNetworkLabeler(this.board);
+        const exits = this.board.GetExits();
+        for(const exit of exits){
+            const exitNetworkId = exit.GetNetworkId();
+            if(exitNetworkId !== undefined){
+                let exitCount = exitDictionary[exitNetworkId];
+                if(exitCount === undefined){
+                    exitDictionary[exitNetworkId] = 1;
+                }
+                else{
+                    exitDictionary[exitNetworkId] = (exitCount + 1);
+                }
+            }
+        }
 
+        for(const networkId in exitDictionary){
+            const exitCount = exitDictionary[networkId];
+            const networkScore = (exitCount -1) * 4;
+            this.exitScore += networkScore;
+        }
     }
 
     /**

@@ -104,8 +104,24 @@ export class PlayableBaseTile extends BaseTile{
 }
 
 export class EdgeBaseTile extends BaseTile{
+    private networkId: number;
+
     constructor(edges: Edge[]){
         super(edges, 0); //All edge tiles have turn number 0.
+    }
+
+    /**
+     * Allows network id to be set once. Network id tells what network this tile belongs to.
+     * @param networkId The network id.
+     */
+    public SetNetworkId(networkId: number): void{
+        if(this.networkId === undefined){
+            this.networkId = networkId
+        }
+    }
+
+    public GetNetworkId(): number{
+        return this.networkId;
     }
 }
 
