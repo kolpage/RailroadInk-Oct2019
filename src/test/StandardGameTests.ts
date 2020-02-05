@@ -7,7 +7,7 @@ import { StandardGame } from "../game/StandardGame";
 import { BaseScoreCalculator } from "../game/BaseScoreCalculator";
 
 class StandardGameTestHelper{
-    private static setupDebugDicePool(): DebugDicePool{
+    private static setupDebugDicePoolForGame1(): DebugDicePool{
         const roll1 = [TileType.RoadStraight, TileType.RoadThreeWay, TileType.RailThreeWay, TileType.Overpass];
         const roll2 = [TileType.RoadStraight, TileType.RoadTurn, TileType.RoadTurn, TileType.Overpass];
         const roll3 = [TileType.RoadThreeWay, TileType.RailThreeWay, TileType.RailStraight, TileType.StationTurn];
@@ -19,13 +19,29 @@ class StandardGameTestHelper{
         return new DebugDicePool(diceRolls);
     }
 
-    public static CreateTestGame(): BaseGame{
-        return new BaseGame(7, this.setupDebugDicePool(), 7, 7);
+    private static setupDebugDicePoolForGame2(): DebugDicePool{
+        const roll1 = [TileType.RoadTurn, TileType.RoadStraight, TileType.RailTurn, TileType.Overpass];
+        const roll2 = [TileType.RoadStraight, TileType.RoadTurn, TileType.RailTurn, TileType.Overpass];
+        const roll3 = [TileType.RoadThreeWay, TileType.RoadThreeWay, TileType.RailStraight, TileType.Overpass];
+        const roll4 = [TileType.RoadStraight, TileType.RoadTurn, TileType.RoadTurn, TileType.StationStraight];
+        const roll5 = [TileType.RailStraight, TileType.RailThreeWay, TileType.RailThreeWay, TileType.Overpass];
+        const roll6 = [TileType.RoadTurn, TileType.RailStraight, TileType.RailStraight, TileType.StationTurn];
+        const roll7 = [TileType.RailThreeWay, TileType.RoadStraight, TileType.RailThreeWay, TileType.Overpass];
+        const diceRolls = [roll1, roll2, roll3, roll4, roll5, roll6, roll7];
+        return new DebugDicePool(diceRolls);
+    }
+
+    public static CreateTestGame1(): BaseGame{
+        return new BaseGame(7, this.setupDebugDicePoolForGame1(), 7, 7);
+    }
+
+    public static CreateTestGame2(): BaseGame{
+        return new BaseGame(7, this.setupDebugDicePoolForGame2(), 7, 7);
     }
 }
 
 export class StandardGameTests{
-
+    
     /**
      * Full standard game. No errors. Scores 49 pts.
      * Stations: 1 network of 9. 32 pts.
@@ -37,7 +53,7 @@ export class StandardGameTests{
      * Total Score: 49pts.
      */
     public ValidFullGame_ShouldScore49_NoValidationErrorsShouldOccur(){
-        const game = StandardGameTestHelper.CreateTestGame();
+        const game = StandardGameTestHelper.CreateTestGame1();
         const board = game.GetBoard();
         const move1 = game.MakeMove(
             [
@@ -47,99 +63,212 @@ export class StandardGameTests{
                 new MoveDTO(TileType.RoadThreeWay, Orientation.right, 2, 5),
                 new MoveDTO(TileType.SpecialRoadRailAdjacent, Orientation.left, 2, 6)
             ]
-        );
-        if(!move1.WasMoveSuccessful){
-            return false;
-        }
-        const move2 = game.MakeMove(
-            [
-                new MoveDTO(TileType.RoadTurn, Orientation.right, 3, 6),
-                new MoveDTO(TileType.RoadTurn, Orientation.up, 3, 5),
-                new MoveDTO(TileType.RoadStraight, Orientation.up, 0, 4),
-                new MoveDTO(TileType.Overpass, Orientation.up, 1, 4)
-            ]
-        );
-        if(!move2.WasMoveSuccessful){
-            return false;
-        }
-        const move3 = game.MakeMove(
-            [
-                new MoveDTO(TileType.RailStraight, Orientation.up, 0, 3),
-                new MoveDTO(TileType.RailThreeWay, Orientation.right, 1, 3),
-                new MoveDTO(TileType.RoadThreeWay, Orientation.right, 3, 4),
-                new MoveDTO(TileType.StationTurn, Orientation.up, 2, 3)
-            ]
-        );
-        if(!move3.WasMoveSuccessful){
-            return false;
-        }
-        const move4 = game.MakeMove(
-            [
-                new MoveDTO(TileType.RailStraight, Orientation.right, 5, 6),
-                new MoveDTO(TileType.RailStraight, Orientation.right, 5, 5),
-                new MoveDTO(TileType.RailStraight, Orientation.up, 6, 3),
-                new MoveDTO(TileType.StationStraight, Orientation.down, 4, 4),
-                new MoveDTO(TileType.SpecialThreeRailOneRoad, Orientation.down, 5, 4)
-            ]
-        );
-        if(!move4.WasMoveSuccessful){
-            return false;
-        }
-        const move5 = game.MakeMove(
-            [
-                new MoveDTO(TileType.RoadTurn, Orientation.left, 6, 5),
-                new MoveDTO(TileType.RailThreeWay, Orientation.down, 5, 3),
-                new MoveDTO(TileType.RailTurn, Orientation.right, 5, 2),
-                new MoveDTO(TileType.StationStraight, Orientation.down, 4, 2)
-            ]
-        );
-        if(!move5.WasMoveSuccessful){
-            return false;
-        }
-        const move6 = game.MakeMove(
-            [
+            );
+            if(!move1.WasMoveSuccessful){
+                return false;
+            }
+            const move2 = game.MakeMove(
+                [
+                    new MoveDTO(TileType.RoadTurn, Orientation.right, 3, 6),
+                    new MoveDTO(TileType.RoadTurn, Orientation.up, 3, 5),
+                    new MoveDTO(TileType.RoadStraight, Orientation.up, 0, 4),
+                    new MoveDTO(TileType.Overpass, Orientation.up, 1, 4)
+                ]
+                );
+                if(!move2.WasMoveSuccessful){
+                    return false;
+                }
+                const move3 = game.MakeMove(
+                    [
+                        new MoveDTO(TileType.RailStraight, Orientation.up, 0, 3),
+                        new MoveDTO(TileType.RailThreeWay, Orientation.right, 1, 3),
+                        new MoveDTO(TileType.RoadThreeWay, Orientation.right, 3, 4),
+                        new MoveDTO(TileType.StationTurn, Orientation.up, 2, 3)
+                    ]
+                    );
+                    if(!move3.WasMoveSuccessful){
+                        return false;
+                    }
+                    const move4 = game.MakeMove(
+                        [
+                            new MoveDTO(TileType.RailStraight, Orientation.right, 5, 6),
+                            new MoveDTO(TileType.RailStraight, Orientation.right, 5, 5),
+                            new MoveDTO(TileType.RailStraight, Orientation.up, 6, 3),
+                            new MoveDTO(TileType.StationStraight, Orientation.down, 4, 4),
+                            new MoveDTO(TileType.SpecialThreeRailOneRoad, Orientation.down, 5, 4)
+                        ]
+                        );
+                        if(!move4.WasMoveSuccessful){
+                            return false;
+                        }
+                        const move5 = game.MakeMove(
+                            [
+                                new MoveDTO(TileType.RoadTurn, Orientation.left, 6, 5),
+                                new MoveDTO(TileType.RailThreeWay, Orientation.down, 5, 3),
+                                new MoveDTO(TileType.RailTurn, Orientation.right, 5, 2),
+                                new MoveDTO(TileType.StationStraight, Orientation.down, 4, 2)
+                            ]
+                            );
+                            if(!move5.WasMoveSuccessful){
+                                return false;
+                            }
+                            const move6 = game.MakeMove(
+                                [
                 new MoveDTO(TileType.StationStraight, Orientation.down, 0, 1),
                 new MoveDTO(TileType.RailThreeWay, Orientation.left, 1, 1),
                 new MoveDTO(TileType.RoadThreeWay, Orientation.down, 2, 2),
                 new MoveDTO(TileType.RoadStraight, Orientation.up, 2, 4)
             ]
+            );
+            if(!move6.WasMoveSuccessful){
+                return false;
+            }
+            const move7 = game.MakeMove(
+                [
+                    new MoveDTO(TileType.RailStraight, Orientation.right, 1, 0),
+                    new MoveDTO(TileType.SpecialRoadRailAcross, Orientation.right, 2, 1),
+                    new MoveDTO(TileType.StationStraight, Orientation.left, 2, 0),
+                    new MoveDTO(TileType.RailStraight, Orientation.up, 3, 1),
+                    new MoveDTO(TileType.RoadThreeWay, Orientation.right, 6, 4)
+                ]
+                );
+                if(!move7.WasMoveSuccessful){
+                    return false;
+                }
+                
+                const scorer = new BaseScoreCalculator(board);
+                const score = scorer.GetScore();
+                if(score !== undefined){
+                    if(score.ExitScore !== 32){
+                        return false;
+                    }
+                    if(score.CenterSquareScore !== 6){
+                        return false;
+                    }
+                    if(score.ErrorScore !== -3){
+                        console.log("Error score calculated to be: " + score.ErrorScore);
+                        return false;
+                    }
+                    if(score.LongestRoadScore !== 8){
+                        return false;
+                    }
+                    if(score.LongestRailScore !== 6){
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+            
+    public ValidFullGame2_ShouldScore50__NoValidationErrorsShouldOccur(){
+        const game = StandardGameTestHelper.CreateTestGame2();
+        const board = game.GetBoard();
+        const move1 = game.MakeMove(
+        [
+            new MoveDTO(TileType.RoadTurn, Orientation.up, 0, 5),
+            new MoveDTO(TileType.RoadStraight, Orientation.right, 0, 4),
+            new MoveDTO(TileType.Overpass, Orientation.right, 0, 3),
+            new MoveDTO(TileType.RailTurn, Orientation.down, 1, 6)
+        ]
+        );
+        if(!move1.WasMoveSuccessful){
+            return false;
+        }
+        const move2 = game.MakeMove(
+        [
+            new MoveDTO(TileType.RoadStraight, Orientation.right, 0, 2),
+            new MoveDTO(TileType.RailTurn, Orientation.down, 0, 0),
+            new MoveDTO(TileType.RoadTurn, Orientation.right, 1, 1),
+            new MoveDTO(TileType.Overpass, Orientation.right, 3, 6),
+            new MoveDTO(TileType.SpecialThreeRoadOneRail, Orientation.right, 0, 1)
+        ]
+        );
+        if(!move2.WasMoveSuccessful){
+            return false;
+        }
+        const move3 = game.MakeMove(
+        [
+            new MoveDTO(TileType.RoadThreeWay, Orientation.down, 1, 2),
+            new MoveDTO(TileType.Overpass, Orientation.right, 1, 3),
+            new MoveDTO(TileType.RailStraight, Orientation.up, 2, 6),
+            new MoveDTO(TileType.RoadThreeWay, Orientation.up, 3, 5)
+        ]
+        );
+        if(!move3.WasMoveSuccessful){
+            return false;
+        }
+        const move4 = game.MakeMove(
+        [
+            new MoveDTO(TileType.RoadStraight, Orientation.right, 1, 4),
+            new MoveDTO(TileType.RoadTurn, Orientation.left, 1, 5),
+            new MoveDTO(TileType.RoadTurn, Orientation.right, 3, 3),
+            new MoveDTO(TileType.StationStraight, Orientation.up, 2, 3)
+        ]
+        );
+        if(!move4.WasMoveSuccessful){
+            return false;
+        }
+        const move5 = game.MakeMove(
+        [
+            new MoveDTO(TileType.RailThreeWay, Orientation.left, 1, 0),
+            new MoveDTO(TileType.RailStraight, Orientation.up, 2, 0),
+            new MoveDTO(TileType.RailThreeWay, Orientation.left, 5, 0),
+            new MoveDTO(TileType.Overpass, Orientation.up, 6, 1),
+            new MoveDTO(TileType.SpecialRoadRailAcross, Orientation.right, 3, 0)
+        ]
+        );
+        if(!move5.WasMoveSuccessful){
+            return false;
+        }
+        const move6 = game.MakeMove(
+        [
+            new MoveDTO(TileType.RailStraight, Orientation.up, 4, 0),
+            new MoveDTO(TileType.RailStraight, Orientation.up, 4, 6),
+            new MoveDTO(TileType.RoadTurn, Orientation.down, 5, 1),
+            new MoveDTO(TileType.StationTurn, Orientation.left, 6, 2)
+        ]
         );
         if(!move6.WasMoveSuccessful){
             return false;
         }
         const move7 = game.MakeMove(
-            [
-                new MoveDTO(TileType.RailStraight, Orientation.right, 1, 0),
-                new MoveDTO(TileType.SpecialRoadRailAcross, Orientation.right, 2, 1),
-                new MoveDTO(TileType.StationStraight, Orientation.left, 2, 0),
-                new MoveDTO(TileType.RailStraight, Orientation.up, 3, 1),
-                new MoveDTO(TileType.RoadThreeWay, Orientation.right, 6, 4)
-            ]
+        [
+            new MoveDTO(TileType.RoadStraight, Orientation.up, 2, 5),
+            new MoveDTO(TileType.Overpass, Orientation.right, 3, 4),
+            new MoveDTO(TileType.RailThreeWay, Orientation.up, 5, 6),
+            new MoveDTO(TileType.RailThreeWay, Orientation.right, 6, 0)
+        ]
         );
         if(!move7.WasMoveSuccessful){
             return false;
         }
-
+        
         const scorer = new BaseScoreCalculator(board);
         const score = scorer.GetScore();
         if(score !== undefined){
-            if(score.ExitScore !== 32){
+            if(score.ExitScore !== 28){
                 return false;
             }
-            if(score.CenterSquareScore !== 6){
+            if(score.CenterSquareScore !== 3){
                 return false;
             }
-            if(score.ErrorScore !== -3){
+            if(score.ErrorScore !== -6){
                 console.log("Error score calculated to be: " + score.ErrorScore);
                 return false;
             }
+            if(score.LongestRoadScore !== 15){
+                return false;
+            }
+            if(score.LongestRailScore !== 10){
+                return false;
+            }
         }
-
+        
         return true;
     }
-
+            
     public InvalidGame_NotPlayingAllRequiredTiles(){
-        const game = StandardGameTestHelper.CreateTestGame();
+        const game = StandardGameTestHelper.CreateTestGame1();
         const move1 = game.MakeMove(
             [
                 new MoveDTO(TileType.Overpass, Orientation.up, 1, 5),
@@ -158,7 +287,7 @@ export class StandardGameTests{
     }
 
     public InvalidGame_PlayingTooManyTurns(){
-        const game = StandardGameTestHelper.CreateTestGame();
+        const game = StandardGameTestHelper.CreateTestGame1();
         const move1 = game.MakeMove(
             [
                 new MoveDTO(TileType.RoadStraight, Orientation.up, 0, 5),
@@ -258,7 +387,7 @@ export class StandardGameTests{
     }
 
     public InvalidGame_TilesNotConnected(){
-        const game = StandardGameTestHelper.CreateTestGame();
+        const game = StandardGameTestHelper.CreateTestGame1();
         const move1 = game.MakeMove(
             [
                 new MoveDTO(TileType.RoadStraight, Orientation.up, 0, 5),
@@ -279,7 +408,7 @@ export class StandardGameTests{
     }
 
     public InvalidGame_TilesNotConnected_AfterSubsequentPlay(){
-        const game = StandardGameTestHelper.CreateTestGame();
+        const game = StandardGameTestHelper.CreateTestGame1();
         const move1 = game.MakeMove(
             [
                 new MoveDTO(TileType.RoadStraight, Orientation.up, 0, 5),
@@ -311,7 +440,7 @@ export class StandardGameTests{
     }
 
     public InvalidGame_InvalidMove_TileNotAvailable_TileNotRolled(){
-        const game = StandardGameTestHelper.CreateTestGame();
+        const game = StandardGameTestHelper.CreateTestGame1();
         const invalidMove = new MoveDTO(TileType.RoadTurn, Orientation.down, 1, 6);//Tile wasn't rolled.
         const move1 = game.MakeMove(
             [
@@ -336,7 +465,7 @@ export class StandardGameTests{
     }
 
     public InvalidGame_InvalidMove_TileNotAvailable_StandardTileAlreadyPlayed(){
-        const game = StandardGameTestHelper.CreateTestGame();
+        const game = StandardGameTestHelper.CreateTestGame1();
         const invalidMove = new MoveDTO(TileType.RoadStraight, Orientation.down, 1, 6);//Tile already played.
         const move1 = game.MakeMove(
             [
@@ -361,7 +490,7 @@ export class StandardGameTests{
     }
 
     public InvalidGame_InvalidMove_TileNotAvailable_SpecialTileAlreadyPlayed(){
-        const game = StandardGameTestHelper.CreateTestGame();
+        const game = StandardGameTestHelper.CreateTestGame1();
         const invalidMove = new MoveDTO(TileType.SpecialRoadRailAdjacent, Orientation.left, 3, 6);
         const move1 = game.MakeMove(
             [

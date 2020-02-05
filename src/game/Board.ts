@@ -15,6 +15,9 @@ export class Board{
     private board: BaseTile[][];
     private tileIndex: { [tileId: string]: ITileLocation};
     private exits: EdgeBaseTile[];
+    private roads: BaseTile[];
+    private rails: BaseTile[];
+    private rivers: BaseTile[];
     private playableBoardWidth: number;
     private playableBoardHeight: number;
     private get boardWidth(): number{
@@ -30,6 +33,9 @@ export class Board{
         this.playableBoardHeight = playAreaHeight;
         this.tileFactory = tileFactory;
         this.tileIndex = {};
+        this.roads = [];
+        this.rails = [];
+        this.rivers = [];
         this.exits = [];
         this.initialize();
         this.setBoardEdges();
@@ -37,6 +43,15 @@ export class Board{
 
     public GetExits(): EdgeBaseTile[]{
         return this.exits;
+    }
+
+    public GetTilesOfType(edge: Edge){
+        switch(edge){
+            case Edge.road: return this.roads;
+            case Edge.rail: return this.rails;
+            case Edge.river: return this.rivers;
+        }
+        return [];
     }
 
     /**
@@ -258,6 +273,7 @@ export class Board{
             row: boardRowIndex,
             column: boardColumnIndex
         };
+        this.addTileToTileLists(tile);
     }
 
     /** Removes the tile at the specified position. Returns the tile if there was a tile there, otherwise undefined. */
@@ -277,8 +293,62 @@ export class Board{
             return undefined;
         }
         this.board[boardRowIndex][columnIndex] = undefined;
-        delete this.tileIndex[tile.GetTileId()]; 
+        delete this.tileIndex[tile.GetTileId()];
+        this.removeTileFromTileLists(tile);
         return tile;
+    }
+
+    private addTileToTileLists(tile: BaseTile): void{
+        const hasRoadEdge = this.doesTileHaveEdgeType(tile, Edge.road);
+        const hasRailEdge = this.doesTileHaveEdgeType(tile, Edge.rail);
+        const hasRiverEdge = this.doesTileHaveEdgeType(tile, Edge.river);
+
+        if(hasRoadEdge){
+            this.roads.push(tile);
+        }
+        if(hasRailEdge){
+            this.rails.push(tile);
+        }
+        if(hasRiverEdge){
+            this.rivers.push(tile);
+        }
+    }
+
+    private removeTileFromTileLists(tile: BaseTile): void{
+        const roadIndex = this.roads.indexOf(tile);
+        if(roadIndex > -1){
+            this.roads.splice(roadIndex, 1);
+        }
+
+        const railIndex = this.rails.indexOf(tile);
+        if(railIndex > -1){
+            this.rails.splice(railIndex, 1);
+        }
+
+        const riverIndex = this.rivers.indexOf(tile);
+        if(riverIndex > -1){
+            this.rivers.splice(riverIndex, 1);
+        }
+    }
+
+    private doesTileHaveEdgeType(tile: BaseTile, edgeType: Edge): boolean{
+        const topEdge = tile.GetTopEdge();
+        if(topEdge === edgeType){
+            return true;
+        }
+        const rightEdge = tile.GetRightEdge();
+        if(rightEdge === edgeType){
+            return true;
+        }
+        const bottomEdge = tile.GetBottomEdge();
+        if(bottomEdge === edgeType){
+            return true;
+        }
+        const leftEdge = tile.GetLeftEdge();
+        if(leftEdge === edgeType){
+            return true;
+        }
+        return false;
     }
 
     /** Prints the board as a string. */

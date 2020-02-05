@@ -4,6 +4,7 @@ import { PlayableBaseTile } from "./tiles";
 import { EdgeMatchingStatus } from "../common/Enums";
 import { PositionValidator } from "../common/PositionValidator";
 import { ExitNetworkLabeler } from "./TileVisitor";
+import { LongestRoadDetector, LongestRailDetector } from "./LongestPathDetector";
 
 export class BaseScoreCalculator{
     
@@ -71,14 +72,16 @@ export class BaseScoreCalculator{
      * Awards 1 point for each tile in the longest continuous section of road.
      */
     private scoreLongestRoadPoints(): void{
-
+        const longestRoadDetector = new LongestRoadDetector(this.board);
+        this.longestRoadScore = longestRoadDetector.GetLongestPath();
     }
 
     /** 
      * Awards 1 point for each tile in the longest continuous section of rail.
      */
     private scoreLongestRailPoints(): void{
-
+        const longestRailDetector = new LongestRailDetector(this.board);
+        this.longestRailScore = longestRailDetector.GetLongestPath();
     }
 
     /**

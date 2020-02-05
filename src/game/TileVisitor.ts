@@ -2,6 +2,7 @@ import { BaseTile, TileHelpers, EdgeBaseTile, WallEdgeTile, RoadEdgeTile, RailEd
 import { Edge, EdgeMatchingStatus } from "../common/Enums";
 import { Board } from "./Board";
 import { PositionValidator } from "../common/PositionValidator";
+import { ConnectionValidator } from "../common/ConnectionValidator";
 
 export interface IVisitInfo{
     tile: BaseTile,
@@ -132,7 +133,7 @@ export class ExitNetworkLabeler extends TileVisitor{
             if(isStation || this.isSameEdgeType(topEdge, hailingEdge)){
                 const aboveTile = this.board.GetTileAbove(currentTile);
                 if(aboveTile !== undefined 
-                    && PositionValidator.ValidateEdges(topEdge, aboveTile.GetBottomEdge()) === EdgeMatchingStatus.valid
+                    && ConnectionValidator.AreEdgesConnected(topEdge, aboveTile.GetBottomEdge())
                 ){
                     this.addTileToVisitList(aboveTile, topEdge, aboveTile.GetBottomEdge());
                 }
@@ -145,7 +146,7 @@ export class ExitNetworkLabeler extends TileVisitor{
             if(isStation || this.isSameEdgeType(rightEdge, hailingEdge)){
                 const rightTile = this.board.GetTileRight(currentTile);
                 if(rightTile !== undefined
-                    && PositionValidator.ValidateEdges(rightEdge, rightTile.GetLeftEdge()) === EdgeMatchingStatus.valid
+                    && ConnectionValidator.AreEdgesConnected(rightEdge, rightTile.GetLeftEdge())
                 ){
                     this.addTileToVisitList(rightTile, rightEdge, rightTile.GetLeftEdge());
                 }
@@ -158,7 +159,7 @@ export class ExitNetworkLabeler extends TileVisitor{
             if(isStation || this.isSameEdgeType(bottomEdge, hailingEdge)){
                 const belowTile = this.board.GetTileBelow(currentTile);
                 if(belowTile !== undefined
-                    && PositionValidator.ValidateEdges(bottomEdge, belowTile.GetTopEdge()) === EdgeMatchingStatus.valid
+                    && ConnectionValidator.AreEdgesConnected(bottomEdge, belowTile.GetTopEdge())
                 ){
                     this.addTileToVisitList(belowTile, bottomEdge, belowTile.GetTopEdge());
                 }
@@ -171,7 +172,7 @@ export class ExitNetworkLabeler extends TileVisitor{
             if(isStation || this.isSameEdgeType(leftEdge, hailingEdge)){
                 const leftTile = this.board.GetTileLeft(currentTile);
                 if(leftTile !== undefined
-                    && PositionValidator.ValidateEdges(leftEdge, leftTile.GetRightEdge()) === EdgeMatchingStatus.valid
+                    && ConnectionValidator.AreEdgesConnected(leftEdge, leftTile.GetRightEdge())
                 ){
                     this.addTileToVisitList(leftTile, leftEdge, leftTile.GetRightEdge());
                 }
