@@ -186,7 +186,7 @@ export class BaseTurn{
         return this.diceToPlay.filter(die => !die.played).map((die => die.tileType));
     }
 
-    /** Gets all the dice that must be played this turn. */
+    /** Gets all the dice that still must be played this turn. */
     public GetRequiredDiceToPlay(): TileType[]{
         return this.diceToPlay.filter(die => !die.played && die.required).map(die => die.tileType);
     }

@@ -68,6 +68,32 @@ export class Board{
         return this.playableBoardHeight;
     }
 
+    /**
+     * Determines if the given tile can be played anywhere on the board.
+     * @param tile The tile to see if can be played
+     */
+    public IsTilePlayable(tile: TileType){
+        const tileFactory = new TileFactory();
+        const upTile = tileFactory.CreateTile(tile, Number.MAX_SAFE_INTEGER, Orientation.up);
+        const rightTile = tileFactory.CreateTile(tile, Number.MAX_SAFE_INTEGER, Orientation.right);
+        const downTile = tileFactory.CreateTile(tile, Number.MAX_SAFE_INTEGER, Orientation.down);
+        const leftTile = tileFactory.CreateTile(tile, Number.MAX_SAFE_INTEGER, Orientation.left);
+        const tileOrientations = [upTile, rightTile, downTile, leftTile];
+        for(let rowIndex = 0; rowIndex < this.playableBoardHeight; rowIndex++){
+            for(let columnIndex = 0; columnIndex < this.playableBoardWidth; columnIndex++){
+                if(this.board[rowIndex][columnIndex] !== undefined){
+                    continue;
+                }
+                for(const tile of tileOrientations){
+                    if(this.IsTilePositionValid(tile, rowIndex, columnIndex)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     /** 
      * Returns true if a tile placed in the specified position and orientation
      * follows all game tile placement rules. False if it violates a rule.

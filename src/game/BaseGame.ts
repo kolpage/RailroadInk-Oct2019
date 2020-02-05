@@ -118,7 +118,13 @@ export class BaseGame {
 
             //Verify all required tiles have been played.
             if(!this.currentTurn.CanTurnBeDone()){
-                turnIssues.push(TurnInvalidReason.requiredDiceNotPlayed);
+                const unplayedDice = this.currentTurn.GetRequiredDiceToPlay();
+                for(const die of unplayedDice){
+                    if(this.board.IsTilePlayable(die)){
+                        turnIssues.push(TurnInvalidReason.requiredDiceNotPlayed);
+                        break;
+                    }
+                }
             }
         }
         else{
