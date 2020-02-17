@@ -209,6 +209,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         specialDiceToUpdate.SetGameTurn(this.state.gameTurn.TurnNumber); // TODO: Don't hide state change
     }
 
+    // TODO: Sidebar should probably be its own component 
     private showSidebar(){
         if(this.state.gameTurn.IsGameOver){
             return <ScoreCard score={this.state.gameTurn.Score}/>
@@ -226,7 +227,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
 
     render(){
-        // TODO: Refactor out to more components
         return (
             <div className='boardContainer'>
                 <div className='row'>
