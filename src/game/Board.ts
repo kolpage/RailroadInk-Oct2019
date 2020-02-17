@@ -84,8 +84,8 @@ export class Board{
                 if(this.board[rowIndex][columnIndex] !== undefined){
                     continue;
                 }
-                for(const tile of tileOrientations){
-                    if(this.IsTilePositionValid(tile, rowIndex, columnIndex)){
+                for(const testTile of tileOrientations){
+                    if(this.IsTilePositionValid(testTile, rowIndex, columnIndex)){
                         return true;
                     }
                 }
