@@ -218,7 +218,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
                     <DiceContainer dice={this.specialDice} onDiceSelected={this.updateSelectedDice} />
                     <div className='column'>
                         <DiceContainer dice={this.state.rolledDice} onDiceSelected={this.updateSelectedDice}/>
-                        <button onClick={this.advanceTurn} disabled={!this.canAdvanceTurn()} className='rollButton'>Roll Dice</button>
+                        <button onClick={this.advanceTurn} className='rollButton'>Roll Dice</button>
                     </div>
                 </React.Fragment>
             )
