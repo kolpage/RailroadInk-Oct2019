@@ -1,7 +1,9 @@
-import { BaseTile, EdgeBaseTile, PlayableBaseTile, RoadEdgeTile, RailEdgeTile } from "./tiles";
+import { BaseTile, EdgeBaseTile, PlayableBaseTile, RoadEdgeTile, RailEdgeTile, StationTurnTile } from "./tiles";
 import { Edge, TileType, Orientation, EdgeMatchingStatus, TilePlacementResult as TilePlacementResult } from "../common/Enums";
 import { TileFactory } from "./TileFactory";
 import { PositionValidator } from "../common/PositionValidator";
+import { ConnectionValidator } from "../common/ConnectionValidator";
+import { TileContinuityValidator } from "./TileVisitor";
 
 export interface ITileLocation{
     row: number,
@@ -74,19 +76,32 @@ export class Board{
      */
     public IsTilePlayable(tile: TileType){
         const tileFactory = new TileFactory();
+        const tileConnectionValidator = new TileContinuityValidator(this);
         const upTile = tileFactory.CreateTile(tile, Number.MAX_SAFE_INTEGER, Orientation.up);
         const rightTile = tileFactory.CreateTile(tile, Number.MAX_SAFE_INTEGER, Orientation.right);
         const downTile = tileFactory.CreateTile(tile, Number.MAX_SAFE_INTEGER, Orientation.down);
         const leftTile = tileFactory.CreateTile(tile, Number.MAX_SAFE_INTEGER, Orientation.left);
         const tileOrientations = [upTile, rightTile, downTile, leftTile];
+        if(tile === TileType.StationTurn){
+            tileOrientations.push(tileFactory.CreateTile(TileType.StationTurnMirror, Number.MAX_SAFE_INTEGER, Orientation.up));
+            tileOrientations.push(tileFactory.CreateTile(TileType.StationTurnMirror, Number.MAX_SAFE_INTEGER, Orientation.right));
+            tileOrientations.push(tileFactory.CreateTile(TileType.StationTurnMirror, Number.MAX_SAFE_INTEGER, Orientation.down));
+            tileOrientations.push(tileFactory.CreateTile(TileType.StationTurnMirror, Number.MAX_SAFE_INTEGER, Orientation.left));
+        }
         for(let rowIndex = 0; rowIndex < this.playableBoardHeight; rowIndex++){
             for(let columnIndex = 0; columnIndex < this.playableBoardWidth; columnIndex++){
                 if(this.board[rowIndex][columnIndex] !== undefined){
                     continue;
                 }
                 for(const testTile of tileOrientations){
-                    if(this.IsTilePositionValid(testTile, rowIndex, columnIndex)){
-                        return true;
+                    const followsEdgeRules = this.IsTilePositionValid(testTile, rowIndex, columnIndex);
+                    if(followsEdgeRules){
+                        this.SetTile(testTile, rowIndex, columnIndex, false);
+                        const isConnected = tileConnectionValidator.Validate(testTile);
+                        this.RemoveTile(rowIndex, columnIndex);
+                        if(isConnected){
+                            return true;
+                        }
                     }
                 }
             }
@@ -269,7 +284,7 @@ export class Board{
         return this.tileIndex[tile.GetTileId()];
     }
 
-    /** Sets a tile on the board. Returns true if tile was sucessfully set, false otherwise. */
+    /** Sets a tile on the board. Returns true if tile was sucessfully set, false otherwise. Takes playable coords. */
     public SetTile(
         tile: PlayableBaseTile,
         rowIndex: number, 
@@ -302,7 +317,7 @@ export class Board{
         this.addTileToTileLists(tile);
     }
 
-    /** Removes the tile at the specified position. Returns the tile if there was a tile there, otherwise undefined. */
+    /** Removes the tile at the specified position. Returns the tile if there was a tile there, otherwise undefined. Uses playable coords */
     public RemoveTile(rowIndex: number, columnIndex: number): BaseTile | undefined{
         if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
             return undefined;

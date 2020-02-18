@@ -58,7 +58,7 @@ export class BaseTurn{
      * Updates the board and special tile tracker objects.
      */
     public CommitTurn(): void{
-        if(!this.isTurnCommitted && this.CanTurnBeDone()){
+        if(!this.isTurnCommitted){
             this.isTurnCommitted = true;
             this.playedTiles.forEach(move => {
                 const tile = move.GetTile();
