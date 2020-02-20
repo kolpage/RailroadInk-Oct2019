@@ -90,7 +90,7 @@ export class Board{
         }
         for(let rowIndex = 0; rowIndex < this.playableBoardHeight; rowIndex++){
             for(let columnIndex = 0; columnIndex < this.playableBoardWidth; columnIndex++){
-                if(this.board[rowIndex][columnIndex] !== undefined){
+                if(this.GetTile(rowIndex, columnIndex) !== undefined){
                     continue;
                 }
                 for(const testTile of tileOrientations){
@@ -111,7 +111,7 @@ export class Board{
 
     /** 
      * Returns true if a tile placed in the specified position and orientation
-     * follows all game tile placement rules. False if it violates a rule.
+     * follows all game tile placement rules. False if it violates a rule. Takes playable coords
      */
     public IsTilePositionValid(tile: PlayableBaseTile, rowIndex: number, columnIndex: number): boolean{
         //Bad coordinates or there's already a tile played there
@@ -162,8 +162,8 @@ export class Board{
             return undefined;
         }
 
-        const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
-        const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        const boardRowIndex = this.convertPlayableCoordToBoardCoords(rowIndex);
+        const boardColumnIndex = this.convertPlayableCoordToBoardCoords(columnIndex);
         return this.board[boardRowIndex][boardColumnIndex] as PlayableBaseTile;
     }
 
@@ -184,8 +184,8 @@ export class Board{
             boardColumnIndex = tileCoords.column;
         }
         else{
-            boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
-            boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+            boardRowIndex = this.convertPlayableCoordToBoardCoords(tileOrRowIndex);
+            boardColumnIndex = this.convertPlayableCoordToBoardCoords(columnIndex);
         }
         
         boardRowIndex--;
@@ -212,8 +212,8 @@ export class Board{
             boardColumnIndex = tileCoords.column;
         }
         else{
-            boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
-            boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+            boardRowIndex = this.convertPlayableCoordToBoardCoords(tileOrRowIndex);
+            boardColumnIndex = this.convertPlayableCoordToBoardCoords(columnIndex);
         }
         
         boardRowIndex++;
@@ -240,8 +240,8 @@ export class Board{
             boardColumnIndex = tileCoords.column;
         }
         else{
-            boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
-            boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+            boardRowIndex = this.convertPlayableCoordToBoardCoords(tileOrRowIndex);
+            boardColumnIndex = this.convertPlayableCoordToBoardCoords(columnIndex);
         }
         
         boardColumnIndex--;
@@ -268,8 +268,8 @@ export class Board{
             boardColumnIndex = tileCoords.column;
         }
         else{
-            boardRowIndex = this.convertGameCoordToBoardCoords(tileOrRowIndex);
-            boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+            boardRowIndex = this.convertPlayableCoordToBoardCoords(tileOrRowIndex);
+            boardColumnIndex = this.convertPlayableCoordToBoardCoords(columnIndex);
         }
         
         boardColumnIndex++;
@@ -295,8 +295,8 @@ export class Board{
             return TilePlacementResult.invalidCoordinates;
         }
 
-        const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
-        const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        const boardRowIndex = this.convertPlayableCoordToBoardCoords(rowIndex);
+        const boardColumnIndex = this.convertPlayableCoordToBoardCoords(columnIndex);
         if(this.board[boardRowIndex][boardColumnIndex] !== undefined){
             if(!allowOverwrite){
                 return TilePlacementResult.alreadyTileAtLocation;
@@ -322,8 +322,8 @@ export class Board{
         if(!this.validatePlayableBoardCoordinates(rowIndex, columnIndex)){
             return undefined;
         }
-        const boardRowIndex = this.convertGameCoordToBoardCoords(rowIndex);
-        const boardColumnIndex = this.convertGameCoordToBoardCoords(columnIndex);
+        const boardRowIndex = this.convertPlayableCoordToBoardCoords(rowIndex);
+        const boardColumnIndex = this.convertPlayableCoordToBoardCoords(columnIndex);
         
         return this.removeTileAndUpdateIndex(boardRowIndex, boardColumnIndex);
     }
@@ -448,7 +448,7 @@ export class Board{
     private createTopBottomEdge(rowIndexOfEdge: number): void{
         const edgeTileSequenceGenerator = new EdgeTileSequenceGenerator(TileType.RoadEdge, this.tileFactory);
         for(let i = 0; i < this.playableBoardWidth; i++){
-            const boardIndex = this.convertGameCoordToBoardCoords(i);
+            const boardIndex = this.convertPlayableCoordToBoardCoords(i);
             const tile = edgeTileSequenceGenerator.GetNextTile();
             if(this.isExitTile(tile)){
                 this.exits.push(tile);
@@ -469,7 +469,7 @@ export class Board{
     private createLeftRightEdge(columnIndexOfEdge: number): void{
         const edgeTileSequenceGenerator = new EdgeTileSequenceGenerator(TileType.RailEdge, this.tileFactory);
         for(let i = 0; i < this.playableBoardWidth; i++){
-            const boardIndex = this.convertGameCoordToBoardCoords(i);
+            const boardIndex = this.convertPlayableCoordToBoardCoords(i);
             const tile = edgeTileSequenceGenerator.GetNextTile();
             if(this.isExitTile(tile)){
                 this.exits.push(tile);
@@ -482,7 +482,7 @@ export class Board{
         }
     }
 
-    private convertGameCoordToBoardCoords(gameCoordinate: number): number{
+    private convertPlayableCoordToBoardCoords(gameCoordinate: number): number{
         return gameCoordinate + 1;
     }
 
