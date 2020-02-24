@@ -11,7 +11,6 @@ import { Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
 import ScoreCard from './ScoreCard';
 
-
 interface IBoardProps{
     gameBoard: GameBoard;
     seed: string;

@@ -139,6 +139,7 @@ function GridBoarder(props: IGridBoarderProps){
                 <ExitTile tile={railTile} />
                 <ExitTile tile={emptyTile} />
                 <ExitTile tile={roadTile} />
+                <ExitTile tile={emptyTile} />
             </div>
         );
     }

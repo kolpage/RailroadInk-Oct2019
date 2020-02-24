@@ -1,76 +1,81 @@
 import * as React from 'react';
 import '../styles/tile.scss';
-import { TileGraphics } from '../Graphics/TileGraphics';
 import { IGameTile } from '../Models/GameTile';
+import { TileType } from '../../common/Enums';
+
+const RoadStraightArt = require("../Assests/RoadStraight.png");
+const RailStraightArt = require("../Assests/RailStraight.png");
+const RailTurnArt = require("../Assests/RailTurn.png");
+const RoadTurnArt = require("../Assests/RoadTurn.png");
+const StationStraightArt = require("../Assests/StationStraight.png");
+const StationTurnArt = require("../Assests/StationTurn.png");
+const StationTurnMirrorArt = require("../Assests/StationTurnMirror.png");
+const RoadThreeWayArt = require("../Assests/RoadThreeWay.png");
+const RailThreeWayArt = require("../Assests/RailThreeWay.png");
+const OverpassArt = require("../Assests/Overpass.png");
+const SpecialAllRailArt = require("../Assests/SpecialAllRail.png");
+const SpecialThreeRailOneRoadArt = require("../Assests/SpecialThreeRailOneRoad.png");
+const SpecialThreeRoadOneRailArt = require("../Assests/SpecialThreeRoadOneRail.png");
+const SpecialAllRoadArt = require("../Assests/SpecialAllRoad.png");
+const SpecialRoadRailAdjacentArt = require("../Assests/SpecialRoadRailAdjacent.png");
+const SpecialRoadRailAcrossArt = require("../Assests/SpecialRoadRailAcross.png");
+const EmptyFieldArt = require("../Assests/EmptyField.png");
+
 
 interface ITileProps {
-    tile: IGameTile,
-    length: number,
+    tile: IGameTile
 }
 
-export class Tile extends React.Component<ITileProps> {
-    trainTrackCanvas: any;
-    tileLength: number;
-    graphicEngine: TileGraphics;
-    height: number;
-    width: number;
-    styleClass: string;
-
-    public static defaultProps = {
-        length: 75
-    };
-
-    constructor(props: ITileProps) {
-        super(props);
-        this.trainTrackCanvas = React.createRef();
-        this.height = this.props.length;
-        this.width = this.props.length;
-    }
-
-    componentDidMount() {
-        // TODO: Should this be depedency injected? We can't create it until the components mount...
-        this.graphicEngine = new TileGraphics(this.getCanvasContext(), this.props.length);
-
-        this.redrawTile();
-    }
-
-    getCanvasContext() {
-        if (!this.trainTrackCanvas.current) { return; }
-        return this.trainTrackCanvas.current.getContext('2d');
-    }
-
-    redrawTile() {
-        // TODO: It would be nice to not check for context but the render function might cause errors 
-        //       since canvas doesn't get a context until it's first drawn
-        if (this.getCanvasContext()) {
-            this.graphicEngine.DrawTile(this.props.tile);
+export function Tile(props: ITileProps){
+    function GetTileArt(){
+        switch (props.tile.Type) {
+            case TileType.RoadStraight: return RoadStraightArt;
+            case TileType.RailStraight: return RailStraightArt;
+            case TileType.RailTurn: return RailTurnArt;
+            case TileType.RoadTurn: return RoadTurnArt;
+            case TileType.StationStraight: return StationStraightArt;
+            case TileType.StationTurn: return StationTurnArt;
+            case TileType.StationTurnMirror: return StationTurnMirrorArt;
+            case TileType.RoadThreeWay: return RoadThreeWayArt;
+            case TileType.RailThreeWay: return RailThreeWayArt;
+            case TileType.Overpass: return OverpassArt;
+            case TileType.SpecialAllRail: return SpecialAllRailArt;
+            case TileType.SpecialThreeRailOneRoad: return SpecialThreeRailOneRoadArt;
+            case TileType.SpecialThreeRoadOneRail: return SpecialThreeRoadOneRailArt;
+            case TileType.SpecialAllRoad: return SpecialAllRoadArt;
+            case TileType.SpecialRoadRailAdjacent: return SpecialRoadRailAdjacentArt;
+            case TileType.SpecialRoadRailAcross: return SpecialRoadRailAcrossArt;
+            case TileType.Empty:
+            default: return EmptyFieldArt;    
         }
     }
 
-    render() {
-        this.redrawTile();
-        return (
-            <div className={this.styleClass} style={{width: this.width, height: this.height}}>
-                <canvas ref={this.trainTrackCanvas} width={this.width} height={this.height}></canvas>
-            </div>
-        )
+    const pixalStyle = {
+        transform: 'rotate(' + 90*props.tile.TileOrientation +'deg)',
+        width: 75, 
+        height: 75
     }
+    
+    return (
+        <div style={{width: 75, height: 75}}>
+            <img src={GetTileArt()} style={pixalStyle} />
+        </div>
+    );
 }
 
-export class ExitTile extends Tile{
-    constructor(props: ITileProps) {
-        super(props);
-        this.width = this.props.length;
-        this.height = this.props.length*(1/3);
-        this.styleClass = 'exitCell'
-    }
+export function ExitTile(props: ITileProps){
+    return (
+        <div style={{width: 75, height: 75*(1/3), padding: '0px 2px', backgroundColor: '#6abe30', overflow: 'hidden'}}>
+            <Tile tile={props.tile} />
+        </div>
+    )
 }
 
-export class ExitTileSide extends Tile{
-    constructor(props: ITileProps) {
-        super(props);
-        this.width = this.props.length*(1/3);
-        this.height = this.props.length;
-        this.styleClass = 'exitCellSide'
-    }
+export function ExitTileSide(props: ITileProps){
+    return (
+        <div style={{width: 75*(1/3), height: 75, padding: '2px 0px', backgroundColor: '#6abe30', overflow: 'hidden'}}>
+            <Tile tile={props.tile} />
+        </div>
+    )
 }
+
