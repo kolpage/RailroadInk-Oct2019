@@ -3,6 +3,7 @@ import { GetDiceRollEvent, AdvanceTurnEvent, StartGameEvent } from "../common/Co
 import { BaseGame } from "./BaseGame";
 import { StandardDicePool } from "./DicePool";
 import { TurnResponseDTO } from "../common/DTO/TurnResponseDTO";
+import { StandardGame } from "./StandardGame";
 
 export class GameServices{
     private activeGame: BaseGame;
@@ -22,7 +23,7 @@ export class GameServices{
 
     private handleStartGameEvent(event, args){
         const seed = !!args.trim() ? args : null;
-        this.activeGame = new BaseGame(7, new StandardDicePool(seed));
+        this.activeGame = new StandardGame();
         this.initalizeGameEventHandlers();
         return new TurnResponseDTO(this.activeGame.GetNumberOfTurns(), this.activeGame.GetTurnNumber(), [], [], this.activeGame.GetDiceRoll());
     }

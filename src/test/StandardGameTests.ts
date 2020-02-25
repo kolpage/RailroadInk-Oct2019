@@ -32,11 +32,11 @@ class StandardGameTestHelper{
     }
 
     public static CreateTestGame1(): BaseGame{
-        return new BaseGame(7, this.setupDebugDicePoolForGame1(), 7, 7);
+        return new BaseGame(7, this.setupDebugDicePoolForGame1(), new BaseScoreCalculator(), 7, 7);
     }
 
     public static CreateTestGame2(): BaseGame{
-        return new BaseGame(7, this.setupDebugDicePoolForGame2(), 7, 7);
+        return new BaseGame(7, this.setupDebugDicePoolForGame2(), new BaseScoreCalculator(), 7, 7);
     }
 }
 
@@ -136,7 +136,8 @@ export class StandardGameTests{
                     return false;
                 }
                 
-                const scorer = new BaseScoreCalculator(board);
+                const scorer = new BaseScoreCalculator();
+                scorer.ScoreBoard(board);
                 const score = scorer.GetScore();
                 if(score !== undefined){
                     if(score.ExitScore !== 32){
@@ -243,7 +244,8 @@ export class StandardGameTests{
             return false;
         }
         
-        const scorer = new BaseScoreCalculator(board);
+        const scorer = new BaseScoreCalculator();
+        scorer.ScoreBoard(board);
         const score = scorer.GetScore();
         if(score !== undefined){
             if(score.ExitScore !== 28){
@@ -535,7 +537,7 @@ export class StandardGameTests{
         const dicePool = new DebugDicePool([
             [TileType.RoadStraight, TileType.RoadTurn, TileType.RailStraight, TileType.RailTurn]
         ]);
-        const game = new BaseGame(7, dicePool, 7, 7);
+        const game = new BaseGame(7, dicePool, new BaseScoreCalculator(), 7, 7);
         const move1 = game.MakeMove([
             new MoveDTO(TileType.RoadTurn, Orientation.up, 0, 1),
             new MoveDTO(TileType.RoadStraight, Orientation.up, 1, 1),
@@ -550,7 +552,7 @@ export class StandardGameTests{
         const dicePool = new DebugDicePool([
             [TileType.RoadStraight, TileType.RoadTurn, TileType.RoadStraight, TileType.StationStraight]
         ]);
-        const game = new BaseGame(7, dicePool, 7, 7);
+        const game = new BaseGame(7, dicePool, new BaseScoreCalculator(), 7, 7);
         const move1 = game.MakeMove([
             new MoveDTO(TileType.RoadTurn, Orientation.up, 0, 1),
             new MoveDTO(TileType.RoadStraight, Orientation.right, 0, 0),
@@ -558,7 +560,8 @@ export class StandardGameTests{
             new MoveDTO(TileType.StationStraight, Orientation.left, 3, 5)
         ]);
 
-        const scorer = new BaseScoreCalculator(game.GetBoard());
+        const scorer = new BaseScoreCalculator();
+        scorer.ScoreBoard(game.GetBoard());
         if(scorer.GetScore().ErrorScore === -1){
             return true;
         }
@@ -568,7 +571,7 @@ export class StandardGameTests{
         const dicePool = new DebugDicePool([
             [TileType.RailTurn, TileType.RailStraight, TileType.RoadStraight, TileType.RoadTurn]
         ]);
-        const game = new BaseGame(7, dicePool, 7, 7);
+        const game = new BaseGame(7, dicePool, new BaseScoreCalculator(), 7, 7);
         const move1 = game.MakeMove([
             new MoveDTO(TileType.RoadTurn, Orientation.up, 0, 1),
             new MoveDTO(TileType.RoadStraight, Orientation.right, 0, 0),
@@ -576,7 +579,8 @@ export class StandardGameTests{
             new MoveDTO(TileType.RailStraight, Orientation.right, 0, 2)
         ]);
 
-        const scorer = new BaseScoreCalculator(game.GetBoard());
+        const scorer = new BaseScoreCalculator();
+        scorer.ScoreBoard(game.GetBoard());
         if(scorer.GetScore().ErrorScore === -1){
             return true;
         }
@@ -586,7 +590,7 @@ export class StandardGameTests{
         const dicePool = new DebugDicePool([
             [TileType.RailTurn, TileType.RailStraight, TileType.RoadThreeWay, TileType.RoadThreeWay]
         ]);
-        const game = new BaseGame(7, dicePool, 7, 7);
+        const game = new BaseGame(7, dicePool, new BaseScoreCalculator(), 7, 7);
         const move1 = game.MakeMove([
             new MoveDTO(TileType.RoadThreeWay, Orientation.left, 0, 1),
             new MoveDTO(TileType.RoadThreeWay, Orientation.up, 0, 0),
@@ -594,7 +598,8 @@ export class StandardGameTests{
             new MoveDTO(TileType.RailStraight, Orientation.right, 0, 2)
         ]);
 
-        const scorer = new BaseScoreCalculator(game.GetBoard());
+        const scorer = new BaseScoreCalculator();
+        scorer.ScoreBoard(game.GetBoard());
         if(scorer.GetScore().ErrorScore === -2){
             return true;
         }

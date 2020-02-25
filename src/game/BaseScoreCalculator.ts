@@ -15,14 +15,23 @@ export class BaseScoreCalculator{
     private longestRoadScore: number = 0;
     private centerScore: number = 0;
     private errorScore: number = 0;
-    private expansionScore: number = 0;
+    protected expansionScore: number = 0;
 
-    constructor(board: Board){
+    constructor(){ }
+
+    /** Scores the given board. Should only be called once per score calc. */
+    public ScoreBoard(board: Board): void{
+        if(this.board !== undefined){
+            return;
+        }
         this.board = board;
         this.score();
     }
 
     public GetScore(): ScoreDTO{
+        if(this.finalScore === undefined){
+            this.createScoreDTO();
+        }
         return this.finalScore;
     }
 
@@ -32,7 +41,6 @@ export class BaseScoreCalculator{
         this.scoreLongestRailPoints();
         this.scoreCenterPoints();
         this.scoreErrorPoints();
-        this.createScoreDTO();
     }
 
     private createScoreDTO(): void{

@@ -47,7 +47,11 @@ export enum TileType{
     SpecialAllRoad,
     SpecialAllRail,
     SpecialRoadRailAdjacent,
-    SpecialRoadRailAcross
+    SpecialRoadRailAcross,
+    RiverStraight,
+    RiverTurn,
+    RiverRoadBridge,
+    RiverRailBridge
 }
 
 /** Matching statuses of edge checks */

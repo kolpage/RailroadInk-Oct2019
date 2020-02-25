@@ -1,4 +1,4 @@
-import { BaseDie, RouteDie, StationDie } from "./Dice";
+import { BaseDie, RouteDie, StationDie, RiverDie } from "./Dice";
 import { TileType } from "../common/Enums";
 
 const seedrandom = require('seedrandom');
@@ -31,6 +31,15 @@ export class StandardDicePool extends BaseDicePool{
         this.dice.push(new RouteDie(this.randomNumberGenerator));
         this.dice.push(new RouteDie(this.randomNumberGenerator));
         this.dice.push(new StationDie(this.randomNumberGenerator));
+    }
+}
+
+/** Represents the dice pool for a river expansion game. */
+export class RiverExpansionDicePool extends StandardDicePool{
+    constructor(seed?: string){
+        super(seed);
+        this.dice.push(new RiverDie(this.randomNumberGenerator));
+        this.dice.push(new RiverDie(this.randomNumberGenerator));
     }
 }
 

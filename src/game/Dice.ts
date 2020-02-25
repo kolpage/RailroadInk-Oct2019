@@ -45,3 +45,18 @@ export class StationDie extends BaseDie{
         super(sides, randomNumberGenerator);
     }
 }
+
+/** Represents the river die */
+export class RiverDie extends BaseDie{
+    constructor(randomNumberGenerator: Function){
+        const sides = [
+            TileType.RiverStraight,
+            TileType.RiverStraight,
+            TileType.RiverTurn,
+            TileType.RiverTurn,
+            TileType.RiverRoadBridge,
+            TileType.RiverRailBridge
+        ];
+        super(sides, randomNumberGenerator);
+    }
+}

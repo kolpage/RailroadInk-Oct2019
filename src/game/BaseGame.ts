@@ -24,11 +24,12 @@ export class BaseGame {
     private dicePool: BaseDicePool;
     private tileFactory: TileFactory;
 
-    constructor(numberOfTurns: number, dicePool: BaseDicePool, boardWidth?: number, boardHeight?: number){
+    constructor(numberOfTurns: number, dicePool: BaseDicePool, scoreCalculator: BaseScoreCalculator, boardWidth?: number, boardHeight?: number){
         this.boardWidth = boardWidth || this.boardWidth;
         this.boardHeight = boardHeight || this.boardHeight;
         this.numberOfTurns = numberOfTurns;
         this.dicePool = dicePool;
+        this.scoreCalc = scoreCalculator;
         this.tileFactory = new TileFactory();
         this.specialTileTracker = new SpecialTileTracker();
         this.previousTurns = [];
@@ -66,7 +67,7 @@ export class BaseGame {
         this.currentTurn.CommitTurn();
 
         if(this.IsGameOver()){
-            this.scoreCalc = new BaseScoreCalculator(this.board);
+            this.scoreCalc.ScoreBoard(this.board);
             return new TurnResponseDTO(this.numberOfTurns, this.GetTurnNumber(), [], [], [], true, this.scoreCalc.GetScore());
         }
         this.beginNextTurn();
