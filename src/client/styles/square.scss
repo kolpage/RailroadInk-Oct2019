@@ -21,16 +21,20 @@
     border-right-color: gold;
 }
 
+// TODO: Currently z index needs to get set on everything on the square that isn't the tile so that the tile rotation transform doesn't mess up the stacking context.
+//       Figure out a way to not need to use z index (or isolate it just to the tile
 .lowerRightButton {
     bottom: 0;
     right: 0;
     position: absolute;
     user-select: none;
+    z-index: 2;
 }
 
 .upperLeftButton {
     position: absolute;
     user-select: none;
+    z-index: 2;
 }
 
 .turnNumber {
@@ -38,6 +42,7 @@
     right:0px;
     position: absolute;
     user-select: none;
+    z-index: 2;
 }
  
 figure{
