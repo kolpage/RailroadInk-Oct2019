@@ -41,7 +41,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
     }
 
     private bindFunctions(){
-        // TODO: This is definietly a code smell...
+        // TODO: This is definietly a code smell...and would be gone with a function component 
         this.playSelectedDice = this.playSelectedDice.bind(this);
         this.updateMoveOnBoard = this.updateMoveOnBoard.bind(this);
         this.updateSelectedDice = this.updateSelectedDice.bind(this);
