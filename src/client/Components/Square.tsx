@@ -20,108 +20,99 @@ interface ISquareProps {
     transferMove: (srcMove: Move, destMove: Move) => void;
 }
 
-export class Square extends React.Component<ISquareProps> {
-    constructor(props: ISquareProps) {
-        super(props);
-        this.bindFunction();
-    }
-
-    private bindFunction() {
-        this.playSelectedTile = this.playSelectedTile.bind(this);
-        this.rotateSquare = this.rotateSquare.bind(this);
-    }
-
-    playSelectedTile() {
-        if(this.canSqaureBeUpdted()) {
-            if(!this.isSquareEmpty){
-                this.removeTile();
+export function Square(props: ISquareProps) {
+    function playSelectedTile() {
+        if(canSqaureBeUpdted()) {
+            // TODO: this use to not be actully calling this function so may cause problems
+            if(!isSquareEmpty()){
+                removeTile();
             }
-            this.props.playSquare(this.props.move);
+            props.playSquare(props.move);
 
             return true;
         }
         return false;
     }
 
-    removeTile() {
-        this.props.clearSquare(this.props.move);
+    function removeTile() {
+        props.clearSquare(props.move);
     }
 
-    rotateSquare() {
-        if (this.isSquareActive()) { 
-            this.props.rotateSquare(this.props.move);
+    function rotateSquare() {
+        if (isSquareActive()) { 
+            props.rotateSquare(props.move);
         }
     }
 
-    mirrorSquare() {
-        if (this.isSquareActive() && this.props.move.TilePlayed.CanTileBeMirror()) {
-            this.props.mirrorSquare(this.props.move);
+    function mirrorSquare() {
+        if (isSquareActive() && props.move.TilePlayed.CanTileBeMirror()) {
+            props.mirrorSquare(props.move);
         }
     }
 
-    isSquareInvalid(){
-        return !this.props.move.IsValid();
+    function isSquareInvalid(){
+        return !props.move.IsValid();
     }
 
-    private canSqaureBeUpdted() {
-        return ((this.props.move.TilePlayed.TurnPlayed == null) || (this.props.move.TilePlayed.TurnPlayed == this.props.currentTurnNumber)) && !this.props.isGameOver;
+    function canSqaureBeUpdted() {
+        return ((props.move.TilePlayed.TurnPlayed == null) || (props.move.TilePlayed.TurnPlayed == props.currentTurnNumber)) && !props.isGameOver;
     }
 
-    private isSquareActive() {
-        return this.canSqaureBeUpdted() && !this.isSquareEmpty();
+    function isSquareActive() {
+        return canSqaureBeUpdted() && !isSquareEmpty();
     }
 
-    private isSquareEmpty() {
-        return this.props.move.TilePlayed.IsTileEmpty();
+    function isSquareEmpty() {
+        return props.move.TilePlayed.IsTileEmpty();
     }
 
     //#region Drag & drop handlers
-    private handleDragOver(e) {
-        if(this.canSqaureBeUpdted()){
+    function handleDragOver(e) {
+        if(canSqaureBeUpdted()){
             e.preventDefault(); // Preventing default event in dragOver event signifies that the element will accept drop events
         }
     }
 
-    private handleDragDrop(e) {
+    function handleDragDrop(e) {
         e.preventDefault();
         var data = e.dataTransfer.getData("text/move");
         if(data){
             const sourceMove = CreateMoveFromJSON(JSON.parse(data));
-            if(!sourceMove.IsMoveAtSamePosition(this.props.move)){
-                this.props.transferMove(sourceMove, this.props.move);
+            if(!sourceMove.IsMoveAtSamePosition(props.move)){
+                props.transferMove(sourceMove, props.move);
             }
             
         }
         else{
-            return this.playSelectedTile();
+            return playSelectedTile();
         } 
     }
 
-    private handleDragStart(e) {
-        const move = JSON.stringify(this.props.move);
+    function handleDragStart(e) {
+        const move = JSON.stringify(props.move);
         e.dataTransfer.setData("text/move", move);
     }
 
-    private handleDragEnd(e) {
+    function handleDragEnd(e) {
         if (e.dataTransfer.dropEffect !== 'none') {
             //this.removeTile();
         }
     }
     //#endregion
 
-    private addValidationCssClass() {
-        if (this.isSquareInvalid()) {
+    function addValidationCssClass() {
+        if (isSquareInvalid()) {
             return 'invalidBoarder'
         }
 
         return '';
     }
 
-    drawMirrorButton() {
-        if(this.isSquareActive() && this.props.move.TilePlayed.CanTileBeMirror()){
+    function drawMirrorButton() {
+        if(isSquareActive() && props.move.TilePlayed.CanTileBeMirror()){
              return(
                  <div 
-                     onClick={this.mirrorSquare.bind(this)} 
+                     onClick={mirrorSquare} 
                      className='upperLeftButton'
                  >
                      <figure>
@@ -134,11 +125,11 @@ export class Square extends React.Component<ISquareProps> {
         return <div></div>;
      }
 
-    drawRemoveButton(){
-        if(this.isSquareActive()){
+     function drawRemoveButton(){
+        if(isSquareActive()){
             return (
                 <div
-                    onClick={this.removeTile.bind(this)} 
+                    onClick={removeTile} 
                     className='lowerRightButton'
                 >
                     <figure>
@@ -150,30 +141,28 @@ export class Square extends React.Component<ISquareProps> {
         return <div></div>;
     }
 
-    addErrorTooltip(){
-        if(!this.props.move.IsValid()){
-            return TilePlacementResult[this.props.move.Status];
+    function addErrorTooltip(){
+        if(!props.move.IsValid()){
+            return TilePlacementResult[props.move.Status];
         }
 
         return "";
     }
 
-    render(){
-        return(
-            <div className={'square ' + this.props.addtionalStyles + ' ' + this.addValidationCssClass()} title={this.addErrorTooltip()}>
-                {this.drawMirrorButton()}
-                {this.drawRemoveButton()}
-                <div className='turnNumber'>{this.props.move.TilePlayed.TurnPlayed}</div>
-                <div onClick={this.playSelectedTile} 
-                     onContextMenu={this.rotateSquare}
-                     draggable={this.isSquareActive()}
-                     onDragStart={this.handleDragStart.bind(this)}
-                     onDragOver={this.handleDragOver.bind(this)}
-                     onDrop={this.handleDragDrop.bind(this)}
-                     onDragEnd={this.handleDragEnd.bind(this)}>
-                    <Tile tile={this.props.move.TilePlayed} />
-                </div>
+    return(
+        <div className={'square ' + props.addtionalStyles + ' ' + addValidationCssClass()} title={addErrorTooltip()}>
+            {drawMirrorButton()}
+            {drawRemoveButton()}
+            <div className='turnNumber'>{props.move.TilePlayed.TurnPlayed}</div>
+            <div onClick={playSelectedTile} 
+                    onContextMenu={rotateSquare}
+                    draggable={isSquareActive()}
+                    onDragStart={handleDragStart}
+                    onDragOver={handleDragOver}
+                    onDrop={handleDragDrop}
+                    onDragEnd={handleDragEnd}>
+                <Tile tile={props.move.TilePlayed} />
             </div>
-        );
-    }
+        </div>
+    );
 }
