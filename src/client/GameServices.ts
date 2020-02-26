@@ -1,7 +1,7 @@
 // import update from 'react-addons-update';
 import update from 'immutability-helper';
 
-import { TileType } from '../common/Enums';
+import { TileType, GameType } from '../common/Enums';
 import { Move, TurnMoves, GameTurn } from './Models/GameTurn';
 import { MoveDTO } from '../common/DTO/MoveDTO';
 import { GameTile } from './Models/GameTile';
@@ -58,7 +58,7 @@ export function TranslateMoveToDTO(move: Move){
     return new MoveDTO(move.TilePlayed.Type, move.TilePlayed.TileOrientation, move.RowPosition, move.ColumnPosition);
 }
 
-export function StartGame(gameSeed: string, callback: (gameTurn: GameTurn) => void){
+export function StartGame(gameType: GameType, gameSeed: string, callback: (gameTurn: GameTurn) => void){
     ipcRenderer.invoke(StartGameEvent, gameSeed).then((result) => {
         callback(createTurnFromResponseDTO(result));
     });

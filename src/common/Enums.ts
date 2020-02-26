@@ -77,4 +77,10 @@ export enum TurnInvalidReason{
     requiredDiceNotPlayed,
     noActiveTurns,
     tilesMustBeConnectedToExistingTiles
+} 
+
+export enum GameType{
+    Base,
+    River,
+    Lake
 }

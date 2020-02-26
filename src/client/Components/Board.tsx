@@ -10,10 +10,12 @@ import { GameBoard } from '../Models/GameBoard';
 import { Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
 import ScoreCard from './ScoreCard';
+import { GameType } from '../../common/Enums';
 
 interface IBoardProps{
     gameBoard: GameBoard;
     seed: string;
+    gameType: GameType
 }
 
 // TODO: Elevate this state (it should come from the server anyways)
@@ -37,7 +39,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         }
         this.bindFunctions();
 
-        StartGame(this.props.seed, this.initalizeBoard);
+        StartGame(this.props.gameType, this.props.seed, this.initalizeBoard);
     }
 
     private bindFunctions(){
