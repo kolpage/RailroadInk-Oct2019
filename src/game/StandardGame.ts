@@ -5,16 +5,14 @@ import { BaseScoreCalculator } from "./BaseScoreCalculator";
 export class StandardGame extends BaseGame{
 
     private static NumberOfTurns = 7;
-    private static DicePool = new StandardDicePool();
     private static BoardWidth = 7;
     private static BoardHeight = 7;
-    private static ScoreCalculator = new BaseScoreCalculator();
 
-    constructor(){
+    constructor(seed?: string){
         super(
             StandardGame.NumberOfTurns, 
-            StandardGame.DicePool, 
-            StandardGame.ScoreCalculator,
+            new StandardDicePool(seed), 
+            new BaseScoreCalculator(),
             StandardGame.BoardWidth, 
             StandardGame.BoardHeight
         );

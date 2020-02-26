@@ -23,7 +23,7 @@ export class GameServices{
 
     private handleStartGameEvent(event, args){
         const seed = !!args.trim() ? args : null;
-        this.activeGame = new StandardGame();
+        this.activeGame = new StandardGame(seed);
         this.initalizeGameEventHandlers();
         return new TurnResponseDTO(this.activeGame.GetNumberOfTurns(), this.activeGame.GetTurnNumber(), [], [], this.activeGame.GetDiceRoll());
     }

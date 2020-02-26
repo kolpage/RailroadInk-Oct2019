@@ -4,16 +4,14 @@ import { RiverExpansionScoreCalculator } from "./RiverExpansionScoreCalculator";
 
 export class RiverExpansionGame extends BaseGame{
     private static NumberOfTurns = 6;
-    private static DicePool = new RiverExpansionDicePool();
     private static BoardWidth = 7;
     private static BoardHeight = 7;
-    private static ScoreCalculator = new RiverExpansionScoreCalculator();
 
-    constructor(){
+    constructor(seed?: string){
         super(
             RiverExpansionGame.NumberOfTurns, 
-            RiverExpansionGame.DicePool, 
-            RiverExpansionGame.ScoreCalculator,
+            new RiverExpansionDicePool(seed), 
+            new RiverExpansionScoreCalculator(),
             RiverExpansionGame.BoardWidth, 
             RiverExpansionGame.BoardHeight
         );
