@@ -65,7 +65,6 @@ export class RiverDie extends BaseDie{
 export class LakeDie extends BaseDie{
     constructor(randomNumberGenerator: Function){
         const sides = [
-            TileType.LakeFull,
             TileType.LakeHalfLand,
             TileType.LakeThreeLand,
             TileType.LakeRoad,
