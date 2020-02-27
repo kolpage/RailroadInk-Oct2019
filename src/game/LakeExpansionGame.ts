@@ -1,6 +1,6 @@
 import { LakeExpansionDicePool } from "./DicePool";
 import { BaseGame } from "./BaseGame";
-import { RiverExpansionScoreCalculator } from "./RiverExpansionScoreCalculator";
+import { LakeExpansionScoreCalculator } from "./LakeExpansionScoreCalculator";
 
 export class LakeExpansionGame extends BaseGame{
     private static NumberOfTurns = 6;
@@ -11,8 +11,7 @@ export class LakeExpansionGame extends BaseGame{
         super(
             LakeExpansionGame.NumberOfTurns, 
             new LakeExpansionDicePool(seed), 
-            // TODO: Implment LakeExpansionScoreCalculator
-            new RiverExpansionScoreCalculator(),
+            new LakeExpansionScoreCalculator(),
             LakeExpansionGame.BoardWidth, 
             LakeExpansionGame.BoardHeight
         );
