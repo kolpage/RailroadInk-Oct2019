@@ -24,9 +24,8 @@ export class GameServices{
     }
 
     private handleStartGameEvent(event, args){
-       // const seed = !!args.trim() ? args : null;
-        const seed:string = args[0];
-        const gameType:GameType = args[1];
+        const seed: string = !!args[0].trim() ? args[0] : null;
+        const gameType: GameType = args[1];
 
         this.activeGame = GameFactory(gameType, seed);
         this.initalizeGameEventHandlers();
@@ -38,6 +37,7 @@ export class GameServices{
     }
 
     private handleAdvanceTurnEvent(event, args){
+        console.log(args);
         return this.activeGame.MakeMove(args);
     }
 }
