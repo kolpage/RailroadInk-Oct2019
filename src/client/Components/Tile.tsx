@@ -26,6 +26,13 @@ const RiverRoadArt = require("../Assests/RiverRoad.png");
 const RiverTurnArt = require("../Assests/RiverTurn.png");
 const RiverStraightArt = require("../Assests/RiverStraight.png");
 
+const LakeFullArt = require("../Assests/LakeFull.png");
+const LakeHalfLandArt = require("../Assests/LakeHalfLand.png");
+const LakeThreeLandArt = require("../Assests/LakeThreeLand.png");
+const LakeRoadArt = require("../Assests/LakeRoad.png");
+const LakeRailArt = require("../Assests/LakeRail.png");
+const LakeRoadRail = require("../Assests/LakeRoadRail.png");
+
 
 interface ITileProps {
     tile: IGameTile
@@ -54,6 +61,12 @@ export function Tile(props: ITileProps){
             case TileType.RiverRoadBridge: return RiverRoadArt;
             case TileType.RiverTurn: return RiverTurnArt;
             case TileType.RiverStraight: return RiverStraightArt;
+            case TileType.LakeFull: return LakeFullArt;
+            case TileType.LakeHalfLand: return LakeHalfLandArt;
+            case TileType.LakeThreeLand: return LakeThreeLandArt;
+            case TileType.LakeRoad: return LakeRoadArt;
+            case TileType.LakeRail: return LakeRailArt;
+            case TileType.LakeRoadRail: return LakeRoadRail;
             case TileType.Empty:
             default: return EmptyFieldArt;    
         }

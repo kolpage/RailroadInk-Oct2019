@@ -1,11 +1,11 @@
 import { ipcMain } from "electron";
 import { GetDiceRollEvent, AdvanceTurnEvent, StartGameEvent } from "../common/Constants";
 import { BaseGame } from "./BaseGame";
-import { StandardDicePool } from "./DicePool";
 import { TurnResponseDTO } from "../common/DTO/TurnResponseDTO";
 import { StandardGame } from "./StandardGame";
 import { GameType } from "../common/Enums";
 import { RiverExpansionGame } from "./RiverExpansionGame";
+import { LakeExpansionGame } from"./LakeExpansionGame";
 
 export class GameServices{
     private activeGame: BaseGame;
@@ -46,6 +46,6 @@ function GameFactory(gameType: GameType, seed?:string){
     switch (gameType) {
         case GameType.Base: return new StandardGame(seed);
         case GameType.River: return new RiverExpansionGame(seed);
-        //case GameType.Lake: return new LakeExpansionGame(seed);  
+        case GameType.Lake: return new LakeExpansionGame(seed);  
     } 
 }

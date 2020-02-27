@@ -51,7 +51,14 @@ export enum TileType{
     RiverStraight,
     RiverTurn,
     RiverRoadBridge,
-    RiverRailBridge
+    RiverRailBridge,
+    LakeFull,
+    LakeHalfLand,
+    LakeThreeLand,
+    LakeRoad,
+    LakeRail,
+    LakeRoadRail
+
 }
 
 /** Matching statuses of edge checks */

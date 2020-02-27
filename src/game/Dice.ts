@@ -60,3 +60,18 @@ export class RiverDie extends BaseDie{
         super(sides, randomNumberGenerator);
     }
 }
+
+/** Represents the lake die */
+export class LakeDie extends BaseDie{
+    constructor(randomNumberGenerator: Function){
+        const sides = [
+            TileType.LakeFull,
+            TileType.LakeHalfLand,
+            TileType.LakeThreeLand,
+            TileType.LakeRoad,
+            TileType.LakeRail,
+            TileType.LakeRoadRail
+        ];
+        super(sides, randomNumberGenerator);
+    }
+}

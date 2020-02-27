@@ -20,6 +20,10 @@ export default function StartMenu(props: IStartMenuPros){
         props.startGame(GameType.River, seed);
     }
 
+    function startLakeGameClicked(){
+        props.startGame(GameType.Lake, seed);
+    }
+
     function handleSeedChange(e){
         setSeed(e.target.value);
     }
@@ -33,6 +37,7 @@ export default function StartMenu(props: IStartMenuPros){
             </div>
             <button className="startButton" onClick={startGameClicked}>Start Standar Game</button>
             <button className="startButton" onClick={startRiverGameClicked}>Start River Game</button>
+            <button className="startButton" onClick={startLakeGameClicked}>Start Lake Game</button>
 
             <div className="seedOption">
                 <span title="Leave empty to get a random seed">Seed: </span>
