@@ -37,7 +37,6 @@ export class GameServices{
     }
 
     private handleAdvanceTurnEvent(event, args){
-        console.log(args);
         return this.activeGame.MakeMove(args);
     }
 }
