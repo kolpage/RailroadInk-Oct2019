@@ -21,6 +21,11 @@ const SpecialRoadRailAdjacentArt = require("../Assests/SpecialRoadRailAdjacent.p
 const SpecialRoadRailAcrossArt = require("../Assests/SpecialRoadRailAcross.png");
 const EmptyFieldArt = require("../Assests/EmptyField.png");
 
+const RiverRailBridgeArt = require("../Assests/RiverRail.png");
+const RiverRoadArt = require("../Assests/RiverRoad.png");
+const RiverTurnArt = require("../Assests/RiverTurn.png");
+const RiverStraightArt = require("../Assests/RiverStraight.png");
+
 
 interface ITileProps {
     tile: IGameTile
@@ -45,6 +50,10 @@ export function Tile(props: ITileProps){
             case TileType.SpecialAllRoad: return SpecialAllRoadArt;
             case TileType.SpecialRoadRailAdjacent: return SpecialRoadRailAdjacentArt;
             case TileType.SpecialRoadRailAcross: return SpecialRoadRailAcrossArt;
+            case TileType.RiverRailBridge: return RiverRailBridgeArt;
+            case TileType.RiverRoadBridge: return RiverRoadArt;
+            case TileType.RiverTurn: return RiverTurnArt;
+            case TileType.RiverStraight: return RiverStraightArt;
             case TileType.Empty:
             default: return EmptyFieldArt;    
         }
