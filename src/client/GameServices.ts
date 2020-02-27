@@ -59,7 +59,7 @@ export function TranslateMoveToDTO(move: Move){
 }
 
 export function StartGame(gameType: GameType, gameSeed: string, callback: (gameTurn: GameTurn) => void){
-    ipcRenderer.invoke(StartGameEvent, gameSeed).then((result) => {
+    ipcRenderer.invoke(StartGameEvent, [gameSeed, gameType]).then((result) => {
         callback(createTurnFromResponseDTO(result));
     });
 }

@@ -11,18 +11,17 @@ interface IStartMenuPros{
 
 export default function StartMenu(props: IStartMenuPros){
     const [seed, setSeed] = React.useState("");
-    const [gameType, setGameType] = React.useState(GameType.Base);
     
     function startGameClicked(){
-        props.startGame(gameType, seed);
+        props.startGame(GameType.Base, seed);
+    }
+
+    function startRiverGameClicked(){
+        props.startGame(GameType.River, seed);
     }
 
     function handleSeedChange(e){
         setSeed(e.target.value);
-    }
-
-    function handleGameTypeChange(e){
-        setGameType(e.target.value);
     }
     
     return(
@@ -32,21 +31,8 @@ export default function StartMenu(props: IStartMenuPros){
                 <figure><img src={TrainImg} className='trainImg' /></figure>
                 {/*<figure><img src={CarImg} className='carImg' /></figure>*/}
             </div>
-            <button className="startButton" onClick={startGameClicked}>Start Game</button>
-            
-            <p>Select a game type:</p>
-            <div>
-                <input type="radio" name="base" value={GameType.Base} onChange={handleGameTypeChange} checked/>
-                <label>Base</label>
-            </div>
-            <div>
-                <input type="radio" name="river" value={GameType.River} onChange={handleGameTypeChange}/>
-                <label>River</label>
-            </div>
-            <div>
-                <input type="radio" name="lake" value={GameType.Lake} onChange={handleGameTypeChange}/>
-                <label>Lake</label>
-            </div>
+            <button className="startButton" onClick={startGameClicked}>Start Standar Game</button>
+            <button className="startButton" onClick={startRiverGameClicked}>Start River Game</button>
 
             <div className="seedOption">
                 <span title="Leave empty to get a random seed">Seed: </span>
