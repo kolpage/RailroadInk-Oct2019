@@ -27,8 +27,9 @@ const RiverTurnArt = require("../Assests/RiverTurn.png");
 const RiverStraightArt = require("../Assests/RiverStraight.png");
 
 const LakeFullArt = require("../Assests/LakeFull.png");
-const LakeHalfLandArt = require("../Assests/LakeHalfLand.png");
-const LakeThreeLandArt = require("../Assests/LakeThreeLand.png");
+const LakeThreeSidesArt = require("../Assests/LakeOneLand.png");
+const LakeTwoSidesArt = require("../Assests/LakeHalfLand.png");
+const LakeOneSideArt = require("../Assests/LakeThreeLand.png");
 const LakeRoadArt = require("../Assests/LakeRoad.png");
 const LakeRailArt = require("../Assests/LakeRail.png");
 const LakeRoadRail = require("../Assests/LakeRoadRail.png");
@@ -62,8 +63,9 @@ export function Tile(props: ITileProps){
             case TileType.RiverTurn: return RiverTurnArt;
             case TileType.RiverStraight: return RiverStraightArt;
             case TileType.LakeFull: return LakeFullArt;
-            case TileType.LakeHalfLand: return LakeHalfLandArt;
-            case TileType.LakeThreeLand: return LakeThreeLandArt;
+            case TileType.LakeThreeSides: return LakeThreeSidesArt;
+            case TileType.LakeTwoSides: return LakeTwoSidesArt;
+            case TileType.LakeOneSide: return LakeOneSideArt;
             case TileType.LakeRoad: return LakeRoadArt;
             case TileType.LakeRail: return LakeRailArt;
             case TileType.LakeRoadRail: return LakeRoadRail;

@@ -22,6 +22,17 @@ export class TileFactory{
             case TileType.SpecialAllRail: return new Tiles.SpecialAllRailTile(orientation, turn);
             case TileType.SpecialRoadRailAdjacent: return new Tiles.SpecialRoadRailAdjacentTile(orientation, turn);
             case TileType.SpecialRoadRailAcross: return new Tiles.SpecialRoadRailAcrossTile(orientation, turn);
+            case TileType.RiverStraight: return new Tiles.RiverStraightTile(orientation, turn);
+            case TileType.RiverTurn: return new Tiles.RiverTurnTile(orientation, turn);
+            case TileType.RiverRoadBridge: return new Tiles.RiverRoadBridgeTile(orientation, turn);
+            case TileType.RiverRailBridge: return new Tiles.RiverRailBridgeTile(orientation, turn);
+            case TileType.LakeThreeSides: return new Tiles.LakeThreeSidesTile(orientation, turn);
+            case TileType.LakeTwoSides: return new Tiles.LakeTwoSidesTile(orientation, turn);
+            case TileType.LakeOneSide: return new Tiles.LakeOneSideTile(orientation, turn);
+            case TileType.LakeRoad: return new Tiles.LakeRoadTile(orientation, turn);
+            case TileType.LakeRail: return new Tiles.LakeRailTile(orientation, turn);
+            case TileType.LakeRoadRail: return new Tiles.LakeRoadRailTile(orientation, turn);
+            default: throw new Error(`Tile type ${TileType[tileType]} not implemented`)
         }
     }
 

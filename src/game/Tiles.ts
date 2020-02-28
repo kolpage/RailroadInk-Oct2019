@@ -413,6 +413,186 @@ export class SpecialRoadRailAcrossTile extends PlayableBaseTile{
     }
 }
 
+/** Tile representing the piece with a straight river. */
+export class RiverStraightTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.river, Edge.empty, Edge.river, Edge.empty];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RiverStraight;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RVST";
+    }
+}
+
+/** Tile representing the piece with a turn river. */
+export class RiverTurnTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.river, Edge.river, Edge.empty, Edge.empty];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RiverTurn;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RVTN";
+    }
+}
+
+/** Tile representing the piece with a river and a road. */
+export class RiverRoadBridgeTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.river, Edge.road, Edge.river, Edge.road];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RiverRoadBridge;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RVRD";
+    }
+}
+
+/** Tile representing the piece with a river and a rail. */
+export class RiverRailBridgeTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.river, Edge.road, Edge.river, Edge.road];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.RiverRailBridge;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "RVRL";
+    }
+}
+
+/** Tile representing the piece with a lake on three sides. */
+export class LakeThreeSidesTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.lake, Edge.lake, Edge.empty, Edge.lake];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.LakeThreeSides;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "LAK3";
+    }
+}
+
+/** Tile representing the piece with a lake on two sides. */
+export class LakeTwoSidesTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.empty, Edge.lake, Edge.lake, Edge.empty];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.LakeTwoSides;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "LAK2";
+    }
+}
+
+/** Tile representing the piece with a lake on one side. */
+export class LakeOneSideTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.empty, Edge.empty, Edge.lake, Edge.empty];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.LakeOneSide;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "LAK1";
+    }
+}
+
+/** Tile representing the piece with a lake and a road. */
+export class LakeRoadTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.road, Edge.empty, Edge.lake, Edge.empty];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.LakeRoad;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "LKRD";
+    }
+}
+
+/** Tile representing the piece with a lake and a rail. */
+export class LakeRailTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.rail, Edge.empty, Edge.lake, Edge.empty];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.LakeRail;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "LKRL";
+    }
+}
+
+/** Tile representing the piece with a lake, a road, a rail, and a station. */
+export class LakeRoadRailTile extends PlayableBaseTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.rail, Edge.lake, Edge.lake, Edge.road];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.LakeRoadRail;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "LKDL";
+    }
+}
+
 /** Represents a rail exit tile that can be connected to */
 export class RailEdgeTile extends EdgeBaseTile{
     constructor(){

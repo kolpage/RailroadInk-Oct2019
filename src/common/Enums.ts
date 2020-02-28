@@ -53,12 +53,12 @@ export enum TileType{
     RiverRoadBridge,
     RiverRailBridge,
     LakeFull,
-    LakeHalfLand,
-    LakeThreeLand,
+    LakeThreeSides,
+    LakeTwoSides,
+    LakeOneSide,
     LakeRoad,
     LakeRail,
     LakeRoadRail
-
 }
 
 /** Matching statuses of edge checks */
