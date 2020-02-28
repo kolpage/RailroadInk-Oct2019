@@ -82,7 +82,7 @@ export function Tile(props: ITileProps){
     
     return (
         <div style={{width: 75, height: 75}}>
-            <img src={GetTileArt()} style={pixalStyle} />
+            <img src={GetTileArt()} style={pixalStyle} draggable={false}/>
         </div>
     );
 }
