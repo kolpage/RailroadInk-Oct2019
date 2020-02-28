@@ -125,6 +125,10 @@ export class EdgeBaseTile extends BaseTile{
     }
 }
 
+export class RiverExpansionTile extends PlayableBaseTile {};
+
+export class LakeExpansionTile extends PlayableBaseTile{};
+
 /** Tile representing the rail turn piece. */
 export class RailTurnTile extends PlayableBaseTile{
     constructor(orientation: Orientation, turn: number){
@@ -414,7 +418,7 @@ export class SpecialRoadRailAcrossTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a straight river. */
-export class RiverStraightTile extends PlayableBaseTile{
+export class RiverStraightTile extends RiverExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.river, Edge.empty, Edge.river, Edge.empty];
         super(initEdges, orientation, turn, true);
@@ -432,7 +436,7 @@ export class RiverStraightTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a turn river. */
-export class RiverTurnTile extends PlayableBaseTile{
+export class RiverTurnTile extends RiverExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.river, Edge.river, Edge.empty, Edge.empty];
         super(initEdges, orientation, turn, true);
@@ -450,7 +454,7 @@ export class RiverTurnTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a river and a road. */
-export class RiverRoadBridgeTile extends PlayableBaseTile{
+export class RiverRoadBridgeTile extends RiverExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.river, Edge.road, Edge.river, Edge.road];
         super(initEdges, orientation, turn, true);
@@ -468,9 +472,9 @@ export class RiverRoadBridgeTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a river and a rail. */
-export class RiverRailBridgeTile extends PlayableBaseTile{
+export class RiverRailBridgeTile extends RiverExpansionTile{
     constructor(orientation: Orientation, turn: number){
-        const initEdges: Edge[] = [Edge.river, Edge.road, Edge.river, Edge.road];
+        const initEdges: Edge[] = [Edge.river, Edge.rail, Edge.river, Edge.rail];
         super(initEdges, orientation, turn, true);
     }
 
@@ -486,7 +490,7 @@ export class RiverRailBridgeTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a lake on three sides. */
-export class LakeThreeSidesTile extends PlayableBaseTile{
+export class LakeThreeSidesTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.lake, Edge.lake, Edge.empty, Edge.lake];
         super(initEdges, orientation, turn, true);
@@ -504,7 +508,7 @@ export class LakeThreeSidesTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a lake on two sides. */
-export class LakeTwoSidesTile extends PlayableBaseTile{
+export class LakeTwoSidesTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.empty, Edge.lake, Edge.lake, Edge.empty];
         super(initEdges, orientation, turn, true);
@@ -522,7 +526,7 @@ export class LakeTwoSidesTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a lake on one side. */
-export class LakeOneSideTile extends PlayableBaseTile{
+export class LakeOneSideTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.empty, Edge.empty, Edge.lake, Edge.empty];
         super(initEdges, orientation, turn, true);
@@ -540,7 +544,7 @@ export class LakeOneSideTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a lake and a road. */
-export class LakeRoadTile extends PlayableBaseTile{
+export class LakeRoadTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.road, Edge.empty, Edge.lake, Edge.empty];
         super(initEdges, orientation, turn, true);
@@ -558,7 +562,7 @@ export class LakeRoadTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a lake and a rail. */
-export class LakeRailTile extends PlayableBaseTile{
+export class LakeRailTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.empty, Edge.lake, Edge.empty];
         super(initEdges, orientation, turn, true);
@@ -576,7 +580,7 @@ export class LakeRailTile extends PlayableBaseTile{
 }
 
 /** Tile representing the piece with a lake, a road, a rail, and a station. */
-export class LakeRoadRailTile extends PlayableBaseTile{
+export class LakeRoadRailTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.rail, Edge.lake, Edge.lake, Edge.road];
         super(initEdges, orientation, turn, true);
