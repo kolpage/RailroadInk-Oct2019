@@ -29,36 +29,36 @@ export enum Edge{
 /** The types of tiles that can be played */
 export enum TileType{
     Empty = -1,
-    RailEdge,
-    RoadEdge,
-    WallEdge,
-    RailTurn,
-    RailThreeWay,
-    RailStraight,
-    RoadTurn,
-    RoadThreeWay,
-    RoadStraight,
-    Overpass,
-    StationStraight,
-    StationTurn,
-    StationTurnMirror,
-    SpecialThreeRoadOneRail,
-    SpecialThreeRailOneRoad,
-    SpecialAllRoad,
-    SpecialAllRail,
-    SpecialRoadRailAdjacent,
-    SpecialRoadRailAcross,
-    RiverStraight,
-    RiverTurn,
-    RiverRoadBridge,
-    RiverRailBridge,
-    LakeFull,
-    LakeThreeSides,
-    LakeTwoSides,
-    LakeOneSide,
-    LakeRoad,
-    LakeRail,
-    LakeRoadRail
+    RailEdge,//0
+    RoadEdge,//1
+    WallEdge,//2
+    RailTurn,//3
+    RailThreeWay,//4
+    RailStraight,//5
+    RoadTurn,//6
+    RoadThreeWay,//7
+    RoadStraight,//8
+    Overpass,//9
+    StationStraight,//10
+    StationTurn,//11
+    StationTurnMirror,//12
+    SpecialThreeRoadOneRail,//13
+    SpecialThreeRailOneRoad,//14
+    SpecialAllRoad,//15
+    SpecialAllRail,//16
+    SpecialRoadRailAdjacent,//17
+    SpecialRoadRailAcross,//18
+    RiverStraight,//19
+    RiverTurn,//20
+    RiverRoadBridge,//21
+    RiverRailBridge,//22
+    LakeFull,//23
+    LakeThreeSides,//24
+    LakeTwoSides,//25
+    LakeOneSide,//26
+    LakeRoad,//27
+    LakeRail,//28
+    LakeRoadRail//29
 }
 
 /** Matching statuses of edge checks */

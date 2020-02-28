@@ -1,6 +1,6 @@
 import { TileType, TilePlacementResult } from "../common/Enums";
 import { Move } from "./Move";
-import { PlayableBaseTile, BaseTile } from "./tiles";
+import { PlayableBaseTile, BaseTile, RiverExpansionTile, LakeExpansionTile } from "./tiles";
 import { Board } from "./Board";
 import { SpecialTileTracker } from "../common/SpecialTileTracker";
 import { TileContinuityValidator } from "./TileVisitor";
@@ -166,6 +166,9 @@ export class BaseTurn{
         for(let moveIndex = 0; moveIndex < this.playedTiles.length; moveIndex++){
             const move = this.playedTiles[moveIndex];
             const tile = move.GetTile();
+            if(!this.doesTileHaveToBePlayed(tile)){
+                continue;
+            }
             if(this.doesTileHaveToBeConnected(tile.GetTileType())){
                 const isContinuous = this.tileContinuityValidator.Validate(tile);
                 if(!isContinuous){
@@ -174,6 +177,13 @@ export class BaseTurn{
             }
         }
         return invalidMoveIndices;
+    }
+
+    private doesTileHaveToBePlayed(tile: BaseTile): boolean{
+        if(tile instanceof RiverExpansionTile || tile instanceof LakeExpansionTile){
+            return false;
+        }
+        return true;
     }
 
     /** Gets all the dice rolled for this turn. */
