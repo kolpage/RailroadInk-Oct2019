@@ -23,18 +23,14 @@ interface ISquareProps {
 export function Square(props: ISquareProps) {
     function playSelectedTile() {
         if(canSqaureBeUpdted()) {
-            // TODO: this use to not be actully calling this function so may cause problems
-            if(!isSquareEmpty()){
-                removeTile();
-            }
             props.playSquare(props.move);
-
             return true;
         }
         return false;
     }
 
     function removeTile() {
+        console.log("remove tile")
         props.clearSquare(props.move);
     }
 
