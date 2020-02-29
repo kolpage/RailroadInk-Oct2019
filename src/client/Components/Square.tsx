@@ -30,7 +30,6 @@ export function Square(props: ISquareProps) {
     }
 
     function removeTile() {
-        console.log("remove tile")
         props.clearSquare(props.move);
     }
 
