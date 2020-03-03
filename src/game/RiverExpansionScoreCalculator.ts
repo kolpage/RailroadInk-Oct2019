@@ -1,5 +1,6 @@
 import { BaseScoreCalculator } from "./BaseScoreCalculator";
 import { Board } from "./Board";
+import { BestScoringRiverDetector } from "./LongestPathDetector";
 
 export class RiverExpansionScoreCalculator extends BaseScoreCalculator{
     constructor(){
@@ -14,6 +15,7 @@ export class RiverExpansionScoreCalculator extends BaseScoreCalculator{
 
     /** Scores the expansion points. */
     private scoreExpansionPoints(){
-        this.expansionScore = 0;
+        const bestScoringRiverDetector = new BestScoringRiverDetector(this.board);
+        this.expansionScore = bestScoringRiverDetector.Score();
     }
 }

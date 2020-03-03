@@ -34,6 +34,9 @@ import { PositionValidatorTests } from './test/PositionValidatorTests';
 import { StandardGameTests } from './test/StandardGameTests';
 import { BaseGame } from './game/BaseGame';
 import { GameServices } from './game/GameServices';
+import { BestScoringRiverDetector } from './game/LongestPathDetector';
+import { Board } from './game/Board';
+import { TileFactory } from './game/TileFactory';
 const windowStateKeeper = require('electron-window-state');
 
 function createWindowWithState() {
@@ -79,3 +82,4 @@ app.on('ready', createWindowWithState);
 //Test.TurnTest_ValidTilePlacement();
 //Test.TurnTest_InvalidTilePlacement_PuttingStationInBackwards();
 //Test.TurnTest_ValidButStupidPlacement_PuttingStationInWithEmptySidesTouching();
+//var riverTest = new BestScoringRiverDetector(new Board(7, 7, new TileFactory()));
