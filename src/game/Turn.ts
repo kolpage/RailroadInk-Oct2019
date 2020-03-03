@@ -31,9 +31,10 @@ export class BaseTurn{
         this.diceToPlay = [];
         this.playedTiles = [];
         for(const rolledDie of rolledDice){
+            const requiredToBePlayed = this.doesDieHaveToBePlayed(rolledDie);
             this.diceToPlay.push({
                 tileType: rolledDie,
-                required: true,
+                required: requiredToBePlayed,
                 played: false
             });
         }
@@ -157,19 +158,22 @@ export class BaseTurn{
         }
     }
 
-    protected doesTileHaveToBeConnected(tileType: TileType): boolean{
+    protected doesTileHaveToBeConnected(tile: BaseTile): boolean{
+        if(tile instanceof RiverExpansionTile || tile instanceof LakeExpansionTile){
+            return false;
+        }
         return true;
     }
 
+    /** Returns the tiles that are disconnected but need to be connected. 
+     *  This will not return tiles that are disconnected and don't need to be connected.
+     */
     public GetDisconnectedTiles(): number[]{
         const invalidMoveIndices: number[] = [];
         for(let moveIndex = 0; moveIndex < this.playedTiles.length; moveIndex++){
             const move = this.playedTiles[moveIndex];
             const tile = move.GetTile();
-            if(!this.doesTileHaveToBePlayed(tile)){
-                continue;
-            }
-            if(this.doesTileHaveToBeConnected(tile.GetTileType())){
+            if(this.doesTileHaveToBeConnected(tile)){
                 const isContinuous = this.tileContinuityValidator.Validate(tile);
                 if(!isContinuous){
                     invalidMoveIndices.push(moveIndex);
@@ -179,11 +183,23 @@ export class BaseTurn{
         return invalidMoveIndices;
     }
 
-    private doesTileHaveToBePlayed(tile: BaseTile): boolean{
-        if(tile instanceof RiverExpansionTile || tile instanceof LakeExpansionTile){
-            return false;
+    private doesDieHaveToBePlayed(tile: TileType): boolean{
+        switch(tile){
+            case TileType.RiverStraight:
+            case TileType.RiverTurn:
+            case TileType.RiverRailBridge:
+            case TileType.RiverRoadBridge:
+            case TileType.LakeFull:
+            case TileType.LakeThreeSides:
+            case TileType.LakeTwoSides:
+            case TileType.LakeOneSide:
+            case TileType.LakeRoad:
+            case TileType.LakeRail:
+            case TileType.LakeRoadRail:
+                return false;
+            default:
+                return true;
         }
-        return true;
     }
 
     /** Gets all the dice rolled for this turn. */

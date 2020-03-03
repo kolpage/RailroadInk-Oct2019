@@ -8,7 +8,7 @@ import { LongestRoadDetector, LongestRailDetector } from "./LongestPathDetector"
 
 export class BaseScoreCalculator{
     
-    private board: Board;
+    protected board: Board;
     private finalScore: ScoreDTO;
     private exitScore: number = 0;
     private longestRailScore: number = 0;
@@ -81,7 +81,7 @@ export class BaseScoreCalculator{
      */
     private scoreLongestRoadPoints(): void{
         const longestRoadDetector = new LongestRoadDetector(this.board);
-        this.longestRoadScore = longestRoadDetector.GetLongestPath();
+        this.longestRoadScore = longestRoadDetector.Score();
     }
 
     /** 
@@ -89,7 +89,7 @@ export class BaseScoreCalculator{
      */
     private scoreLongestRailPoints(): void{
         const longestRailDetector = new LongestRailDetector(this.board);
-        this.longestRailScore = longestRailDetector.GetLongestPath();
+        this.longestRailScore = longestRailDetector.Score();
     }
 
     /**

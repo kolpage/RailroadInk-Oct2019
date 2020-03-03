@@ -43,10 +43,12 @@ export class Board{
         this.setBoardEdges();
     }
 
+    /** Returns a list of all exit tiles */
     public GetExits(): EdgeBaseTile[]{
         return this.exits;
     }
 
+    /** Returns all tiles of the specified type */
     public GetTilesOfType(edge: Edge){
         switch(edge){
             case Edge.road: return this.roads;
@@ -54,6 +56,16 @@ export class Board{
             case Edge.river: return this.rivers;
         }
         return [];
+    }
+
+    /** Gets the tile by tile id */
+    public GetTileById(id: string): BaseTile | undefined{
+        let tile;
+        const tileLocation = this.tileIndex[id];
+        if(tileLocation !== undefined){
+            tile = this.board[tileLocation.row][tileLocation.column];
+        }
+        return tile;
     }
 
     /**
