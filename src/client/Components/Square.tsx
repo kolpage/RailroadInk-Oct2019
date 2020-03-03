@@ -73,7 +73,7 @@ export function Square(props: ISquareProps) {
         var data = e.dataTransfer.getData("text/move");
         if(data){
             const sourceMove = CreateMoveFromJSON(JSON.parse(data));
-            if(!sourceMove.IsMoveAtSamePosition(props.move) && sourceMove.TilePlayed.TurnPlayed < props.currentTurnNumber){
+            if(!sourceMove.IsMoveAtSamePosition(props.move) && sourceMove.TilePlayed.TurnPlayed === props.currentTurnNumber){
                 props.transferMove(sourceMove, props.move);
             }
             
