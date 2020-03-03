@@ -11,6 +11,7 @@ import { Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
 import ScoreCard from './ScoreCard';
 import { GameType } from '../../common/Enums';
+import { IsLakeTile } from '../../common/TileDefinition';
 
 interface IBoardProps{
     gameBoard: GameBoard;
@@ -50,7 +51,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         this.removeMoveFromBoard = this.removeMoveFromBoard.bind(this);
         this.advanceTurn = this.advanceTurn.bind(this);
         this.updateRolledDice = this.updateRolledDice.bind(this);
-        this.canAdvanceTurn = this.canAdvanceTurn.bind(this);
         this.initalizeBoard = this.initalizeBoard.bind(this);
         this.setupNextTurn = this.setupNextTurn.bind(this);
         this.showInvalidMoves = this.showInvalidMoves.bind(this);
@@ -107,6 +107,10 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
             if (this.isSpecialTile(move.TilePlayed)) {
                 move.TilePlayed.TurnPlayed = this.state.gameTurn.TurnNumber;
                 this.updateSpecialDiceForMove(move);
+            }
+
+            if(IsLakeTile(move.TilePlayed.Type)){
+                
             }
 
             this.setState({gameBoard: updatedBoard, gameTurn: currentTurn, selectedDice: new GameDice()});   
@@ -185,12 +189,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
        if (!this.isSpecialDice(dice) || (this.isSpecialDice(dice) && this.canPlaySpecialDice())) {
             this.setState({selectedDice: dice});
         }
-    }
-
-    private canAdvanceTurn(){
-        // TODO: Allow for debug mode to roll dice whenever
-        // FUTURE: This check will need to be update when there are optional dice to play or a different number of moves 
-        return this.state.rolledDice.every((dice) => dice.Played);
     }
 
     private isSpecialDice(dice: GameDice){
