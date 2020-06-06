@@ -2,7 +2,9 @@ import * as React from 'react';
 import '../styles/square.scss';
 import { Tile } from './Tile';
 import { Move, CreateMoveFromJSON } from '../Models/GameTurn';
-import { TilePlacementResult } from '../../common/Enums';
+import { TilePlacementResult, Orientation, TileType } from '../../common/Enums';
+import { ITile, GameTile } from '../Models/GameTile';
+import { CanTileFlood } from '../Utility Functions/LakeValidation';
 
 const RefreshArrowIcon = require("../Assests/RefreshArrow.png")
 const RemoveIcon = require("../Assests/RemoveCrop.png")
@@ -18,9 +20,15 @@ interface ISquareProps {
     clearSquare: (move: Move) => void;
     mirrorSquare: (move: Move) => void;
     transferMove: (srcMove: Move, destMove: Move) => void;
+    getSurroundingSquares: (row: number, column: number) => ITile[];
+    makeSquareFlood: (monve: Move) => void;
 }
 
 export function Square(props: ISquareProps) {
+    React.useEffect(() => {
+        //isSquareFlooded();
+    });
+    
     function playSelectedTile() {
         if(canSqaureBeUpdted()) {
             props.playSquare(props.move);
@@ -54,11 +62,27 @@ export function Square(props: ISquareProps) {
     }
 
     function isSquareActive() {
-        return canSqaureBeUpdted() && !isSquareEmpty();
+        return canSqaureBeUpdted() && !isSquareEmpty() && isSquareInteractive();
     }
 
     function isSquareEmpty() {
         return props.move.TilePlayed.IsTileEmpty();
+    }
+
+    function isSquareInteractive(){
+        //TODO: This logic should live here
+        return props.move.TilePlayed.Type != TileType.LakeFull;
+    }
+
+    function isSquareFlooded() {
+        let surroundingSquares = props.getSurroundingSquares(props.move.RowPosition, props.move.ColumnPosition);
+        surroundingSquares = surroundingSquares.map(square => square || new GameTile())
+
+        const shouldTileFlood = CanTileFlood(props.move.TilePlayed, surroundingSquares[Orientation.up], surroundingSquares[Orientation.right], surroundingSquares[Orientation.down], surroundingSquares[Orientation.left]);
+
+        if(shouldTileFlood){
+            props.makeSquareFlood(props.move);
+        }
     }
 
     //#region Drag & drop handlers
@@ -85,6 +109,7 @@ export function Square(props: ISquareProps) {
 
     function handleDragStart(e) {
         const move = JSON.stringify(props.move);
+        e.target.className = '';
         e.dataTransfer.setData("text/move", move);
     }
 

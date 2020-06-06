@@ -5,11 +5,13 @@ import { Board } from './Components/Board';
 import StartMenu from './Components/StartMenu';
 import { GetBoard } from './GameServices';
 import { GameType } from '../common/Enums';
+import { GameBoard } from './Models/GameBoard';
 
 function PlayArea(){
     const [gameStarted, setGameStarted] = React.useState(false);
     const [gameSeed, setGameSeed] = React.useState(null);
     const [gameType, setGameType] = React.useState(GameType.Base);
+    const [gameBoard, setGameBoard] = React.useState(new GameBoard(7,7));
 
     function startGame(gameType: GameType, seed:string){
         setGameSeed(seed);
@@ -19,7 +21,7 @@ function PlayArea(){
 
     function showScreen(){
         if(gameStarted){
-            return <Board key="board" gameBoard={GetBoard()} gameType={gameType} seed={gameSeed} />;
+            return <Board key="board" gameBoard={gameBoard} gameType={gameType} seed={gameSeed} />;
         }else{
             return <StartMenu startGame={startGame}/>
         }
