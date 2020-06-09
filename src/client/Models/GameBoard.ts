@@ -2,7 +2,6 @@ import { Move } from "./GameTurn";
 import { IGameTile, GameTile } from "./GameTile";
 import { TileType, Orientation } from "../../common/Enums";
 import { CanTileFlood, IsLakeTile } from "../Utility Functions/LakeValidation";
-import { Board } from "../../game/Board";
 
 export class GameBoard {
     public readonly numberOfColumns: number;
@@ -101,7 +100,7 @@ export class GameBoard {
         const bottomTile = this.GetBoardTile(col, row+1);
         const leftTile = this.GetBoardTile(col-1, row);
         if(CanTileFlood(tile.gameTile, topTile.gameTile, rightTile.gameTile, bottomTile.gameTile, leftTile.gameTile)){
-            const floodedTile = new GameTile(TileType.LakeFull, Orientation.up); // TODO: Don't hack in a turn number to prevent 'x' icon from showing on square
+            const floodedTile = new GameTile(TileType.LakeFull, Orientation.up);
             this.setTile(floodedTile, col, row);
             this.checkForFlooding(this.GetBoardTile(col, row));
         }
