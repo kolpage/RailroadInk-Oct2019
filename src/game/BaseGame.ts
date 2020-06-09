@@ -8,7 +8,7 @@ import { TurnResponseDTO } from "../common/DTO/TurnResponseDTO";
 import { InvalidMoveResponseDTO } from "../common/DTO/InvalidMoveResponseDTO";
 import { SpecialTileTracker } from "../common/SpecialTileTracker";
 import { BaseScoreCalculator } from "./BaseScoreCalculator";
-import { BaseTile } from "./tiles";
+import { BaseTile, PlayableBaseTile } from "./tiles";
 import { Move } from "./Move";
 import { ScoreDTO } from "../common/DTO/ScoreDTO";
 
@@ -19,7 +19,7 @@ export class BaseGame {
     private currentTurn: BaseTurn | undefined;
     private previousTurns: BaseTurn[];
     private specialTileTracker: SpecialTileTracker;
-    private board: Board;
+    protected board: Board;
     private scoreCalc: BaseScoreCalculator;
     private dicePool: BaseDicePool;
     private tileFactory: TileFactory;
@@ -92,7 +92,7 @@ export class BaseGame {
         return tile;
     }
 
-
+    
     private attemptToMakeMoves(moves: MoveDTO[], moveIssues: InvalidMoveResponseDTO[], turnIssues: TurnInvalidReason[]): void{
         if(this.isActiveTurn()){
             //Try placing all tiles. Verify placement allowed based on neighboring tiles.
@@ -103,8 +103,10 @@ export class BaseGame {
                 if(tilePlacementResult !== TilePlacementResult.valid){
                     moveIssues.push(new InvalidMoveResponseDTO(i, move, tilePlacementResult));
                 }
+                
+                this.afterMoveAction(moves, i, tile, tilePlacementResult);
             }
-
+            
             //Verify all tiles placed are connected to existing board elements
             const disconnectedTiles: number[] = this.currentTurn.GetDisconnectedTiles();
             if(disconnectedTiles.length > 0){
@@ -113,26 +115,28 @@ export class BaseGame {
                     const move: MoveDTO = moves[moveIndex];
                     moveIssues.push(
                         new InvalidMoveResponseDTO(moveIndex, move, TilePlacementResult.tileNotConnected)
-                    );
-                 }
-            }
-
-            //Verify all required tiles have been played.
-            if(!this.currentTurn.CanTurnBeDone()){
-                const unplayedDice = this.currentTurn.GetRequiredDiceToPlay();
-                for(const die of unplayedDice){
-                    if(this.board.IsTilePlayable(die)){
-                        turnIssues.push(TurnInvalidReason.requiredDiceNotPlayed);
-                        break;
+                        );
+                    }
+                }
+                
+                //Verify all required tiles have been played.
+                if(!this.currentTurn.CanTurnBeDone()){
+                    const unplayedDice = this.currentTurn.GetRequiredDiceToPlay();
+                    for(const die of unplayedDice){
+                        if(this.board.IsTilePlayable(die)){
+                            turnIssues.push(TurnInvalidReason.requiredDiceNotPlayed);
+                            break;
+                        }
                     }
                 }
             }
+            else{
+                turnIssues.push(TurnInvalidReason.noActiveTurns);
+            }
         }
-        else{
-            turnIssues.push(TurnInvalidReason.noActiveTurns);
-        }
-    }
-
+        
+    protected afterMoveAction(moves: MoveDTO[], currentMoveIndex: number, tile: PlayableBaseTile, tilePlacementResult: TilePlacementResult): void{ }
+    
     /**
      * Returns true if there is an active turn moves can be played to.
      */
