@@ -15,6 +15,7 @@ interface IGridProps {
     updateMoveOnBoard: (move: Move) => void;
     clearMoveOnBoard: (move: Move) => void;
     transferMove: (srcMove: Move, destMove: Move) => void;
+    playFloodMove: (move: Move) => void;
 }
 
 export default function Grid(props:IGridProps){
@@ -36,10 +37,19 @@ export default function Grid(props:IGridProps){
         props.updateMoveOnBoard(move);
     }
 
+    function getSurroundingSquares(row: number, column: number){
+        const topTile = props.gameBoard.GetTile(column, row-1);
+        const rightTile = props.gameBoard.GetTile(column+1, row);
+        const bottomTile = props.gameBoard.GetTile(column, row+1);
+        const leftTile = props.gameBoard.GetTile(column-1, row);
+
+        return [topTile, rightTile, bottomTile, leftTile];
+    }
+
     function buildPlayAreaGrid() {
         let board = [];
 
-        for (var currentRow = 0; currentRow < props.gameBoard.numberOrRows; currentRow++) {
+        for (var currentRow = 0; currentRow < props.gameBoard.numberOfRows; currentRow++) {
             board.push(createRow(currentRow, props.gameBoard.numberOfColumns));
         }
 
@@ -49,7 +59,7 @@ export default function Grid(props:IGridProps){
     function getInnerSquareBoardStyles(row: number, column: number){
         let styles = [];
         let totalColumns = props.gameBoard.numberOfColumns;
-        let totalRows = props.gameBoard.numberOrRows;
+        let totalRows = props.gameBoard.numberOfRows;
 
         if(row === 2 && column > 1 && column < totalColumns-2){
             styles.push("innerTop");
@@ -89,6 +99,8 @@ export default function Grid(props:IGridProps){
                         currentTurnNumber={props.gameTurn.TurnNumber} 
                         isGameOver={props.gameTurn.IsGameOver}
                         addtionalStyles={getInnerSquareBoardStyles(rowPosition, currentColumn)}
+                        getSurroundingSquares={getSurroundingSquares}
+                        makeSquareFlood={props.playFloodMove}
                         key={cellKey} 
                     />);
         }

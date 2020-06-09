@@ -10,8 +10,7 @@ import { GameBoard } from '../Models/GameBoard';
 import { Move, GameTurn } from '../Models/GameTurn';
 import { IGameTile } from '../Models/GameTile';
 import ScoreCard from './ScoreCard';
-import { GameType } from '../../common/Enums';
-import { IsLakeTile } from '../../common/TileDefinition';
+import { GameType, TileType } from '../../common/Enums';
 
 interface IBoardProps{
     gameBoard: GameBoard;
@@ -54,6 +53,7 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         this.initalizeBoard = this.initalizeBoard.bind(this);
         this.setupNextTurn = this.setupNextTurn.bind(this);
         this.showInvalidMoves = this.showInvalidMoves.bind(this);
+        this.transferMove = this.transferMove.bind(this);
     }
 
     initalizeBoard(startingTurn: GameTurn){
@@ -86,6 +86,15 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
         this.setState({rolledDice: gameDice});
     }
 
+    private updateBoardWithFloodMove(move: Move){
+        // TODO: Next line violates demeters law
+        move.TilePlayed.Type = TileType.LakeFull;
+        
+        let updatedBoard = this.state.gameBoard;
+        updatedBoard.MakeMove(move);
+        this.setState({gameBoard: updatedBoard});
+    }
+
     private playSelectedDice(move: Move){
         if (!this.state.selectedDice.IsEmpty()){
             let currentTurn = this.state.gameTurn;
@@ -107,10 +116,6 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
             if (this.isSpecialTile(move.TilePlayed)) {
                 move.TilePlayed.TurnPlayed = this.state.gameTurn.TurnNumber;
                 this.updateSpecialDiceForMove(move);
-            }
-
-            if(IsLakeTile(move.TilePlayed.Type)){
-                
             }
 
             this.setState({gameBoard: updatedBoard, gameTurn: currentTurn, selectedDice: new GameDice()});   
@@ -236,7 +241,8 @@ export class Board extends React.Component<IBoardProps, IBoardState>{
                         addMoveToBoard={this.playSelectedDice} 
                         updateMoveOnBoard={this.updateMoveOnBoard} 
                         clearMoveOnBoard={this.removeMoveFromBoard} 
-                        transferMove={this.transferMove.bind(this)}
+                        transferMove={this.transferMove}
+                        playFloodMove={this.updateBoardWithFloodMove.bind(this)}
                     />
                 </div>
             </div>
