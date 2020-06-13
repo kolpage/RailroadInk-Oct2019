@@ -32,6 +32,7 @@ export class TileFactory{
             case TileType.LakeRoad: return new Tiles.LakeRoadTile(orientation, turn);
             case TileType.LakeRail: return new Tiles.LakeRailTile(orientation, turn);
             case TileType.LakeRoadRail: return new Tiles.LakeRoadRailTile(orientation, turn);
+            case TileType.LakeFull: return new Tiles.LakeFull(orientation, turn);
             default: throw new Error(`Tile type ${TileType[tileType]} not implemented`)
         }
     }
