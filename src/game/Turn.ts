@@ -121,6 +121,9 @@ export class BaseTurn{
         if(tile === TileType.StationTurnMirror){
             tile = TileType.StationTurn;
         }
+        if(tile === TileType.LakeRoadRailMirror){
+            tile = TileType.LakeRoadRail;
+        }
         if(tile === TileType.LakeFull){
             return;
         }

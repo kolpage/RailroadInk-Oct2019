@@ -614,6 +614,23 @@ export class LakeRoadRailTile extends LakeExpansionTile{
     }
 }
 
+export class LakeRoadRailMirrorTile extends LakeExpansionTile{
+    constructor(orientation: Orientation, turn: number){
+        const initEdges: Edge[] = [Edge.road, Edge.lake, Edge.lake, Edge.lake];
+        super(initEdges, orientation, turn, true);
+    }
+
+    /** Gets the enum associated with this tile. */
+    public GetTileType(): TileType | undefined{
+        return TileType.LakeRoadRailMirror;
+    }
+
+    /** For debug only */
+    public GetAbbrName(): string{
+        return "LKMR";
+    }
+}
+
 /** Represents a rail exit tile that can be connected to */
 export class RailEdgeTile extends EdgeBaseTile{
     constructor(){
