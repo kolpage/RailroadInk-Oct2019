@@ -88,7 +88,7 @@ export class LakeExpansionGame extends BaseGame{
 
     private floodTile(location: ITileLocation, moves: MoveDTO[], currentMoveIndex: number): void{
         const floodMove = new MoveDTO(TileType.LakeFull, Orientation.up, location.row, location.column);
-        moves.splice(currentMoveIndex, 0, floodMove);
+        moves.splice(currentMoveIndex + 1, 0, floodMove);
     }
 
     private checkForFlood(location: ITileLocation): boolean{
