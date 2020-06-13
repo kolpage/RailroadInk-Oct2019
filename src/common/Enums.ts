@@ -58,7 +58,8 @@ export enum TileType{
     LakeOneSide,//26
     LakeRoad,//27
     LakeRail,//28
-    LakeRoadRail//29
+    LakeRoadRail,//29
+    LakeRoadRailMirror//30
 }
 
 /** Matching statuses of edge checks */
