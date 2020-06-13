@@ -1,9 +1,10 @@
 import { TileType, TilePlacementResult } from "../common/Enums";
 import { Move } from "./Move";
-import { PlayableBaseTile, BaseTile, RiverExpansionTile, LakeExpansionTile } from "./tiles";
+import { PlayableBaseTile, BaseTile, RiverExpansionTile, LakeExpansionTile, LakeFull } from "./tiles";
 import { Board } from "./Board";
 import { SpecialTileTracker } from "../common/SpecialTileTracker";
 import { TileContinuityValidator } from "./TileVisitor";
+import { Tile } from "../client/Components/Tile";
 
 export interface IPlayableDice{
     tileType: TileType,
@@ -120,6 +121,9 @@ export class BaseTurn{
         if(tile === TileType.StationTurnMirror){
             tile = TileType.StationTurn;
         }
+        if(tile === TileType.LakeFull){
+            return;
+        }
         
         const die = this.diceToPlay.find(die => die.tileType === tile && !die.played);
         if(die){
@@ -136,6 +140,9 @@ export class BaseTurn{
      * @param tile The tile to see if available.
      */
     private isTileAvailable(tile: TileType): boolean{
+        if(tile === TileType.LakeFull){
+            return true;
+        }
         tile = this.convertMirroredTile(tile);
 
         let isDieAvailable = this.diceToPlay.some(die => die.tileType === tile && !die.played);
