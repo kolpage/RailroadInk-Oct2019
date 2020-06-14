@@ -579,23 +579,6 @@ export class LakeRailTile extends LakeExpansionTile{
     }
 }
 
-export class LakeFull extends LakeExpansionTile{
-    constructor(orientation: Orientation, turn: number){
-        const initEdges: Edge[] = [Edge.lake, Edge.lake, Edge.lake, Edge.lake];
-        super(initEdges, orientation, turn, true);
-    }
-
-    /** Gets the enum associated with this tile. */
-    public GetTileType(): TileType | undefined{
-        return TileType.LakeFull;
-    }
-
-    /** For debug only */
-    public GetAbbrName(): string{
-        return "LKFL";
-    }
-}
-
 /** Tile representing the piece with a lake, a road, a rail, and a station. */
 export class LakeRoadRailTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
@@ -611,23 +594,6 @@ export class LakeRoadRailTile extends LakeExpansionTile{
     /** For debug only */
     public GetAbbrName(): string{
         return "LKDL";
-    }
-}
-
-export class LakeRoadRailMirrorTile extends LakeExpansionTile{
-    constructor(orientation: Orientation, turn: number){
-        const initEdges: Edge[] = [Edge.road, Edge.lake, Edge.lake, Edge.lake];
-        super(initEdges, orientation, turn, true);
-    }
-
-    /** Gets the enum associated with this tile. */
-    public GetTileType(): TileType | undefined{
-        return TileType.LakeRoadRailMirror;
-    }
-
-    /** For debug only */
-    public GetAbbrName(): string{
-        return "LKMR";
     }
 }
 

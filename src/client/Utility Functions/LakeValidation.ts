@@ -47,14 +47,9 @@ export function CanTileFlood(centerTile: ITile, topTile: ITile, rightTile: ITile
     const BottomTileIsEmpty = IsSideEmpty(Orientation.up, bottomTile);
     const LeftTileIsEmpty = IsSideEmpty(Orientation.right, leftTile);
 
-    
-
     const oneSideIsEmpty = [TopTileIsEmpty, RightTileIsEmpty, BottomTileIsEmpty, LeftTileIsEmpty].filter(Boolean).length == 1;
     const threeSidesAreLake = [TopTileIsLake, RightTileIsLake, BottomTileIsLake, LeftTileIsLake].filter(Boolean).length == 3;
     const allSidesAreLake = [TopTileIsLake, RightTileIsLake, BottomTileIsLake, LeftTileIsLake].filter(Boolean).length == 4;
-
-    console.log(`one side is empty: ${oneSideIsEmpty}, three sides are lake: ${threeSidesAreLake}, allSidesAreLake: ${allSidesAreLake}`)
-    console.log(`Are sides empty - TopTile: ${TopTileIsEmpty} , RightTile: ${RightTileIsEmpty}, BottomTile: ${BottomTileIsEmpty}, LeftTile: ${LeftTileIsEmpty}`);
 
     return allSidesAreLake || (oneSideIsEmpty && threeSidesAreLake);
 }
