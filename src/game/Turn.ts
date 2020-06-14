@@ -163,6 +163,8 @@ export class BaseTurn{
         switch(tile){
             case TileType.StationTurnMirror:
                 return TileType.StationTurn;
+            case TileType.LakeRoadRailMirror:
+                return TileType.LakeRoadRail;
             default:
                 return tile;
         }

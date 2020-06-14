@@ -34,7 +34,7 @@ export function GetSidesForTileType(tileType: TileType){
         case TileType.LakeRoad: return [Edge.road, Edge.empty, Edge.lake, Edge.empty];
         case TileType.LakeRail: return [Edge.rail, Edge.empty, Edge.lake, Edge.empty];
         case TileType.LakeRoadRail: return [Edge.rail, Edge.lake, Edge.lake, Edge.road]; 
-        case TileType.LakeRoadRail: return [Edge.road, Edge.lake, Edge.lake, Edge.rail]; 
+        case TileType.LakeRoadRailMirror: return [Edge.road, Edge.lake, Edge.lake, Edge.rail]; 
         default: return [Edge.empty, Edge.empty, Edge.empty, Edge.empty];
     }
 }

@@ -616,7 +616,7 @@ export class LakeRoadRailTile extends LakeExpansionTile{
 
 export class LakeRoadRailMirrorTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
-        const initEdges: Edge[] = [Edge.road, Edge.lake, Edge.lake, Edge.lake];
+        const initEdges: Edge[] = [Edge.road, Edge.lake, Edge.lake, Edge.rail];
         super(initEdges, orientation, turn, true);
     }
 
