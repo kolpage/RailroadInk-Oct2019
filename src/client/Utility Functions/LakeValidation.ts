@@ -8,8 +8,13 @@ export function AreBothTypesLake(tileTypeA: TileType, tileTypeB: TileType) {
     return IsLakeTile(tileTypeA) && IsLakeTile(tileTypeB);
 }
 
+// TODO: Duplicate logic that should be combined
 export function IsSideLake(side: Orientation, gameTile: ITile){
     return GetSideForTileAtOrientation(side, gameTile.Type, gameTile.TileOrientation) === Edge.lake;
+}
+
+export function IsSideEmpty(side: Orientation, gameTile: ITile){
+    return GetSideForTileAtOrientation(side, gameTile.Type, gameTile.TileOrientation) === Edge.empty;
 }
 
 export function IsLakeTile(tileType: TileType){
@@ -37,5 +42,21 @@ export function CanTileFlood(centerTile: ITile, topTile: ITile, rightTile: ITile
     const BottomTileIsLake = IsSideLake(Orientation.up, bottomTile);
     const LeftTileIsLake = IsSideLake(Orientation.right, leftTile);
 
-    return [TopTileIsLake, RightTileIsLake, BottomTileIsLake, LeftTileIsLake].filter(Boolean).length >= 3;
+    const TopTileIsEmpty = IsSideEmpty(Orientation.down, topTile);
+    const RightTileIsEmpty = IsSideEmpty(Orientation.left, rightTile);
+    const BottomTileIsEmpty = IsSideEmpty(Orientation.up, bottomTile);
+    const LeftTileIsEmpty = IsSideEmpty(Orientation.right, leftTile);
+
+    
+
+    const oneSideIsEmpty = [TopTileIsEmpty, RightTileIsEmpty, BottomTileIsEmpty, LeftTileIsEmpty].filter(Boolean).length == 1;
+    const threeSidesAreLake = [TopTileIsLake, RightTileIsLake, BottomTileIsLake, LeftTileIsLake].filter(Boolean).length == 3;
+    const allSidesAreLake = [TopTileIsLake, RightTileIsLake, BottomTileIsLake, LeftTileIsLake].filter(Boolean).length == 4;
+
+    console.log(`one side is empty: ${oneSideIsEmpty}, three sides are lake: ${threeSidesAreLake}, allSidesAreLake: ${allSidesAreLake}`)
+    console.log(`Are sides empty - TopTile: ${TopTileIsEmpty} , RightTile: ${RightTileIsEmpty}, BottomTile: ${BottomTileIsEmpty}, LeftTile: ${LeftTileIsEmpty}`);
+
+    return allSidesAreLake || (oneSideIsEmpty && threeSidesAreLake);
 }
+
+

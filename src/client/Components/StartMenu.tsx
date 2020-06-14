@@ -6,22 +6,26 @@ const TrainImg = require("../Assests/Train.png")
 const CarImg = require("../Assests/Car.png")
 
 interface IStartMenuPros{
-    startGame: (gameType: GameType, seed: string) => void;
+    startGame: (gameType: GameType, seed: string, useClassicArt) => void;
 }
 
 export default function StartMenu(props: IStartMenuPros){
     const [seed, setSeed] = React.useState("");
     
+    function startClassicArtGameClick(){
+        props.startGame(GameType.Base, seed, true);
+    }
+
     function startGameClicked(){
-        props.startGame(GameType.Base, seed);
+        props.startGame(GameType.Base, seed, false);
     }
 
     function startRiverGameClicked(){
-        props.startGame(GameType.River, seed);
+        props.startGame(GameType.River, seed, false);
     }
 
     function startLakeGameClicked(){
-        props.startGame(GameType.Lake, seed);
+        props.startGame(GameType.Lake, seed, false);
     }
 
     function handleSeedChange(e){
@@ -35,7 +39,8 @@ export default function StartMenu(props: IStartMenuPros){
                 <figure><img src={TrainImg} className='trainImg' /></figure>
                 {/*<figure><img src={CarImg} className='carImg' /></figure>*/}
             </div>
-            <button className="startButton" onClick={startGameClicked}>Start Standar Game</button>
+            {/*<button className="startButton" onClick={startGameClicked}>Start Classic Art Game</button>*/}
+            <button className="startButton" onClick={startGameClicked}>Start Standard Game</button>
             <button className="startButton" onClick={startRiverGameClicked}>Start River Game</button>
             <button className="startButton" onClick={startLakeGameClicked}>Start Lake Game</button>
 

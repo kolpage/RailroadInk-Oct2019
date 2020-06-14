@@ -27,6 +27,7 @@ function createTurnFromResponseDTO(turnResponseDTO: TurnResponseDTO){
     gameTurn.RolledDice.forEach( dice => {
         dice.SetGameTurn(turnResponseDTO.TurnNumber);
     });
+    console.log(gameTurn.RolledDice);
     return gameTurn;
 }
 
@@ -73,6 +74,7 @@ export function GetDiceRoll(callback: (gameDice: GameDice[]) => void){
 
 export function AdvanceTurn(moves: TurnMoves, successCallback: (gameTurn: GameTurn) => void, errorCallback: (badMoves: Move[]) => void){
     const movesToSend: MoveDTO[] = PrepareMovesForDTO(moves);
+    console.log(movesToSend);
     ipcRenderer.invoke(AdvanceTurnEvent, movesToSend).then((result: TurnResponseDTO) => {
         if(result.WasMoveSuccessful){
             successCallback(createTurnFromResponseDTO(result))

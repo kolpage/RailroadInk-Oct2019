@@ -24,6 +24,8 @@ interface ISquareProps {
     makeSquareFlood: (monve: Move) => void;
 }
 
+//static contextType = ThemeContext;
+
 export function Square(props: ISquareProps) {
     React.useEffect(() => {
         //isSquareFlooded();
@@ -168,6 +170,7 @@ export function Square(props: ISquareProps) {
 
         return "";
     }
+    
 
     return(
         <div className={'square ' + props.addtionalStyles + ' ' + addValidationCssClass()} title={addErrorTooltip()}>
