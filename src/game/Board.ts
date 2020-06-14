@@ -100,6 +100,12 @@ export class Board{
             tileOrientations.push(tileFactory.CreateTile(TileType.StationTurnMirror, Number.MAX_SAFE_INTEGER, Orientation.down));
             tileOrientations.push(tileFactory.CreateTile(TileType.StationTurnMirror, Number.MAX_SAFE_INTEGER, Orientation.left));
         }
+        if(tile === TileType.LakeRoadRail){
+            tileOrientations.push(tileFactory.CreateTile(TileType.LakeRoadRailMirror, Number.MAX_SAFE_INTEGER, Orientation.up));
+            tileOrientations.push(tileFactory.CreateTile(TileType.LakeRoadRailMirror, Number.MAX_SAFE_INTEGER, Orientation.right));
+            tileOrientations.push(tileFactory.CreateTile(TileType.LakeRoadRailMirror, Number.MAX_SAFE_INTEGER, Orientation.down));
+            tileOrientations.push(tileFactory.CreateTile(TileType.LakeRoadRailMirror, Number.MAX_SAFE_INTEGER, Orientation.left));
+        }
         for(let rowIndex = 0; rowIndex < this.playableBoardHeight; rowIndex++){
             for(let columnIndex = 0; columnIndex < this.playableBoardWidth; columnIndex++){
                 if(this.GetTile(rowIndex, columnIndex) !== undefined){
