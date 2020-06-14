@@ -33,6 +33,7 @@ const LakeOneSideArt = require("../Assests/LakeThreeLand.png");
 const LakeRoadArt = require("../Assests/LakeRoad.png");
 const LakeRailArt = require("../Assests/LakeRail.png");
 const LakeRoadRail = require("../Assests/LakeRoadRail.png");
+const LakeRoadRailMirror = require("../Assests/LakeRoadRailMirror.png");
 
 
 interface ITileProps {
@@ -69,7 +70,8 @@ export function Tile(props: ITileProps){
             case TileType.LakeRoad: return LakeRoadArt;
             case TileType.LakeRail: return LakeRailArt;
             case TileType.LakeRoadRail: return LakeRoadRail;
-            case TileType.Empty:
+            case TileType.LakeRoadRailMirror: return LakeRoadRailMirror;
+            case TileType.Empty: 
             default: return EmptyFieldArt;    
         }
     }

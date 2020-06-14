@@ -53,7 +53,7 @@ export class GameTile implements IGameTile {
 
     public CanTileBeMirror() {
         // TODO: Make this poloymorphic behavior 
-        return (this.Type == TileType.StationTurn || this.Type == TileType.StationTurnMirror);
+        return (this.Type == TileType.StationTurn || this.Type == TileType.StationTurnMirror || this.Type == TileType.LakeRoadRail || this.Type == TileType.LakeRoadRailMirror);
     }
 
     public AreTilesEquivalent(otherTile: IGameTile) {
@@ -65,12 +65,16 @@ export class GameTile implements IGameTile {
     }
 
     private getMirroredType() {
-        // TODO: Gross. Switchstatment means this should be poloymorphic
+        // TODO: Gross. Switch statment means this should be poloymorphic
         switch (this.Type) {
             case TileType.StationTurn:
                 return TileType.StationTurnMirror;
             case TileType.StationTurnMirror:
                 return TileType.StationTurn;
+            case TileType.LakeRoadRail:
+                return TileType.LakeRoadRailMirror;
+            case TileType.LakeRoadRailMirror:
+                return TileType.LakeRoadRail;
             default: 
                 return this.Type;
         }
