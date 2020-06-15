@@ -95,7 +95,8 @@ export class LakeMeasurer extends TileVisitor{
 
     public MeasureLake(lakeTile: BaseTile){
         this.lakeSize = 0;
-        this.Reset(lakeTile);
+        this.Reset();
+        this.visitList.push({tile: lakeTile, hailingEdge: Edge.lake});
         while(this.visitList.length > 0){
             const currentTile = this.VisitNextTile();
             if(currentTile === undefined){
@@ -107,6 +108,7 @@ export class LakeMeasurer extends TileVisitor{
     }
 
     protected logVisitInfo(): void{
+        super.logVisitInfo();
         const currentTile = this.GetCurrentTile();
         if(currentTile){
             const tileId = currentTile.GetTileId();
@@ -156,7 +158,7 @@ export class LakeMeasurer extends TileVisitor{
         const leftEdge = currentTile.GetLeftEdge();
         if(leftEdge === Edge.lake){
             const leftTile = this.board.GetTileLeft(currentTile);
-            if(leftTile !== undefined && leftTile.GetTopEdge() === Edge.lake)
+            if(leftTile !== undefined && leftTile.GetRightEdge() === Edge.lake)
             {
                 this.addTileToVisitList(leftTile);
             }
