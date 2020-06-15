@@ -20,6 +20,7 @@ export class Board{
     private roads: BaseTile[];
     private rails: BaseTile[];
     private rivers: BaseTile[];
+    private lakes: BaseTile[];
     private playableBoardWidth: number;
     private playableBoardHeight: number;
     private get boardWidth(): number{
@@ -38,6 +39,7 @@ export class Board{
         this.roads = [];
         this.rails = [];
         this.rivers = [];
+        this.lakes = [];
         this.exits = [];
         this.initialize();
         this.setBoardEdges();
@@ -54,6 +56,7 @@ export class Board{
             case Edge.road: return this.roads;
             case Edge.rail: return this.rails;
             case Edge.river: return this.rivers;
+            case Edge.lake: return this.lakes;
         }
         return [];
     }
@@ -361,6 +364,7 @@ export class Board{
         const hasRoadEdge = this.doesTileHaveEdgeType(tile, Edge.road);
         const hasRailEdge = this.doesTileHaveEdgeType(tile, Edge.rail);
         const hasRiverEdge = this.doesTileHaveEdgeType(tile, Edge.river);
+        const hasLakeEdge = this.doesTileHaveEdgeType(tile, Edge.lake);
 
         if(hasRoadEdge){
             this.roads.push(tile);
@@ -370,6 +374,9 @@ export class Board{
         }
         if(hasRiverEdge){
             this.rivers.push(tile);
+        }
+        if(hasLakeEdge){
+            this.lakes.push(tile);
         }
     }
 

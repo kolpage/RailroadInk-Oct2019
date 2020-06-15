@@ -83,6 +83,110 @@ export abstract class TileVisitor{
     protected abstract addTilesToVisitList(): void;
 }
 
+/** When given a lake tile, it will measure the size of the lake that the tile is a part of. Tracks all lake tiles visited while measuring lake in lakeTilesVisited */
+export class LakeMeasurer extends TileVisitor{
+    private lakeTilesVisited: {[tileId: string]: boolean};
+    private lakeSize: number;
+
+    constructor(board: Board, lakeTilesVisited: {[tileId: string]: boolean}){
+        super(board, undefined);
+        this.lakeTilesVisited = lakeTilesVisited;
+    }
+
+    public MeasureLake(lakeTile: BaseTile){
+        this.lakeSize = 0;
+        this.Reset(lakeTile);
+        while(this.visitList.length > 0){
+            const currentTile = this.VisitNextTile();
+            if(currentTile === undefined){
+                return -1; //Shouldn't be here, so return a negative score.
+            }
+            this.lakeSize++;
+        }
+        return this.lakeSize;
+    }
+
+    protected logVisitInfo(): void{
+        const currentTile = this.GetCurrentTile();
+        if(currentTile){
+            const tileId = currentTile.GetTileId();
+            if(!this.lakeTilesVisited.hasOwnProperty(tileId)){
+                this.lakeTilesVisited[tileId] = true;
+            }
+        }
+    }
+
+    protected addTilesToVisitList(): void{
+        const currentTile = this.GetCurrentTile();
+        if(currentTile === undefined){
+            return;
+        }
+
+        //Add top tile
+        const topEdge = currentTile.GetTopEdge();
+        if(topEdge === Edge.lake){
+            const aboveTile = this.board.GetTileAbove(currentTile);
+            if(aboveTile !== undefined && aboveTile.GetBottomEdge() === Edge.lake)
+            {
+                this.addTileToVisitList(aboveTile);
+            }
+        }
+
+        //Add right tile
+        const rightEdge = currentTile.GetRightEdge();
+        if(rightEdge === Edge.lake){
+            const rightTile = this.board.GetTileRight(currentTile);
+            if(rightTile !== undefined && rightTile.GetLeftEdge() === Edge.lake)
+            {
+                this.addTileToVisitList(rightTile);
+            }
+        }
+
+        //Add bottom tile
+        const bottomEdge = currentTile.GetBottomEdge();
+        if(bottomEdge === Edge.lake){
+            const belowTile = this.board.GetTileBelow(currentTile);
+            if(belowTile !== undefined && belowTile.GetTopEdge() === Edge.lake)
+            {
+                this.addTileToVisitList(belowTile);
+            }
+        }
+
+        //Add left tile
+        const leftEdge = currentTile.GetLeftEdge();
+        if(leftEdge === Edge.lake){
+            const leftTile = this.board.GetTileLeft(currentTile);
+            if(leftTile !== undefined && leftTile.GetTopEdge() === Edge.lake)
+            {
+                this.addTileToVisitList(leftTile);
+            }
+        }
+    }
+
+    private addTileToVisitList(tileToAdd: BaseTile): void{
+        //Is there a tile there?
+        if(tileToAdd === undefined){
+            return;
+        }
+
+        //Is the tile already going to be traversed from this type of hailing edge?
+        const tileInVisitList = this.visitList.find(tileToVisit => tileToVisit.tile === tileToAdd);
+        if(tileInVisitList !== undefined){
+            return;
+        }
+
+        //Has the tile already been visited from this type of hailing edge?
+        const visitInfo = this.GetVisitInfoForTile(tileToAdd.GetTileId());
+        if(visitInfo !== undefined){
+            return;
+        }
+
+        //Tile should be added to visit list
+        this.visitList.push({tile: tileToAdd, hailingEdge: Edge.lake});
+    }
+
+}
+
 export class ExitNetworkLabeler extends TileVisitor{
     private currentNetworkId = 0;
     constructor(board: Board){

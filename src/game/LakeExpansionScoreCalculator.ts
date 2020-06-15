@@ -1,5 +1,7 @@
 import { BaseScoreCalculator } from "./BaseScoreCalculator";
 import { Board } from "./Board";
+import { Edge } from "../common/Enums";
+import { LakeMeasurer } from "./TileVisitor";
 
 export class LakeExpansionScoreCalculator extends BaseScoreCalculator{
     constructor(){
@@ -14,6 +16,16 @@ export class LakeExpansionScoreCalculator extends BaseScoreCalculator{
 
     /** Scores the expansion points. */
     private scoreExpansionPoints(){
-        this.expansionScore = 0;
+        const lakeScores: number[] = [];
+        const countedLakeTiles = {};
+        const lakeTiles = this.board.GetTilesOfType(Edge.lake);
+        const lakeMeasurer = new LakeMeasurer(this.board, countedLakeTiles);
+        for(let i = 0; i < lakeTiles.length; i++){
+            const lakeTile = lakeTiles[i];
+            if(lakeTile && !countedLakeTiles.hasOwnProperty(lakeTile.GetTileId())){
+                lakeScores.push(lakeMeasurer.MeasureLake(lakeTile));
+            }
+        }
+        this.expansionScore = Math.min.apply(undefined, lakeScores);
     }
 }
