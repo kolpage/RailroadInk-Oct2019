@@ -277,6 +277,7 @@ export class ExitNetworkLabeler extends TileVisitor{
             case Edge.exitRoad:
             case Edge.rail:
             case Edge.exitRail:
+            case Edge.lake:
                 return true;
             default:
                 return false;

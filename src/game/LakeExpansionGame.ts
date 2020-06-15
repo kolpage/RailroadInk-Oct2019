@@ -74,8 +74,8 @@ export class LakeExpansionGame extends BaseGame{
                 const leftTile = this.board.GetTileLeft(tile);
                 if(leftTile === undefined){
                     const potentialFloodLocation: ITileLocation = {
-                        row: move.RowIndex - 1,
-                        column: move.ColumnIndex
+                        row: move.RowIndex,
+                        column: move.ColumnIndex - 1
                     };
                     const shouldFlood = this.checkForFlood(potentialFloodLocation);
                     if(shouldFlood){

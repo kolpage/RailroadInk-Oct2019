@@ -421,7 +421,7 @@ export class SpecialRoadRailAcrossTile extends PlayableBaseTile{
 export class RiverStraightTile extends RiverExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.river, Edge.empty, Edge.river, Edge.empty];
-        super(initEdges, orientation, turn, true);
+        super(initEdges, orientation, turn, false);
     }
 
     /** Gets the enum associated with this tile. */
@@ -439,7 +439,7 @@ export class RiverStraightTile extends RiverExpansionTile{
 export class RiverTurnTile extends RiverExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.river, Edge.river, Edge.empty, Edge.empty];
-        super(initEdges, orientation, turn, true);
+        super(initEdges, orientation, turn, false);
     }
 
     /** Gets the enum associated with this tile. */
@@ -457,7 +457,7 @@ export class RiverTurnTile extends RiverExpansionTile{
 export class RiverRoadBridgeTile extends RiverExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.river, Edge.road, Edge.river, Edge.road];
-        super(initEdges, orientation, turn, true);
+        super(initEdges, orientation, turn, false);
     }
 
     /** Gets the enum associated with this tile. */
@@ -475,7 +475,7 @@ export class RiverRoadBridgeTile extends RiverExpansionTile{
 export class RiverRailBridgeTile extends RiverExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.river, Edge.rail, Edge.river, Edge.rail];
-        super(initEdges, orientation, turn, true);
+        super(initEdges, orientation, turn, false);
     }
 
     /** Gets the enum associated with this tile. */
@@ -493,7 +493,7 @@ export class RiverRailBridgeTile extends RiverExpansionTile{
 export class LakeThreeSidesTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.lake, Edge.lake, Edge.empty, Edge.lake];
-        super(initEdges, orientation, turn, true);
+        super(initEdges, orientation, turn, false);
     }
 
     /** Gets the enum associated with this tile. */
@@ -511,7 +511,7 @@ export class LakeThreeSidesTile extends LakeExpansionTile{
 export class LakeTwoSidesTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.empty, Edge.lake, Edge.lake, Edge.empty];
-        super(initEdges, orientation, turn, true);
+        super(initEdges, orientation, turn, false);
     }
 
     /** Gets the enum associated with this tile. */
@@ -529,7 +529,7 @@ export class LakeTwoSidesTile extends LakeExpansionTile{
 export class LakeOneSideTile extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.empty, Edge.empty, Edge.lake, Edge.empty];
-        super(initEdges, orientation, turn, true);
+        super(initEdges, orientation, turn, false);
     }
 
     /** Gets the enum associated with this tile. */
@@ -582,7 +582,7 @@ export class LakeRailTile extends LakeExpansionTile{
 export class LakeFull extends LakeExpansionTile{
     constructor(orientation: Orientation, turn: number){
         const initEdges: Edge[] = [Edge.lake, Edge.lake, Edge.lake, Edge.lake];
-        super(initEdges, orientation, turn, true);
+        super(initEdges, orientation, turn, false);
     }
 
     /** Gets the enum associated with this tile. */
